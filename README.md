@@ -1,2 +1,9 @@
 # mulle-objc-developer
-Package all items together for a homebrew formula
+
+Package all items together for a homebrew formula. 
+
+[mulle-objc Community](//mulle-objc.github.io/about)
+
+## Memo
+
+To pick up changes in the formula the URL of the formula must change AFAIK.
