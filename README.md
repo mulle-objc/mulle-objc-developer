@@ -1,6 +1,6 @@
 # mulle-objc-developer
 
-Package all items together for a homebrew formula. 
+Package all items together into a single homebrew formula. 
 
 [mulle-objc Community](//mulle-objc.github.io/about)
 
