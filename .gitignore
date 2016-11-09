@@ -1,12 +1,8 @@
-
-/bin/mulle-homebrew/
-
+.DS_Store
+build/
+/bin/mulle-homebrew
 /.bootstrap.auto/
-
 /.bootstrap.local/
-
 /dependencies/
-
 /addictions/
-
 /.repos/
