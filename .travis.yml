@@ -1,0 +1,9 @@
+language: objective-c
+
+before_install:
+  - brew update
+  - brew tap mulle-kybernetik/software
+  - brew install mulle-build
+
+script:
+   - ./mulle-objc-clone.sh
