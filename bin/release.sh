@@ -1,6 +1,6 @@
 #! /bin/sh
 
-PROJECT="MulleObjCDeveloper" # requires camel-case
+PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
 DEPENDENCIES='${DEPENDENCY_TAP}/mulle-allocator
 ${DEPENDENCY_TAP}/mulle-c11
