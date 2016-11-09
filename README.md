@@ -1,5 +1,8 @@
 # mulle-objc-developer
 
+[![Build Status](https://travis-ci.org/mulle-objc/mulle-objc-developer.svg)](https://travis-ci.org/mulle-objc/mulle-objc-developer)
+
+
 This project packages all items together into a single homebrew formula. If you install this item with [brew](//brew.sh):
 
 ```
