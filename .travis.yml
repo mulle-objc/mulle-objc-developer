@@ -6,4 +6,4 @@ before_install:
   - brew install mulle-build
 
 script:
-   - ./mulle-objc-clone.sh
+   - ./mulle-objc-clone.sh https://github.com/mulle-objc

@@ -33,12 +33,10 @@
 MULLE_BUILD_MIN_MAJOR="0"
 MULLE_BUILD_MIN_MINOR="7"
 
+REPOHOSTDIR="${1:-git@github.com:mulle-objc}"
+[ $# -ne 0 ] && shift
 
-FORK="${1:-mulle-objc}"
-[ $# -ne 0 ] && shift
 BRANCH="${1:-master}"
-[ $# -ne 0 ] && shift
-HOST="${1:-git@github.com}"
 [ $# -ne 0 ] && shift
 
 #
@@ -120,7 +118,7 @@ blurb_and_ask()
 {
    cat <<EOF >&2
 This script will clone the branch "${BRANCH}" of all needed mulle-objc
-repositories from "${HOST}:${FORK}" into the current directory. Then it
+repositories from "${REPOHOSTDIR}" into the current directory. Then it
 will set them up in a convenient way using mulle-build.
 
 There will be a lot of warnings due to symlinks, but that's OK.
@@ -165,7 +163,7 @@ main()
 {
    check_mulle_build_version || fail "mulle-build too old, please update"
 
-   blurb_and_ask
+   [ -z "${DONT_ASK}" ] && blurb_and_ask
 
    local i
 
@@ -173,7 +171,7 @@ main()
    do
       if [ ! -d "$i" ]
       then
-         git clone --branch "${BRANCH}" "${HOST}:${FORK}/${i}" "${i}" || exit 1
+         git clone --branch "${BRANCH}" "${REPOHOSTDIR}/${i}" "${i}" || exit 1
          # setup_hooks "$i"
          # enable_push "$i"
          echo >&2
@@ -186,7 +184,7 @@ main()
    do
       if [ ! -d "$i" ]
       then
-         git clone --branch "${BRANCH}" "${HOST}:${FORK}/${i}" "${i}" || exit 1
+         git clone --branch "${BRANCH}" "${REPOHOSTDIR}/${i}" "${i}" || exit 1
          echo >&2
       else
          echo "${i} already exists, skipping..."
