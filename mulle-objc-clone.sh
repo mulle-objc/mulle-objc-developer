@@ -46,16 +46,14 @@ do
          set -x
       ;;
 
-      --update)
-         OPERATION=update
+      # mulle-build commands
+      --build|--update|--status|--clean|--tag|--install|--git)
+         COMMAND="mulle-`echo "$1" | cut "-c3-"`"
+         OPERATION=mulle-build
       ;;
 
-      --status)
-         OPERATION=status
-      ;;
-
-      --git)
-         OPERATION=git
+      --run)
+         OPERATION=run
       ;;
 
       --*)
@@ -194,14 +192,13 @@ clone()
 {
    check_mulle_build_version || fail "mulle-build too old, please update"
 
-   [ -z "${DONT_ASK}" ] && blurb_and_ask
-
    REPOHOSTDIR="${1:-git@github.com:mulle-objc}"
    [ $# -ne 0 ] && shift
 
    BRANCH="${1:-master}"
    [ $# -ne 0 ] && shift
 
+   [ -z "${DONT_ASK}" ] && blurb_and_ask
 
    local i
 
@@ -267,12 +264,12 @@ main()
          clone "$@"
       ;;
 
-      update|status)
-         run "mulle-${OPERATION}" "$@"
+      mulle-build)
+         run "${COMMAND}" "$@"
       ;;
 
-      git)
-         run "git" "$@"
+      run)
+         run "$@"
       ;;
 
       *)
