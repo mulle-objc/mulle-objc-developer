@@ -2,7 +2,11 @@
 
 ![GitHub version](https://badge.fury.io/gh/mulle-nat%2Fmulle-c11.svg) [![Build Status](https://travis-ci.org/mulle-objc/mulle-objc-developer.svg)](https://travis-ci.org/mulle-objc/mulle-objc-developer)
 
-This project packages all items together into a single homebrew formula. If you install this item with [brew](//brew.sh):
+This project packages all items together into a single homebrew formula. 
+
+> This is also the goto project for issues, if it doesn't match any of the other projects or its unclear.
+
+If you install this item with [brew](//brew.sh):
 
 ```
 brew tap mulle-objc/software
