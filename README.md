@@ -21,14 +21,37 @@ compiler.
 > See [mulle-objc Community](//mulle-objc.github.io) for more information.
 
 
+## Xcode integration
+
+You can get Xcode integration of `mulle-clang`. **mulle-clang** will appear as
+an available compiler in Xcode in the "Build Settings":
+
+![Screeny](pix/xcode-integration.png)
+
+
+Run [`mulle-clang-add-to-xcode.sh`](mulle-clang-add-to-xcode.sh) to integrate
+the **mulle-clang** compiler into Xcode. This will install a plugin in
+`~/Volumes/Users/nat/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins`:
+
+```
+mulle-clang-add-to-xcode.sh
+```
+
+The `.xcconfig` string is:
+
+```
+GCC_VERSION = de.codeon.compilers.mulle-clang
+```
+
+
 ## Developing mulle-objc itself
 
 If you want to hack on `mulle-objc` it is easiest to use the supplied
-script  [`mulle-objc-clone.sh`](mulle-objc-clone.sh) to setup things on
+script [`mulle-objc-clone.sh`](mulle-objc-clone.sh) to setup things on
 your machine.
 
 ```
-./bin/mulle-objc-clone.sh
+mulle-objc-clone.sh
 ```
 
 >This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
