@@ -8,7 +8,7 @@ ${DEPENDENCY_TAP}/mulle-concurrent
 ${DEPENDENCY_TAP}/mulle-container
 ${DEPENDENCY_TAP}/mulle-vararg
 ${DEPENDENCY_TAP}/mulle-thread
-${DEPENDENCY_TAP}/mulle-objc
+${DEPENDENCY_TAP}/mulle-objc-runtime
 ${DEPENDENCY_TAP}/MulleObjC
 codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
 LANGUAGE=c                            # c,cpp, objc
