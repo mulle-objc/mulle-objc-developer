@@ -33,11 +33,42 @@
 MULLE_BUILD_MIN_MAJOR="0"
 MULLE_BUILD_MIN_MINOR="7"
 
-REPOHOSTDIR="${1:-git@github.com:mulle-objc}"
-[ $# -ne 0 ] && shift
+OPERATION=clone
 
-BRANCH="${1:-master}"
-[ $# -ne 0 ] && shift
+while [ $# -ne 0 ]
+do
+   case "$1" in
+      -a)
+         DONT_ASK=YES
+      ;;
+
+      -t)
+         set -x
+      ;;
+
+      --update)
+         OPERATION=update
+      ;;
+
+      --status)
+         OPERATION=status
+      ;;
+
+      --git)
+         OPERATION=git
+      ;;
+
+      --*)
+         echo "unknown option: $1" >&2
+         exit 1
+      ;;
+      *)
+         break
+      ;;
+   esac
+
+   shift
+done
 
 #
 # These are actualy non-bare repositories, that act like bare repositories.
@@ -159,11 +190,18 @@ check_mulle_build_version()
 
 
 
-main()
+clone()
 {
    check_mulle_build_version || fail "mulle-build too old, please update"
 
    [ -z "${DONT_ASK}" ] && blurb_and_ask
+
+   REPOHOSTDIR="${1:-git@github.com:mulle-objc}"
+   [ $# -ne 0 ] && shift
+
+   BRANCH="${1:-master}"
+   [ $# -ne 0 ] && shift
+
 
    local i
 
@@ -194,10 +232,54 @@ main()
    for i in $REPOS
    do
       echo "" >&2
-      echo "### Setup $i" >&2
+      echo "<<>> Setup $i" >&2
       echo "" >&2
       ( cd "$i" ; mulle-clean dist; mulle-build -y -es ) || exit 1
    done
 }
+
+
+run()
+{
+   local command
+
+   command="$1"
+   shift
+
+   local i
+
+   for i in $QUASI_BARE_REPOS $REPOS
+   do
+      if [ -d "$i" ]
+      then
+         echo "<<>> $i" >&2
+         ( cd "$i" && "${command}" "$@" )
+         echo >&2
+      fi
+   done
+}
+
+
+main()
+{
+   case "${OPERATION}" in
+      clone)
+         clone "$@"
+      ;;
+
+      update|status)
+         run "mulle-${OPERATION}" "$@"
+      ;;
+
+      git)
+         run "git" "$@"
+      ;;
+
+      *)
+      echo "unknown command: $1" >&2
+      exit 1
+   esac
+}
+
 
 main "$@"
