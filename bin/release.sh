@@ -7,8 +7,11 @@ ${DEPENDENCY_TAP}/mulle-c11
 ${DEPENDENCY_TAP}/mulle-concurrent
 ${DEPENDENCY_TAP}/mulle-container
 ${DEPENDENCY_TAP}/mulle-vararg
-${DEPENDENCY_TAP}/mulle-thread'  # no camel case, will be evaled later!
-LANGUAGE=c                       # c,cpp, objc
+${DEPENDENCY_TAP}/mulle-thread
+${DEPENDENCY_TAP}/mulle-objc
+${DEPENDENCY_TAP}/MulleObjC
+codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
+LANGUAGE=c                            # c,cpp, objc
 VERSION="`head -1 VERSION`"
 
 #

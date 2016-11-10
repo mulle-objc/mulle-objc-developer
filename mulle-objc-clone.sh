@@ -59,9 +59,9 @@ mulle-allocator
 mulle-vararg
 mulle-aba
 mulle-concurrent
-mulle-container'
-# mulle-objc
-# MulleObjC'
+mulle-container
+mulle-objc
+MulleObjC'
 
 fail()
 {
