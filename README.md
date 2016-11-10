@@ -4,7 +4,7 @@
 
 This project packages all items together into a single homebrew formula. 
 
-> This is also the goto project for issues, if it doesn't match any of the other projects or its unclear.
+> This is also the goto project for issues, that doen't match any of the other projects or its unclear where they belong.
 
 If you install this item with [brew](//brew.sh):
 
