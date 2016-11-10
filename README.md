@@ -24,7 +24,7 @@ your machine.
 ./bin/mulle-objc-clone.sh
 ```
 
->This needs [mulle-buid](//mulle-nat/mulle-build) as a  pre-requisite.
+>This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
 >
 > ```
 > brew tap mulle-kybernetik/software
