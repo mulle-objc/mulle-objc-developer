@@ -10,9 +10,7 @@ This project packages all items together into a single homebrew formula. This is
 You install **mulle-objc-developer** with [brew](//brew.sh):
 
 ```
-brew tap mulle-objc/software
-brew tap codeon-gmbh/software
-brew install mulle-objc-developer
+brew install mulle-objc/software/mulle-objc-developer
 ```
 
 This will install the necessary **mulle-objc** packages to write
