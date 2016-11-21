@@ -1,10 +1,8 @@
 language: objective-c
 
 before_install:
-   - brew tap mulle-kybernetik/software
-   - brew install mulle-build
-   - brew tap codeon-gmbh/software
-   - brew install mulle-clang
+   - brew install mulle-kybernetik/software/mulle-build
+   - brew install codeon-gmbh/software/mulle-clang
 
 script:
-   - DONT_ASK=YES ./mulle-objc-clone.sh https://github.com/mulle-objc
+   - DONT_ASK=YES ./mulle-objc-clone.sh https://github.com/mulle-nat
