@@ -54,10 +54,8 @@ your machine.
 This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
 
 ```
-brew tap mulle-kybernetik/software
-brew install mulle-build
-brew tap codeon-gmbh/software
-brew install mulle-clang
+brew install mulle-kybernetik/software/mulle-build
+brew install codeon-gmbh/software/mulle-clang
 ```
 
 ```
