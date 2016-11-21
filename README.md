@@ -1,8 +1,8 @@
 # mulle-objc-developer
 
-[![Build Status](https://travis-ci.org/mulle-objc/mulle-objc-developer.svg)](https://travis-ci.org/mulle-objc/mulle-objc-developer)
-![GitHub tag](https://img.shields.io/github/tag/mulle-objc/mulle-objc-developer.svg)
-![GitHub release](https://img.shields.io/github/release/mulle-objc/mulle-objc-developer.svg)
+[![Build Status](https://travis-ci.org/mulle-nat/mulle-objc-developer.svg)](https://travis-ci.org/mulle-nat/mulle-objc-developer)
+![GitHub tag](https://img.shields.io/github/tag/mulle-nat/mulle-objc-developer.svg)
+![GitHub release](https://img.shields.io/github/release/mulle-nat/mulle-objc-developer.svg)
 
 
 This project packages all items together into a single homebrew formula. This is also the goto project for issues, that don't match any of the other projects or its unclear where they belong.
@@ -10,7 +10,7 @@ This project packages all items together into a single homebrew formula. This is
 You install **mulle-objc-developer** with [brew](//brew.sh):
 
 ```
-brew install mulle-objc/software/mulle-objc-developer
+brew install mulle-kybernetik/software/mulle-objc-developer
 ```
 
 This will install the necessary **mulle-objc** packages to write
