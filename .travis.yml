@@ -5,4 +5,4 @@ before_install:
    - brew install codeon-gmbh/software/mulle-clang
 
 script:
-   - DONT_ASK=YES ./mulle-objc-clone.sh https://github.com/mulle-nat
+   - DONT_ASK=YES ./mulle-objc-clone.sh https://github.com/mulle-nat release
