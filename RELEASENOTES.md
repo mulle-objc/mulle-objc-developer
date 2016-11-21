@@ -1,3 +1,8 @@
+0.4.3
+====
+
+merge community changes
+
 0.4.1-2
 ====
 
