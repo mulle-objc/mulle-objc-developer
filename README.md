@@ -68,5 +68,5 @@ mulle-build -y
 mulle-test
 ```
 
-You can use the supplied `.xcodeproj` to edit and build the projects, but in order for them
+You can use the supplied **Xcode** project files to edit and build the projects, but in order for them
 to work you must run `mulle-build -y` (or `mulle-bootstrap -y`) once.
