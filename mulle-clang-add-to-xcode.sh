@@ -1,6 +1,7 @@
 #! /bin/sh
 #
 #   Copyright (c) 2015 Nat! - Codeon GmbH
+#   Copyright (c) 2016 3a4oT
 #   All rights reserved.
 #
 #   Redistribution and use in source and binary forms, with or without
@@ -62,6 +63,12 @@ set -e
 
 XCODE_DEVELOPER_PATH="`"xcode-select" -p`"
 [ -d "${XCODE_DEVELOPER_PATH}" ] || fail "Xcode not installed ?"
+
+XCODE_BUILD_VERSION=$(xcodebuild -version | grep -o '[0-9].[0-9].[0-9]$') # => major.minor.patch
+MAJOR_VERSION=(${XCODE_BUILD_VERSION//./ }[0]) # => split to array and take major value
+if [[ $MAJOR_VERSION > 7 ]]; then
+  fail "Xcode ${XCODE_BUILD_VERSION} uses library validation. It won't load in-process plugins anymore. See https://github.com/alcatraz/Alcatraz/issues/475"
+fi
 
 XCODE_CONTENTS_PATH="`dirname ${XCODE_DEVELOPER_PATH}`"
 
