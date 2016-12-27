@@ -22,7 +22,22 @@ compiler.
 
 ## Xcode integration
 
-You can get Xcode integration for **mulle-clang**. mulle-clang will appear as
+### Xcode 8
+ For *Xcode 7* we can use [`mulle-clang-add-to-xcode.sh`](mulle-clang-add-to-xcode.sh)  to integrate **mulle-clang** with project anyhow this doesn't work for *Xcode 8* since [Xcode 8 uses library validation.](https://github.com/alcatraz/Alcatraz/issues/475)
+
+**Xcode 8 integration for mulle-clang with CMake**
+
+ ```bash
+cd <pathToProjectDir>/MulleObjC
+```
+
+```bash
+mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
+```
+
+### Xcode 7
+
+You can get *Xcode 7* integration for **mulle-clang**. mulle-clang will appear as
 an available compiler in Xcode in the "Build Settings":
 
 ![Screeny](pix/xcode-integration.png)
