@@ -60,6 +60,14 @@ do
          DONT_ASK="YES"
       ;;
 
+      -b|--branch)
+         shift
+         [ $# -eq 0 ] && echo "branch missing" >&2 && exit 1
+         COMMON_BRANCH="$1"
+         EMBEDDED_BRANCH="$1"
+         OBJC_BRANCH="$1"
+      ;;
+
       -cb|--common-branch)
          shift
          [ $# -eq 0 ] && echo "branch missing" >&2 && exit 1
@@ -76,6 +84,14 @@ do
          shift
          [ $# -eq 0 ] && echo "branch missing" >&2 && exit 1
          OBJC_BRANCH="$1"
+      ;;
+
+      -h|--host)
+         shift
+         [ $# -eq 0 ] && echo "host directory missing" >&2 && exit 1
+         COMMON_REPOPREFIX="$1"
+         OBJC_REPOPREFIX="$1"
+         EMBEDDED_REPOPREFIX="$1"
       ;;
 
       -ch|--common-host)
@@ -96,13 +112,6 @@ do
          OBJC_REPOPREFIX="$1"
       ;;
 
-      -h|--host)
-         shift
-         [ $# -eq 0 ] && echo "host directory missing" >&2 && exit 1
-         COMMON_REPOPREFIX="$1"
-         OBJC_REPOPREFIX="$1"
-         EMBEDDED_REPOPREFIX="$1"
-      ;;
 
       -t)
          set -x
