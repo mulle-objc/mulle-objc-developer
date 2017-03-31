@@ -5,7 +5,11 @@
 ![GitHub release](https://img.shields.io/github/release/mulle-nat/mulle-objc-developer.svg)
 
 
-This project packages all items together into a single homebrew formula. This is also the goto project for issues, that don't match any of the other projects or its unclear where they belong.
+This project packages all items together into a single homebrew formula.
+
+This is also the goto project for [issues on GitHub](https://github.com/mulle-objc/mulle-objc-developer/issues),
+that don't match any of the other projects or where it's unclear where they
+belong.
 
 You install **mulle-objc-developer** with [brew](//brew.sh):
 
@@ -47,18 +51,15 @@ GCC_VERSION = de.codeon.compilers.mulle-clang
 ## Developing mulle-objc itself
 
 If you want to hack on `mulle-objc` it is easiest to use the supplied
-script [`mulle-objc-clone.sh`](mulle-objc-clone.sh) to setup things on
+script [`mulle-objc-clone`](mulle-objc-clone) to setup things on
 your machine.
 
 
 This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
 
 ```
-brew install mulle-kybernetik/software/mulle-build
-brew install codeon-gmbh/software/mulle-clang
+brew install mulle-kybernetik/alpha/mulle-build
 ```
 
-```
-mulle-objc-clone.sh
-```
+Now run `mulle-objc-clone`
 

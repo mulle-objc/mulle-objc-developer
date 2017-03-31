@@ -59,12 +59,12 @@ sanity_check()
 
    . "${library_path}/mulle-bootstrap-logging.sh"
 
-   ([ -e .CC ]               && log_warning ".CC already exists")              || log_info ".CC is missing"
-   ([ -e .CXX ]              && log_warning ".CXX already exists")             || log_info ".CXX is missing"
-   ([ -e .bootstrap ]        && log_warning ".bootstrap already exists")       || log_info ".bootstrap is missing"
-   ([ -e .bootstrap.local ]  && log_warning ".bootstrap.local already exists") || log_info ".bootstrap.local is missing"
-   ([ -e src ]               && log_warning "./src already exists")            || log_info "./src is missing"
-   ([ -e CMakeLists.txt ]    && log_warning "CMakeLists.txt already exists")   || log_info "CMakeLists.txt is missing"
+   ([ -e .CC ]               && log_info ".CC exists")              || log_warning ".CC is missing"
+   ([ -e .CXX ]              && log_info ".CXX exists")             || log_warning ".CXX is missing"
+   ([ -e .bootstrap ]        && log_info ".bootstrap exists")       || log_warning ".bootstrap is missing"
+   ([ -e .bootstrap.local ]  && log_info ".bootstrap.local exists") || log_warning ".bootstrap.local is missing"
+   ([ -e src ]               && log_info "./src exists")            || log_warning "./src is missing"
+   ([ -e CMakeLists.txt ]    && log_info "CMakeLists.txt exists")   || log_warning "CMakeLists.txt is missing"
 }
 
 
@@ -86,8 +86,10 @@ bootstrap_setup()
    if [ ! -e .bootstrap -o "${FLAG_FORCE}" = "YES" ]
    then
       exekutor mulle-bootstrap init -n
-      exekutor mulle-bootstrap setting -g repositories "${FOUNDATION_URL}"
    fi
+
+   exekutor mulle-bootstrap setting -g -a repositories "${FOUNDATION_CLONE}"
+   exekutor mulle-bootstrap expansion -g MULLE_FOUNDATION_REPOSITORIES "${MULLE_FOUNDATION_REPOSITORIES}"
 }
 
 
@@ -101,36 +103,38 @@ developer_setup()
    then
       exekutor mulle-bootstrap config -y embedded_symlinks
    fi
+
 #   mulle-bootstrap config override_branch -master
 
-   if [ -z "`mulle-bootstrap config caches_path`" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      local this
-      local parent
+   # if [ -z "`mulle-bootstrap config caches_path`" -o "${FLAG_FORCE}" = "YES" ]
+   # then
+   #    local this
+   #    local parent
 
-      this="`pwd -P`"
-      parent="`dirname -- "${this}"`"
+   #    this="`pwd -P`"
+   #    parent="`dirname -- "${this}"`"
 
-      if [ "${parent}" != "." ]
-      then
-         local caches_path
+   #    if [ "${parent}" != "." ]
+   #    then
+   #       local caches_path
 
-         caches_path="${parent}"
-         parent="`dirname -- "${parent}"`"
+   #       caches_path="${parent}"
+   #       parent="`dirname -- "${parent}"`"
 
-         if [ "${parent}" != "." ]
-         then
-            caches_path="${caches_path}:${parent}"
-         fi
-         exekutor mulle-bootstrap config caches_path "${caches_path}"
-      fi
-   fi
+   #       if [ "${parent}" != "." ]
+   #       then
+   #          caches_path="${caches_path}:${parent}"
+   #       fi
+   #       exekutor mulle-bootstrap config caches_path "${caches_path}"
+   #    fi
+   # fi
 }
 
 
 configuration_setup()
 {
-   exekutor mulle-bootstrap setting -g embedded_repositories "${MULLE_CONFIGURATION_URL}"
+   exekutor mulle-bootstrap setting -g -a embedded_repositories "${MULLE_CONFIGURATION_CLONE}"
+   exekutor mulle-bootstrap setting -g -a embedded_repositories "${MULLE_TESTS_CLONE}"
 }
 
 
@@ -363,7 +367,10 @@ library_setup()
 
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
    then
-      demo_library_files
+      if [ ! -d src ]
+      then
+         demo_library_files
+      fi
    fi
 
    common_setup
@@ -388,7 +395,10 @@ executable_setup()
 
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
    then
-      demo_executable_files
+      if [ ! -d src ]
+      then
+         demo_executable_files
+      fi
    fi
 
    common_setup
@@ -427,10 +437,16 @@ main()
 
    directory="."
 
-   VENDOR_URL="https://github.com/mulle-nat"
-   FOUNDATION_URL="${FOUNDATION_URL:-${VENDOR_URL}/MulleFoundation}"
-   MULLE_CONFIGURATION_URL="${MULLE_CONFIGURATION_URL:-${VENDOR_URL}/MulleFoundation}"
    PROJECT_NAME="${PROJECT_NAME:-`basename -- $PWD`}"
+   MULLE_FOUNDATION_REPOSITORIES="https://github.com/mulle-nat"
+
+   DEFAULT_FOUNDATION_CLONE="\${MULLE_FOUNDATION_REPOSITORIES}/MulleFoundation;;\${MULLE_FOUNDATION_BRANCH:-release}"
+   DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${MULLE_FOUNDATION_REPOSITORIES}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
+   DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${MULLE_FOUNDATION_REPOSITORIES}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
+
+   FOUNDATION_CLONE="${FOUNDATION_CLONE:-${DEFAULT_FOUNDATION_CLONE}}"
+   MULLE_CONFIGURATION_CLONE="${MULLE_CONFIGURATION_CLONE:-${DEFAULT_MULLE_CONFIGURATION_CLONE}}"
+   MULLE_TESTS_CLONE="${MULLE_TESTS_CLONE:-${DEFAULT_MULLE_TESTS_CLONE}}"
 
    while [ $# -ne 0 ]
    do
@@ -446,17 +462,17 @@ main()
             directory="$1"
          ;;
 
-         -s|--sparse)
-            FILE_PREFIX="# src/"
-            FLAG_OUTPUT_DEMO_FILES="NO"
-         ;;
-
          -f|--force)
             FLAG_FORCE="YES"
          ;;
 
          -n|--dry-run)
             MULLE_FLAG_EXECUTOR_DRY_RUN="YES"
+         ;;
+
+         -s|--sparse)
+            FILE_PREFIX="# src/"
+            FLAG_OUTPUT_DEMO_FILES="NO"
          ;;
 
          -t|--trace)
@@ -502,5 +518,12 @@ main()
       ;;
    esac
 }
+
+MULLE_EXECUTABLE="`basename -- "$0"`"
+MULLE_ARGUMENTS="$@"
+MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
+MULLE_EXECUTABLE_PID="$$"
+export MULLE_EXECUTABLE_PID
+
 
 main "$@"
