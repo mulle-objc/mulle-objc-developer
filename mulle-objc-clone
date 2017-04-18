@@ -31,7 +31,7 @@
 #
 
 MULLE_BUILD_MIN_MAJOR="3"
-MULLE_BUILD_MIN_MINOR="1"
+MULLE_BUILD_MIN_MINOR="3"
 
 #
 # This script will create the following structure:
@@ -44,14 +44,6 @@ MULLE_BUILD_MIN_MINOR="1"
 #
 # All REPOS are made to defer to MulleObjC-master
 #
-OBJC_BRANCH="release"
-COMMON_BRANCH="${OBJC_BRANCH}"
-EMBEDDED_BRANCH="${OBJC_BRANCH}"
-
-OBJC_REPOPREFIX="https://github.com/mulle-objc/"
-COMMON_REPOPREFIX="${REPOPREFIX}"
-EMBEDDED_REPOPREFIX="${REPOPREFIX}"
-
 
 while [ $# -ne 0 ]
 do
@@ -132,6 +124,18 @@ done
 
 COMMAND="${1:-clone}"
 [ $# -ne 0 ] && shift
+
+#
+# setup default values if not set by options
+#
+OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/mulle-objc/}"
+OBJC_BRANCH="${OBJC_BRANCH:-release}"
+
+COMMON_REPOPREFIX="${COMMON_REPOPREFIX:-${OBJC_REPOPREFIX}}"
+COMMON_BRANCH="${COMMON_BRANCH:-${OBJC_BRANCH}}"
+
+EMBEDDED_REPOPREFIX="${EMBEDDED_REPOPREFIX:-${COMMON_REPOPREFIX}}"
+EMBEDDED_BRANCH="${EMBEDDED_BRANCH:-${COMMON_BRANCH}"
 
 
 MASTER_DIR="MulleObjC-${OBJC_BRANCH}"
