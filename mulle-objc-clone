@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/env bash
 #
 #   Copyright (c) 2016 Nat! - Mulle kybernetiK
 #   All rights reserved.
@@ -42,11 +42,11 @@ usage: mulle-xcode-clone [options]
    Options
       -a   : don't ask
       -b   : branch to checkout for all (default: release)
-      -bc  : branch to checkout for C libraries (inherits -b)
-      -be  : branch to checkout for embedded libraries (inherits -bc)
+      -cb  : branch to checkout for C libraries (inherits -b)
+      -eb  : branch to checkout for embedded libraries (inherits -cb)
       -h   : host to checkout from for all (default: https://github.com/mulle-objc/)
-      -hc  : host to checkout from for C libraries (inherits -h)
-      -he  : host to checkout from for embedded libraries (inherits -hc)
+      -ch  : host to checkout from for C libraries (inherits -h)
+      -eh  : host to checkout from for embedded libraries (inherits -ch)
 EOF
    exit 1
 }
@@ -92,9 +92,7 @@ do
       -h|--host|-oh|--objc-host)
          shift
          [ $# -eq 0 ] && echo "host directory missing" >&2 && exit 1
-         COMMON_REPOPREFIX="$1"
          OBJC_REPOPREFIX="$1"
-         EMBEDDED_REPOPREFIX="$1"
       ;;
 
       -ch|--common-host)
@@ -139,7 +137,7 @@ COMMON_REPOPREFIX="${COMMON_REPOPREFIX:-${OBJC_REPOPREFIX}}"
 COMMON_BRANCH="${COMMON_BRANCH:-${OBJC_BRANCH}}"
 
 EMBEDDED_REPOPREFIX="${EMBEDDED_REPOPREFIX:-${COMMON_REPOPREFIX}}"
-EMBEDDED_BRANCH="${EMBEDDED_BRANCH:-${COMMON_BRANCH}"
+EMBEDDED_BRANCH="${EMBEDDED_BRANCH:-${COMMON_BRANCH}}"
 
 
 MASTER_DIR="MulleObjC-${OBJC_BRANCH}"
@@ -228,15 +226,27 @@ enable_push()
 
 blurb_and_ask()
 {
-   cat <<EOF >&2
-The branch "${OBJC_BRANCH}" of "${OBJC_REPOS}"
-repositories from "${OBJC_REPOPREFIX}" will be cloned into "${MASTER_DIR}".
-The branch "${COMMON_BRANCH}" of "${COMMON_REPOS}"
-repositories from "${COMMON_REPOPREFIX}" will also be cloned into "${MASTER_DIR}".
-The branch "${EMBEDDED_BRANCH}" of "${EMBEDDED_REPOS}"
-repositories from "${EMBEDDED_REPOPREFIX}" will be cloned into "${CACHE_DIR}".
+   local old
 
-Then it will set them everything up in a convenient way using mulle-bootstrap.
+   old="${IFS}"
+   IFS="
+"
+   for repo in ${OBJC_REPOS}
+   do
+      echo "The branch \"${OBJC_BRANCH}\" of \"${repo}\" from \"${OBJC_REPOPREFIX}\" will be cloned into \"${MASTER_DIR}\"."
+   done
+   for repo in ${COMMON_REPOS}
+   do
+      echo "The branch \"${COMMON_BRANCH}\" of \"${repo}\" from \"${COMMON_REPOPREFIX}\" will be cloned into \"${MASTER_DIR}\"."
+   done
+   for repo in ${EMBEDDED_REPOS}
+   do
+      echo "The branch \"${EMBEDDED_BRANCH}\" of \"${repo}\" from \"${EMBEDDED_REPOPREFIX}\" will be cloned into \"${MASTER_DIR}\"."
+   done
+ 
+   cat <<EOF
+
+Then everything will be set up in a convenient way using mulle-bootstrap.
 
 Press [RETURN] to continue, [CTRL]-[C] to abort
 EOF
