@@ -37,7 +37,9 @@ usage:
    mulle-objc-init [options] [command]
 
    Options:
+      -b         : use MulleObjC as Foundation (default: MulleFoundation)
       -d <dir>   : use "dir" instead of working directory
+      --dev      : add conventional configurations for Foundation developers
       -f         : overwrite existing files
       -n         : don't actually do anything
 
@@ -83,13 +85,22 @@ compiler_setup()
 
 bootstrap_setup()
 {
-   if [ ! -e .bootstrap -o "${FLAG_FORCE}" = "YES" ]
+   if [ "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor rm -rf .bootstrap 2> /dev/null
+      exekutor rm -rf .bootstrap.local 2> /dev/null
+   fi
+
+   if [ ! -e .bootstrap  ]
    then
       exekutor mulle-bootstrap init -n
    fi
 
-   exekutor mulle-bootstrap setting -g -a repositories "${FOUNDATION_CLONE}"
-   exekutor mulle-bootstrap expansion -g MULLE_FOUNDATION_REPOSITORIES "${MULLE_FOUNDATION_REPOSITORIES}"
+   if [ -z "`mulle-bootstrap setting -g -r repositories`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r repositories "${FOUNDATION_CLONE}"
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} expansion -g FOUNDATION_REPOSITORIES "${FOUNDATION_REPOSITORIES}"
+   fi
 }
 
 
@@ -97,13 +108,53 @@ developer_setup()
 {
    if [ -z "`mulle-bootstrap config symlinks`" -o "${FLAG_FORCE}" = "YES" ]
    then
-      exekutor mulle-bootstrap config -y symlinks
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y symlinks
    fi
-   if [ -z "`mulle-bootstrap config symlinks`" -o "${FLAG_FORCE}" = "YES" ]
+   if [ -z "`mulle-bootstrap config embedded_symlinks`" -o "${FLAG_FORCE}" = "YES" ]
    then
-      exekutor mulle-bootstrap config -y embedded_symlinks
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y embedded_symlinks
    fi
 
+   if [ "${OPTION_FOUNDATION_DEVELOPER}" = "YES" ]
+   then
+      if [ -z "`mulle-bootstrap config dont_warn_scripts`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y dont_warn_scripts
+      fi
+
+      if [ -z "`mulle-bootstrap config embedded_symlinks`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y embedded_symlinks
+      fi
+
+      if [ -z "`mulle-bootstrap config override_branch`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config override_branch master
+      fi
+
+      if [ -z "`mulle-bootstrap config search_path`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         local search_path
+
+         search_path=""
+         if [ -d ../mulle-configuration ]
+         then
+            directory="`(cd .. ; pwd -P)`"
+            search_path="`add_path "${search_path}" "${directory}"`"
+         fi
+
+         if [ -d ../MulleObjC-master ]
+         then
+            directory="`(cd ../MulleObjC-master ; pwd -P)`"
+            search_path="`add_path "${search_path}" "${directory}"`"
+         fi
+
+         if [ ! -z "${search_path}" ]
+         then
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config search_path "${search_path}"
+         fi
+      fi
+   fi
 #   mulle-bootstrap config override_branch -master
 
    # if [ -z "`mulle-bootstrap config caches_path`" -o "${FLAG_FORCE}" = "YES" ]
@@ -133,8 +184,11 @@ developer_setup()
 
 configuration_setup()
 {
-   exekutor mulle-bootstrap setting -g -a embedded_repositories "${MULLE_CONFIGURATION_CLONE}"
-   exekutor mulle-bootstrap setting -g -a embedded_repositories "${MULLE_TESTS_CLONE}"
+   if [ -z "`mulle-bootstrap setting -g -r embedded_repositories`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r embedded_repositories "${MULLE_CONFIGURATION_CLONE}"
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r -a embedded_repositories "${MULLE_TESTS_CLONE}"
+   fi
 }
 
 
@@ -203,16 +257,20 @@ cmake_minimum_required( VERSION 3.0)
 
 project( ${PROJECT_NAME})
 
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/mulle-configuration)
+set( CMAKE_MODULE_PATH
+\${CMAKE_MODULE_PATH}
+"\${CMAKE_SOURCE_DIR}/mulle-configuration"
+)
 
 set( MULLE_LANGUAGE "ObjC")
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if( "\${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   include( Debug)
 else()
   include( Release)
 endif()
 
-find_library( FOUNDATION_LIBRARY   NAMES Foundation)
+find_library( FOUNDATION_LIBRARY NAMES ${FOUNDATION_LIBRARY_NAME})
+message( STATUS "FOUNDATION_LIBRARY \"${FOUNDATION_NAME}\" found as \${FOUNDATION_LIBRARY}")
 EOF
 }
 
@@ -223,17 +281,49 @@ emit_cmakelists_common_footer()
 }
 
 
+emit_include_directories()
+{
+   local nicey
+
+   nicey="`sed 's|/$||' <<< "${FILE_PREFIX}"`"
+   if [ ! -z "${nicey}" ]
+   then
+      cat <<EOF
+include_directories(
+${nicey}
+)
+
+EOF
+   fi
+}
+
+
+emit_sources_and_headers_library()
+{
+   emit_include_directories
+
+   cat <<EOF
+
+set( SOURCES
+"${FILE_PREFIX}file.m"
+)
+
+set( HEADERS
+"${FILE_PREFIX}file.h"
+)
+EOF
+}
+
+
 emit_cmakelists_library()
 {
    cat <<EOF
 
-SOURCES="
-${FILE_PREFIX}file.m
-"
+###
 
-HEADERS="
-${FILE_PREFIX}file.h
-"
+include( CMakeSourcesAndHeaders.txt)
+
+###
 
 add_library( "${PROJECT_NAME}"
 \${SOURCES}
@@ -250,11 +340,33 @@ EOF
 }
 
 
+emit_sources_and_headers_executable()
+{
+   emit_include_directories
+
+   cat <<EOF
+set( SOURCES
+${FILE_PREFIX}main.m
+)
+
+set( HEADERS
+)
+EOF
+}
+
+
 emit_cmakelists_executable()
 {
    cat <<EOF
+
+###
+
+include( CMakeSourcesAndHeaders.txt)
+
+###
+
 add_executable( "${PROJECT_NAME}"
-${FILE_PREFIX}main.m
+\${SOURCES}
 )
 
 target_link_libraries( "${PROJECT_NAME}"
@@ -269,9 +381,9 @@ EOF
 demo_h_file()
 {
    cat <<EOF
-#import <Foundation/Foundation.h>
+#import <${FOUNDATION_NAME}/${FOUNDATION_NAME}.h>
 
-@interface Foo
+@interface Foo : NSObject
 @end
 EOF
 }
@@ -297,11 +409,15 @@ EOF
 demo_main_m_file()
 {
    cat <<EOF
-#import <Foundation/Foundation.h>
+#import <${FOUNDATION_NAME}/${FOUNDATION_NAME}.h>
+
 
 int  main( int argc, char *argv[])
 {
-   NSLog( @"VfL Bochum 1848");
+#if defined( DEBUG) && defined( __MULLE_OBJC__)
+   mulle_objc_check_runtimewaitqueues();
+#endif
+   printf( "VfL Bochum 1848\n");
    return( 0);
 }
 EOF
@@ -344,7 +460,7 @@ demo_executable_files()
    if [ ! -e "src/main.m" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/main.m" demo_m_file
+      redirect_exekutor "src/main.m" demo_main_m_file
    fi
 }
 
@@ -363,6 +479,11 @@ library_setup()
       )`"
 
       redirect_exekutor CMakeLists.txt echo "${text}"
+   fi
+
+   if [ ! -f "CMakeSourcesAndHeaders.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor CMakeSourcesAndHeaders.txt emit_sources_and_headers_library
    fi
 
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
@@ -393,12 +514,14 @@ executable_setup()
       redirect_exekutor CMakeLists.txt echo "${text}"
    fi
 
+   if [ ! -f "CMakeSourcesAndHeaders.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor CMakeSourcesAndHeaders.txt emit_sources_and_headers_executable
+   fi
+
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
    then
-      if [ ! -d src ]
-      then
-         demo_executable_files
-      fi
+      demo_executable_files
    fi
 
    common_setup
@@ -420,6 +543,7 @@ setup_bootstrap_environment()
 
    . mulle-bootstrap-logging.sh
    . mulle-bootstrap-functions.sh
+   . mulle-bootstrap-local-environment.sh
 }
 
 
@@ -428,31 +552,59 @@ main()
 {
    setup_bootstrap_environment
 
+   # technical flags
+   local MULLE_FLAG_DONT_DEFER="NO"
+   local MULLE_FLAG_EXEKUTOR_DRY_RUN="NO"
+   local MULLE_FLAG_FOLLOW_SYMLINKS="YES"
+   local MULLE_FLAG_LOG_CACHE="NO"
+   local MULLE_FLAG_LOG_DEBUG="NO"
+   local MULLE_FLAG_LOG_EXEKUTOR="NO"
+   local MULLE_FLAG_LOG_FLUFF="NO"
+   local MULLE_FLAG_LOG_SCRIPTS="NO"
+   local MULLE_FLAG_LOG_SETTINGS="NO"
+   local MULLE_FLAG_LOG_VERBOSE="NO"
+   local MULLE_FLAG_MERGE_LOG="NO"
+   local MULLE_TRACE_PATHS_FLIP_X="NO"
+   local MULLE_TRACE_POSTPONE="NO"
+   local MULLE_TRACE_RESOLVER_FLIP_X="NO"
+   local MULLE_TRACE_SETTINGS_FLIP_X="NO"
+
    local FLAG_FORCE="NO"
    local FILE_PREFIX="src/"
    local FLAG_OUTPUT_DEMO_FILES="YES"
-   local MULLE_FLAG_EXECUTOR_DRY_RUN="NO"
+   local OPTION_FOUNDATION_DEVELOPER="NO"
 
    local directory
 
    directory="."
 
+
+   #
+   # allow these to be set via environment for now
+   #
    PROJECT_NAME="${PROJECT_NAME:-`basename -- $PWD`}"
-   MULLE_FOUNDATION_REPOSITORIES="https://github.com/mulle-nat"
-
-   DEFAULT_FOUNDATION_CLONE="\${MULLE_FOUNDATION_REPOSITORIES}/MulleFoundation;;\${MULLE_FOUNDATION_BRANCH:-release}"
-   DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${MULLE_FOUNDATION_REPOSITORIES}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
-   DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${MULLE_FOUNDATION_REPOSITORIES}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
-
-   FOUNDATION_CLONE="${FOUNDATION_CLONE:-${DEFAULT_FOUNDATION_CLONE}}"
-   MULLE_CONFIGURATION_CLONE="${MULLE_CONFIGURATION_CLONE:-${DEFAULT_MULLE_CONFIGURATION_CLONE}}"
-   MULLE_TESTS_CLONE="${MULLE_TESTS_CLONE:-${DEFAULT_MULLE_TESTS_CLONE}}"
+   FOUNDATION_REPOSITORIES="${FOUNDATION_REPOSITORIES:-https://github.com/mulle-nat}"
+   FOUNDATION_NAME="Foundation"
+   FOUNDATION_REPOSITORY_NAME="MulleFoundation"
+   FOUNDATION_LIBRARY_NAME="Foundation"
 
    while [ $# -ne 0 ]
    do
+      if bootstrap_technical_flags "$1"
+      then
+         shift
+         continue
+      fi
+
       case "$1" in
          -h|--help)
             usage
+         ;;
+
+         -b|--basic)
+            FOUNDATION_NAME="MulleObjC"
+            FOUNDATION_REPOSITORY_NAME="MulleObjC"
+            FOUNDATION_LIBRARY_NAME="MulleObjCStandalone"
          ;;
 
          -d|--directory)
@@ -475,10 +627,9 @@ main()
             FLAG_OUTPUT_DEMO_FILES="NO"
          ;;
 
-         -t|--trace)
-            set -x
+         --dev)
+            OPTION_FOUNDATION_DEVELOPER="YES"
          ;;
-
          -*)
             usage
          ;;
@@ -492,6 +643,19 @@ main()
    done
 
    [ $# -eq 0 ] && usage
+
+   bootstrap_setup_trace "${MULLE_TRACE}"
+
+   local UPCASE_FOUNDATION_NAME
+
+   UPCASE_FOUNDATION_NAME="`tr '[a-z]' '[A-Z]' <<< "${FOUNDATION_REPOSITORY_NAME}"`"
+   DEFAULT_FOUNDATION_CLONE="\${FOUNDATION_REPOSITORIES}/${FOUNDATION_REPOSITORY_NAME};;\${${UPCASE_FOUNDATION_NAME}_BRANCH:-release}"
+   DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${FOUNDATION_REPOSITORIES}}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
+   DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${FOUNDATION_REPOSITORIES}}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
+
+   FOUNDATION_CLONE="${FOUNDATION_CLONE:-${DEFAULT_FOUNDATION_CLONE}}"
+   MULLE_CONFIGURATION_CLONE="${MULLE_CONFIGURATION_CLONE:-${DEFAULT_MULLE_CONFIGURATION_CLONE}}"
+   MULLE_TESTS_CLONE="${MULLE_TESTS_CLONE:-${DEFAULT_MULLE_TESTS_CLONE}}"
 
    case "${1}" in
       check)
