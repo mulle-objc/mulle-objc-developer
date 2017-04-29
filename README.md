@@ -7,7 +7,8 @@
 
 This project packages all items together into a single homebrew formula.
 
-This is also the goto project for [issues on GitHub](https://github.com/mulle-objc/mulle-objc-developer/issues),
+This is also the goto project for
+[issues on GitHub](https://github.com/mulle-objc/mulle-objc-developer/issues),
 that don't match any of the other projects or where it's unclear where they
 belong.
 
