@@ -1,5 +1,13 @@
 #! /bin/sh
 
+TAP="${1:-software}"
+[ $# -ne 0 ] && shift
+BRANCH="${1:-release}"
+[ $# -ne 0 ] && shift
+TAG="${1:-`head -1 VERSION`}"
+[ $# -ne 0 ] && shift
+
+
 PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
 DEPENDENCIES='${DEPENDENCY_TAP}/mulle-allocator
@@ -12,7 +20,6 @@ ${DEPENDENCY_TAP}/mulle-objc-runtime
 ${DEPENDENCY_TAP}/MulleObjC
 codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
 LANGUAGE=c                            # c,cpp, objc
-VERSION="`head -1 VERSION`"
 
 #
 # Ideally you don't hafta change anything below this line
@@ -56,15 +63,12 @@ HOMEPAGE="${REMOTEURL}/${NAME}"
 # Specify to where and under what bame to publish via your brew tap
 #
 RBFILE="${NAME}.rb"                    # ruby file for brew
-HOMEBREWTAP="../homebrew-software"     # your tap repository path
+HOMEBREWTAP="../homebrew-${TAP}"     # your tap repository path
 
 
 # --- GIT ---
 # tag to tag your release
 # and the origin where
-TAG="${1:-${TAGPREFIX}${VERSION}}"
-
-[ -z "${VERSION}" ] && fail "VERSION is empty"
 
 main()
 {
