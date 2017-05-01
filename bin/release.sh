@@ -40,11 +40,14 @@ do
    esac
 done
 
+VERSION="`head -1 VERSION`"
+
+
 TAP="${1:-software}"
 [ $# -ne 0 ] && shift
 BRANCH="${1:-release}"
 [ $# -ne 0 ] && shift
-TAG="${1:-`head -1 VERSION`}"
+TAG="${1:-${TAG}}"
 [ $# -ne 0 ] && shift
 
 
