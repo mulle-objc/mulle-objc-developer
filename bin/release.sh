@@ -31,7 +31,11 @@ MULLE_BOOTSTRAP_FAIL_PREFIX="release.sh"
 DIR="`dirname -- "$0"`"
 . ${DIR}/mulle-homebrew/mulle-homebrew.sh || exit 1
 
-VERSION="`head -1 "${DIR}/../VERSION"`"
+# into project directory
+cd "${DIR}/.."
+
+VERSION="`head -1 "VERSION"`"
+[ -z "${VERSION}" ] && echo "Can't find VERSION in $PWD" && exit 1
 
 
 # parse options
@@ -66,7 +70,7 @@ HOMEPAGE="${REMOTEURL}/${NAME}"
 # Specify to where and under what bame to publish via your brew tap
 #
 RBFILE="${NAME}.rb"                    # ruby file for brew
-HOMEBREWTAP="${DIR}/../../homebrew-`basename -- ${PUBLISHER_TAP}`"     # your tap repository path
+HOMEBREWTAP="../homebrew-`basename -- ${PUBLISHER_TAP}`"     # your tap repository path
 
 
 # ARCHIVEURL will be evaled later! keep it in single quotes
