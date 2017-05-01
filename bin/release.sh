@@ -3,16 +3,24 @@
 
 PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
-DEPENDENCIES='${DEPENDENCY_TAP}/mulle-allocator
-${DEPENDENCY_TAP}/mulle-c11
-${DEPENDENCY_TAP}/mulle-concurrent
-${DEPENDENCY_TAP}/mulle-container
-${DEPENDENCY_TAP}/mulle-vararg
-${DEPENDENCY_TAP}/mulle-thread
-${DEPENDENCY_TAP}/mulle-objc-runtime
-${DEPENDENCY_TAP}/MulleObjC
+DEPENDENCIES='${DEPENDENCY_TAP}mulle-allocator
+${DEPENDENCY_TAP}mulle-c11
+${DEPENDENCY_TAP}mulle-concurrent
+${DEPENDENCY_TAP}mulle-container
+${DEPENDENCY_TAP}mulle-vararg
+${DEPENDENCY_TAP}mulle-thread
+${DEPENDENCY_TAP}mulle-objc-runtime
+${DEPENDENCY_TAP}MulleObjC
 codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
 LANGUAGE=c                            # c,cpp, objc
+
+
+# defaults that can be changed with options
+PUBLISHER="mulle-nat"
+PUBLISHER_TAP="mulle-kybernetik/software/"
+DEPENDENCY_TAP="mulle-kybernetik/software/"
+BOOTSTRAP_TAP="mulle-kybernetik/alpha/"
+
 
 #
 # Ideally you don't hafta change anything below this line
@@ -20,8 +28,10 @@ LANGUAGE=c                            # c,cpp, objc
 # source mulle-homebrew.sh (clumsily)
 MULLE_BOOTSTRAP_FAIL_PREFIX="release.sh"
 
-. ./bin/repository-info.sh || exit 1
-. ./bin/mulle-homebrew/mulle-homebrew.sh || exit 1
+DIR="`dirname -- "$0"`"
+. ${DIR}/mulle-homebrew/mulle-homebrew.sh || exit 1
+
+VERSION="`head -1 "${DIR}/../VERSION"`"
 
 
 # parse options
@@ -34,21 +44,12 @@ do
       -*)
          shift
       ;;
+
       *)
          break;
       ;;
    esac
 done
-
-VERSION="`head -1 VERSION`"
-
-
-TAP="${1:-software}"
-[ $# -ne 0 ] && shift
-BRANCH="${1:-release}"
-[ $# -ne 0 ] && shift
-TAG="${1:-${VERSION}}"
-[ $# -ne 0 ] && shift
 
 
 #
@@ -56,23 +57,35 @@ TAG="${1:-${VERSION}}"
 #
 NAME="`get_name_from_project "${PROJECT}" "${LANGUAGE}"`"
 
-
 # --- HOMEBREW FORMULA ---
 # Information needed to construct a proper brew formula
 #
 HOMEPAGE="${REMOTEURL}/${NAME}"
 
-
 # --- HOMEBREW TAP ---
 # Specify to where and under what bame to publish via your brew tap
 #
 RBFILE="${NAME}.rb"                    # ruby file for brew
-HOMEBREWTAP="../homebrew-${TAP}"     # your tap repository path
+HOMEBREWTAP="${DIR}/../../homebrew-`basename -- ${PUBLISHER_TAP}`"     # your tap repository path
+
+
+# ARCHIVEURL will be evaled later! keep it in single quotes
+# where homebrew grabs the archive off
+ARCHIVEURL="https://github.com/mulle-nat/${NAME}/archive/${VERSION}.tar.gz"
+
+# written into formula for homebrew, will be evaled
+HOMEPAGE="https://github.com/${PUBLISHER}/${NAME}"
+
+# git remote to push to, usually origin
+ORIGIN='origin'
+
 
 
 # --- GIT ---
 # tag to tag your release
 # and the origin where
+TAG="${TAG:-${VERSION}}"
+
 
 main()
 {
