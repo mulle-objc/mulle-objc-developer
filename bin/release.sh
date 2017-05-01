@@ -47,7 +47,7 @@ TAP="${1:-software}"
 [ $# -ne 0 ] && shift
 BRANCH="${1:-release}"
 [ $# -ne 0 ] && shift
-TAG="${1:-${TAG}}"
+TAG="${1:-${VERSION}}"
 [ $# -ne 0 ] && shift
 
 
