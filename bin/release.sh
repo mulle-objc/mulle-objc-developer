@@ -1,12 +1,5 @@
 #! /bin/sh
 
-TAP="${1:-software}"
-[ $# -ne 0 ] && shift
-BRANCH="${1:-release}"
-[ $# -ne 0 ] && shift
-TAG="${1:-`head -1 VERSION`}"
-[ $# -ne 0 ] && shift
-
 
 PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
@@ -46,6 +39,14 @@ do
       ;;
    esac
 done
+
+TAP="${1:-software}"
+[ $# -ne 0 ] && shift
+BRANCH="${1:-release}"
+[ $# -ne 0 ] && shift
+TAG="${1:-`head -1 VERSION`}"
+[ $# -ne 0 ] && shift
+
 
 #
 # these can usually be deduced, if you follow the conventions
