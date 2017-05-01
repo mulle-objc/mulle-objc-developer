@@ -89,6 +89,7 @@ TAG="${TAG:-${VERSION}}"
 
 main()
 {
+   cd "${DIR}/.."
    git_main "${ORIGIN}" "${TAG}" || exit 1
    homebrew_main
 }
