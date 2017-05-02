@@ -3,7 +3,7 @@
 
 PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
-DEPENDENCIES='${BOOTSTRAP_TAP}mulle-boostrap
+DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
 ${BOOTSTRAP_TAP}mulle-build
 codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
 LANGUAGE=c                            # c,cpp, objc
