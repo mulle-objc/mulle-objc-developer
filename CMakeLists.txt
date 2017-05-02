@@ -3,7 +3,8 @@ cmake_minimum_required (VERSION 3.0)
 project (mulle-objc-developer)
 
 set(SCRIPTS
-mulle-objc-clone.sh
+mulle-objc-clone
+mulle-objc-init
 )
 
 INSTALL( FILES ${SCRIPTS}
