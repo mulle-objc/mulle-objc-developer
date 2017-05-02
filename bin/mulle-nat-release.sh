@@ -3,7 +3,7 @@
 
 TAPNAME="${1:-software}"
 [ $# -ne 0 ] && shift
-BRANCH="{$1:-release}"
+BRANCH="${1:-release}"
 [ $# -ne 0 ] && shift
 
 DIR="`dirname -- "$0"`"

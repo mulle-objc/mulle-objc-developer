@@ -75,6 +75,7 @@ HOMEPAGE="https://github.com/${PUBLISHER}/${NAME}"
 # git remote to push to, usually origin
 ORIGIN='origin'
 
+BRANCH="${BRANCH:-release}"
 
 
 # --- GIT ---
@@ -85,7 +86,7 @@ TAG="${TAG:-${VERSION}}"
 
 main()
 {
-   git_main "${ORIGIN}" "${TAG}" || exit 1
+   git_main "${BRANCH}" "${ORIGIN}" "${TAG}" || exit 1
    homebrew_main
 }
 
