@@ -213,10 +213,10 @@ This is a [mulle-objc](${MULLE_OBJC_REPOSITORIES}) project.
 Install
 [mulle-objc-developer](${MULLE_OBJC_REPOSITORIES}/mulle-objc-developer).
 
-This will give your the **mulle-clang** compiler and the **mulle-objc**
-libraries that are necessary to build this project as well as
+This will give your the **mulle-clang** compiler that is necessary to build
+this project as well as
 [mulle-bootstrap](https://github.com/mulle-nat/mulle-bootstrap)
-to manage the projects dependencies.
+to build the projects dependencies.
 
 
 ### Install Prequisites on OS X:
@@ -226,6 +226,13 @@ Get [homebrew](https://brew.sh) then
 \`\`\`
 brew install ${MULLE_OBJC_TAP}mulle-objc-developer
 mulle-bootstrap
+\`\`\`
+
+
+### Use **mulle-build** to build project
+
+\`\`\`
+mulle-build
 \`\`\`
 
 
@@ -255,25 +262,6 @@ cd build-vs.d
 cmake -G "Visual Studio 12" ..
 msbuild
 \`\`\`
-
-## Avoiding duplicate compiler installs
-
-If you already have the **mulle-clang** compiler installed, you should edit
-the file \`.bootstrap/repositories\` and change the line
-
-\`\${MULLE_OBJC_REPOSITORIES}/mulle-objc-developer;;\${${UPCASE_MULLE_OBJC_NAME}_BRANCH:-release}\`
-
-to
-
-\`\${MULLE_OBJC_REPOSITORIES}/MulleObjC;;\${MULLE_OBJC_BRANCH:-release}\`
-
-## Installing the compiler system-wide
-
-Check the [mulle-clang](https://github.com/codeon-gmbh/mulle-clang) homepage
-how to install **mulle-clang** on your system.
-
-> On OS X you can install the compiler system-wide with
-> \`brew install codeon-gmbh/software/mulle-clang\`
 
 EOF
 }
@@ -734,7 +722,7 @@ main()
    MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
 
    MULLE_OBJC_NAME="MulleObjC"
-   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="mulle-objc-developer"
+   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="MulleObjC"
    MULLE_OBJC_LIBRARY_NAME="MulleObjCStandalone"
 
    while [ $# -ne 0 ]

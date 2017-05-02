@@ -3,14 +3,8 @@
 
 PROJECT="MulleObjcDeveloper" # requires camel-case
 DESC="mulle-objc Developer Environment"
-DEPENDENCIES='${DEPENDENCY_TAP}mulle-allocator
-${DEPENDENCY_TAP}mulle-c11
-${DEPENDENCY_TAP}mulle-concurrent
-${DEPENDENCY_TAP}mulle-container
-${DEPENDENCY_TAP}mulle-vararg
-${DEPENDENCY_TAP}mulle-thread
-${DEPENDENCY_TAP}mulle-objc-runtime
-${DEPENDENCY_TAP}MulleObjC
+DEPENDENCIES='${BOOTSTRAP_TAP}mulle-boostrap
+${BOOTSTRAP_TAP}mulle-build
 codeon-gmbh/software/mulle-clang'     # no camel case, will be evaled later!
 LANGUAGE=c                            # c,cpp, objc
 
@@ -30,8 +24,6 @@ MULLE_BOOTSTRAP_FAIL_PREFIX="release.sh"
 
 DIR="`dirname -- "$0"`"
 . ${DIR}/mulle-homebrew/mulle-homebrew.sh || exit 1
-
-# into project directory
 cd "${DIR}/.."
 
 VERSION="`head -1 "VERSION"`"
