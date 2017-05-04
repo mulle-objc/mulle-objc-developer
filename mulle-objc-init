@@ -370,6 +370,7 @@ set( SOURCES
 
 set( HEADERS
 "${FILE_PREFIX}file.h"
+"${FILE_PREFIX}version.h"
 )
 EOF
 }
@@ -454,10 +455,41 @@ EOF
 }
 
 
-demo_h_file()
+demo_version_h()
+{
+   cat <<EOF
+/*
+ *  version:  major, minor, patch
+ */
+#define ${PROJECT_IDENTIFIER}_VERSION  ((0 << 20) | (0 << 8) | 0)
+
+
+static inline unsigned int    get_version_major( void)
+{
+   return( ${PROJECT_IDENTIFIER}_VERSION >> 20);
+}
+
+
+static inline unsigned int    get_version_minor( void)
+{
+   return( (${PROJECT_IDENTIFIER}_VERSION >> 8) & 0xFFF);
+}
+
+
+static inline unsigned int    get_version_patch( void)
+{
+   return( ${PROJECT_IDENTIFIER}_VERSION & 0xFF);
+}
+
+EOF
+}
+
+
+demo_file_h()
 {
    cat <<EOF
 #import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
+#import "version.h"
 
 @interface Foo : NSObject
 @end
@@ -465,7 +497,7 @@ EOF
 }
 
 
-demo_m_file()
+demo_file_m()
 {
    cat <<EOF
 #import "foo.h"
@@ -482,10 +514,11 @@ EOF
 }
 
 
-demo_main_m_file()
+demo_main_m()
 {
    cat <<EOF
 #import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
+#import "version.h"
 EOF
 
    if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
@@ -570,16 +603,22 @@ demo_library_files()
       mkdir_if_missing "src"
    fi
 
+   if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/version.h" demo_version_h
+   fi
+
    if [ ! -e "src/file.h" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/file.h" demo_h_file
+      redirect_exekutor "src/file.h" demo_file_h
    fi
 
    if [ ! -e "src/file.m" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/file.m" demo_m_file
+      redirect_exekutor "src/file.m" demo_file_m
    fi
 }
 
@@ -591,10 +630,16 @@ demo_executable_files()
       redirect_exekutor README.md emit_readme_md
    fi
 
+   if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/version.h" demo_version_h
+   fi
+
    if [ ! -e "src/main.m" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/main.m" demo_main_m_file
+      redirect_exekutor "src/main.m" demo_main_m
    fi
 }
 
@@ -694,10 +739,10 @@ main()
    local MULLE_FLAG_LOG_DEBUG="NO"
    local MULLE_FLAG_LOG_EXEKUTOR="NO"
    local MULLE_FLAG_LOG_FLUFF="NO"
+   local MULLE_FLAG_LOG_MERGE="NO"
    local MULLE_FLAG_LOG_SCRIPTS="NO"
    local MULLE_FLAG_LOG_SETTINGS="NO"
    local MULLE_FLAG_LOG_VERBOSE="NO"
-   local MULLE_FLAG_MERGE_LOG="NO"
    local MULLE_TRACE_PATHS_FLIP_X="NO"
    local MULLE_TRACE_POSTPONE="NO"
    local MULLE_TRACE_RESOLVER_FLIP_X="NO"
@@ -718,6 +763,8 @@ main()
    # allow these to be set via environment for now
    #
    PROJECT_NAME="${PROJECT_NAME:-`basename -- $PWD`}"
+   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
+
    MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/mulle-nat}"
    MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
 
