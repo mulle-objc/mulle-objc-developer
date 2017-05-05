@@ -37,9 +37,10 @@
 #   ./bin/release.sh --publisher mulle-nat --publisher-tap mulle-kybernetik/alpha/
 #
 
-PROJECT="MulleObjcDeveloper" # requires camel-case
+PROJECT="MulleObjcDeveloper"      # your project name, requires camel-case
 DESC="mulle-objc Developer Environment"
-LANGUAGE=bash                            # c,cpp, objc
+LANGUAGE="bash"             # c,cpp, objc, bash ...
+
 
 #
 # Keep these commented out, if the automatic detection works well
@@ -77,6 +78,7 @@ generate_brew_formula_build()
    local version="$3"
 
    generate_brew_formula_mulle_build "${project}" "${name}" "${version}"
+   generate_brew_formula_mulle_test  "${project}" "${name}" "${version}"
 }
 
 
@@ -104,11 +106,19 @@ generate_brew_formula()
 #######
 
 MULLE_BOOTSTRAP_FAIL_PREFIX="`basename -- $0`"
+MULLE_HOMEBREW_VERSION="3.0.2"
 
-LIBEXEC_DIR="`mulle-homebrew-path --libexec-path`" || exit 1
+INSTALLED_MULLE_HOMEBREW_VERSION="`mulle-homebrew-env version`" || exit 1
+LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
 
 . "${LIBEXEC_DIR}/mulle-homebrew.sh" || exit 1
 . "${LIBEXEC_DIR}/mulle-git.sh"      || exit 1
+
+if ! homebrew_is_compatible_version "${INSTALLED_MULLE_HOMEBREW_VERSION}" "${MULLE_HOMEBREW_VERSION}"
+then
+   fail "Installed mulle-homebrew version ${INSTALLED_MULLE_HOMEBREW_VERSION} is \
+not compatible with this script from version ${MULLE_HOMEBREW_VERSION}"
+fi
 
 # parse options
 homebrew_parse_options "$@"
@@ -184,16 +194,16 @@ then
    fail "you need to specify a publisher tap with --publisher-tap (hint: <mulle-kybernetik/software/>)"
 fi
 
-HOMEBREW_PARENT_PATH=".."
+TAPS_LOCATION="${TAPS_LOCATION:-..}"
 
-HOMEBREW_TAP="${HOMEBREW_PARENT_PATH}/homebrew-`basename -- ${PUBLISHER_TAP}`"
+HOMEBREW_TAP="${HOMEBREW_TAP:-${TAPS_LOCATION}/homebrew-`basename -- ${PUBLISHER_TAP}`}"
 
 RBFILE="${RBFILE:-${NAME}.rb}"
 
 # --- GIT ---
 
 #
-# require PUBLISHER and PUBLISHER_TAP as command line parameters, so
+# require PUBLISHER (and PUBLISHER_TAP) as command line parameter, so
 # that forks don't have to edit this constantly
 #
 if [ -z "${PUBLISHER}" ]
@@ -215,10 +225,12 @@ GITHUB="${GITHUB:-github}"
 BRANCH="${BRANCH:-release}"
 
 
-
 main()
 {
+   # do the release
    git_main "${BRANCH}" "${ORIGIN}" "${TAG}" "${GITHUB}" || exit 1
+
+   # generate the formula and push it
    homebrew_main "${PROJECT}" \
                  "${NAME}" \
                  "${VERSION}" \
