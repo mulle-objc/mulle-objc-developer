@@ -37,7 +37,7 @@ MULLE_BUILD_MIN_MINOR="3"
 usage()
 {
    cat <<EOF >&2
-usage: mulle-xcode-clone [options]
+usage: mulle-objc-clone [options]
 
    Options
       -a   : don't ask
@@ -167,6 +167,7 @@ mulle-thread
 mulle-vararg'
 
 OBJC_REPOS='mulle-objc-runtime
+mulle-objc-list
 MulleObjC'
 
 REPOS="${COMMON_REPOS}

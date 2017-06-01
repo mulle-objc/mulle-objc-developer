@@ -55,13 +55,17 @@ LANGUAGE="bash"             # c,cpp, objc, bash ...
 #
 # Use the ${DEPENDENCY_TAP} prefix for non-official dependencies.
 #
+# DEPENDENCIES='${DEPENDENCY_TAP}mulle-concurrent
+# libpng
+# '
+
 DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
 ${BOOTSTRAP_TAP}mulle-build
 codeon-gmbh/software/mulle-clang'
 
 BUILD_DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
 ${BOOTSTRAP_TAP}mulle-build
-cmake'  # cmake would be useful to, if you are cmake based!
+'
 
 
 #######
@@ -106,7 +110,24 @@ generate_brew_formula()
 #######
 
 MULLE_BOOTSTRAP_FAIL_PREFIX="`basename -- $0`"
-MULLE_HOMEBREW_VERSION="3.0.2"
+MULLE_HOMEBREW_VERSION="3.4.5"
+
+EXEC_DIR="`dirname -- $0`"
+
+#
+# prefer local mulle-homebrew if available
+#
+if [ -x "${EXEC_DIR}/mulle-homebrew/mulle-homebrew-env" ]
+then
+   PATH="${EXEC_DIR}/mulle-homebrew:$PATH"
+fi
+
+if [ -z "`command -v mulle-homebrew-env`" ]
+then
+   echo "mulle-homebrew-env not found in PATH" >&2
+   exit 1
+fi
+
 
 INSTALLED_MULLE_HOMEBREW_VERSION="`mulle-homebrew-env version`" || exit 1
 LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
@@ -208,9 +229,13 @@ RBFILE="${RBFILE:-${NAME}.rb}"
 #
 if [ -z "${PUBLISHER}" ]
 then
-   fail "you need to specify a publisher with --publisher (hint: https://github.com/<publisher>)"
+   fail "You need to specify a publisher with --publisher (hint: https://github.com/<publisher>)"
 fi
 
+if [ -z "${VERSION}" ]
+then
+   fail "Could not figure out the version. (hint: check VERSIONNAME, VERSIONFILE)"
+fi
 
 # tag to tag your release
 TAG="${TAG:-${TAG_PREFIX}${VERSION}}"
