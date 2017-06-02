@@ -1,3 +1,8 @@
+0.8.3
+===
+
+* forgot cmake dependency
+
 0.5.1
 ====
 

@@ -65,7 +65,7 @@ codeon-gmbh/software/mulle-clang'
 
 BUILD_DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
 ${BOOTSTRAP_TAP}mulle-build
-'
+cmake'
 
 
 #######
