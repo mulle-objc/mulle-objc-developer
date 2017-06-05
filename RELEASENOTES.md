@@ -1,3 +1,10 @@
+0.8.5
+===
+
+* added install_ubuntu.sh
+* fixed .bootstrap repository dependency on mulle-homebrew
+
+
 0.8.3
 ===
 

@@ -5,12 +5,18 @@
 ![GitHub release](https://img.shields.io/github/release/mulle-nat/mulle-objc-developer.svg)
 
 
-This project packages all items together into a single homebrew formula.
+This project installs all required items together into a single formula and
+supplies you with a script `mulle-objc-init` to setup your own *mulle-objc*
+projects.
 
 This is also the goto project for
 [issues on GitHub](https://github.com/mulle-objc/mulle-objc-developer/issues),
 that don't match any of the other projects or where it's unclear where they
 belong.
+
+## Installation
+
+### Install on OS X
 
 You install **mulle-objc-developer** with [brew](//brew.sh):
 
@@ -18,11 +24,53 @@ You install **mulle-objc-developer** with [brew](//brew.sh):
 brew install mulle-kybernetik/software/mulle-objc-developer
 ```
 
-This will install the necessary **mulle-objc** packages to write
-Objective-C code and the [mulle-clang](//github.com/codeon-gmbh/mulle-clang)
-compiler.
+This will install the [mulle-clang](//github.com/codeon-gmbh/mulle-clang)
+compiler and some necessary scripts .
 
 > See [mulle-objc Community](//mulle-objc.github.io) for more information.
+
+
+### Install on Unbuntu Linux
+
+This methods works for **trusty**, **xenial** and **zesty**:
+
+```
+curl -L -O 'https://raw.githubusercontent.com/mulle-nat/MulleObjC/release/install-ubuntu.sh'
+chmod 755 install-ubuntu.sh
+sudo ./install-ubuntu.sh
+```
+
+
+## mulle-objc-init
+
+Try
+
+```
+mulle-objc-init -d /tmp/demo executable
+cd /tmp/demo
+mulle-build --bootstrap
+./build/demo
+```
+
+to get a hello world with MulleObjC program going.
+
+
+```
+usage:
+   mulle-objc-init [options] [command]
+
+   Options:
+      -d <dir>   : use "dir" instead of working directory
+      --dev      : add conventional configurations for MulleObjC developers
+      -f         : overwrite existing files
+      -n         : don't actually do anything
+
+   Command:
+      check      : check current project
+      library    : create a mulle-objc library project
+      executable : create a mulle-objc executable project
+```
+
 
 
 ## Xcode integration

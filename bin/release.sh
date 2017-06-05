@@ -46,8 +46,8 @@ LANGUAGE="bash"             # c,cpp, objc, bash ...
 # Keep these commented out, if the automatic detection works well
 # enough for you
 #
-# VERSIONFILE=
-# VERSIONNAME=
+VERSIONFILE=mulle-objc-init
+VERSIONNAME=MULLE_OBJC_DEVELOPER_VERSION
 
 #
 # Specify needed homebrew packages by name as you would when saying

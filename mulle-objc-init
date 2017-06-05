@@ -29,6 +29,8 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 #
+MULLE_OBJC_DEVELOPER_VERSION=0.8.5
+
 
 usage()
 {
@@ -44,8 +46,9 @@ usage:
 
    Command:
       check      : check current project
-      library    : create a mulle-objc library project
       executable : create a mulle-objc executable project
+      library    : create a mulle-objc library project
+      version    : print mulle-objc-developer version
 EOF
    exit 1
 }
@@ -863,6 +866,11 @@ main()
          mkdir_if_missing "${directory}"
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          executable_setup
+      ;;
+
+      version)
+         echo "${MULLE_OBJC_DEVELOPER_VERSION}"
+         exit 0
       ;;
 
       *)
