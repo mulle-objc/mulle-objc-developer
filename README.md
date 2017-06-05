@@ -106,7 +106,7 @@ your machine.
 This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
 
 ```
-brew install mulle-kybernetik/alpha/mulle-build
+brew install mulle-kybernetik/software/mulle-build
 ```
 
 Now run `mulle-objc-clone`
