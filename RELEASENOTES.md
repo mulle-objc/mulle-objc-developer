@@ -1,3 +1,9 @@
+0.8.9
+===
+
+* add --cache option, mostly for WSL/bash to speed things up a bit
+
+
 0.8.5
 ===
 

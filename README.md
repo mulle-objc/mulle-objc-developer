@@ -30,7 +30,7 @@ compiler and some necessary scripts .
 > See [mulle-objc Community](//mulle-objc.github.io) for more information.
 
 
-### Install on Unbuntu Linux
+### Install on Unbuntu Linux and WSL/bash
 
 This methods works for **trusty**, **xenial** and **zesty**:
 
@@ -43,16 +43,24 @@ sudo ./install-ubuntu.sh
 
 ## mulle-objc-init
 
-Try
+Use `mulle-objc-init` to prepare the development environment, to get a hello
+world with MulleObjC program going. This will download and compile quite a
+few dependencies.
+
 
 ```
-mulle-objc-init -d /tmp/demo executable
+mulle-objc-init --cache -d /tmp/demo executable
 cd /tmp/demo
 mulle-build --bootstrap
+```
+
+Now run your Objective-C executable:
+
+```
 ./build/demo
 ```
 
-to get a hello world with MulleObjC program going.
+### mulle-objc-init usage
 
 
 ```

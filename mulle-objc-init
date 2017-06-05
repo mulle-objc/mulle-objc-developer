@@ -29,7 +29,7 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 #
-MULLE_OBJC_DEVELOPER_VERSION=0.8.7
+MULLE_OBJC_DEVELOPER_VERSION=0.8.3
 
 
 usage()
@@ -41,6 +41,7 @@ usage:
    Options:
       -d <dir>   : use "dir" instead of working directory
       --dev      : add conventional configurations for MulleObjC developers
+      --cache    : cache downloaded git repositories
       -f         : overwrite existing files
       -n         : don't actually do anything
 
@@ -95,13 +96,30 @@ bootstrap_setup()
 
    if [ ! -e .bootstrap  ]
    then
-      exekutor mulle-bootstrap init -n
+      exekutor mulle-bootstrap -s init -n
    fi
 
    if [ -z "`mulle-bootstrap setting -g -r repositories`" -o "${FLAG_FORCE}" = "YES" ]
    then
       exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r repositories "${MULLE_OBJC_CLONE}"
       exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} expansion -g MULLE_OBJC_REPOSITORIES "${MULLE_OBJC_REPOSITORIES}"
+   fi
+}
+
+
+cache_setup()
+{
+   if [ "${OPTION_CACHE_CLONES}" = "YES" ]
+   then
+      case "${UNAME}" in
+         darwin)
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -u "clone_cache" "${HOME}/Library/Caches/mulle-bootstrap/clones"
+         ;;
+
+         *)
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -u "clone_cache" "${HOME}/.cache/mulle-bootstrap/clones"
+         ;;
+      esac
    fi
 }
 
@@ -198,6 +216,7 @@ common_setup()
 {
    bootstrap_setup
    compiler_setup
+   cache_setup
    developer_setup
    configuration_setup
 }
@@ -441,12 +460,14 @@ target_link_libraries( "${PROJECT_NAME}"
 \${BEGIN_ALL_LOAD}
 \${LIBRARIES}
 \${END_ALL_LOAD}
+\${OS_SPECIFIC_LIBRARIES}
 )
 EOF
    else
       cat <<EOF
 target_link_libraries( "${PROJECT_NAME}"
 \${LIBRARIES}
+\${OS_SPECIFIC_LIBRARIES}
 )
 EOF
    fi
@@ -756,6 +777,7 @@ main()
    local FLAG_OUTPUT_DEMO_FILES="YES"
    local OPTION_MULLE_OBJC_DEVELOPER="NO"
    local OPTION_STATIC_MULLE_OBJC="NO"
+   local OPTION_CACHE_CLONES="NO"
 
    local directory
 
@@ -772,6 +794,7 @@ main()
    MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
 
    MULLE_OBJC_NAME="MulleObjC"
+   UPCASE_MULLE_OBJC_NAME="MULLE_OBJC"
    MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="MulleObjC"
    MULLE_OBJC_LIBRARY_NAME="MulleObjCStandalone"
 
@@ -808,6 +831,10 @@ main()
             FLAG_OUTPUT_DEMO_FILES="NO"
          ;;
 
+         --cache)
+            OPTION_CACHE_CLONES="YES"
+         ;;
+
          --dev)
             OPTION_MULLE_OBJC_DEVELOPER="YES"
          ;;
@@ -838,9 +865,6 @@ main()
    # MulleObjC
    # There will be a mulle-foundation-init later
    #
-   local UPCASE_MULLE_OBJC_NAME
-
-   UPCASE_MULLE_OBJC_NAME="`tr '[a-z]' '[A-Z]' <<< "${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME}" | tr '-' '_'`"
    DEFAULT_MULLE_OBJC_CLONE="\${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME};;\${${UPCASE_MULLE_OBJC_NAME}_BRANCH:-release}"
    DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
    DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
