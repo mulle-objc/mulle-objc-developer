@@ -35,7 +35,7 @@ compiler and some necessary scripts .
 This methods works for **trusty**, **xenial** and **zesty**:
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-nat/MulleObjC/release/install-ubuntu.sh'
+curl -L -O 'https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh'
 chmod 755 install-ubuntu.sh
 sudo ./install-ubuntu.sh
 ```
@@ -67,11 +67,10 @@ usage:
 
    Command:
       check      : check current project
-      library    : create a mulle-objc library project
       executable : create a mulle-objc executable project
+      library    : create a mulle-objc library project
+      version    : print mulle-objc-developer version
 ```
-
-
 
 ## Xcode integration
 
