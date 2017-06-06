@@ -1,0 +1,935 @@
+#! /usr/bin/env bash
+#
+#   Copyright (c) 2017 Nat! - Mulle kybernetiK
+#   All rights reserved.
+#
+#   Redistribution and use in source and binary forms, with or without
+#   modification, are permitted provided that the following conditions are met:
+#
+#   Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#   Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#   Neither the name of Mulle kybernetiK nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#   POSSIBILITY OF SUCH DAMAGE.
+#
+MULLE_OBJC_DEVELOPER_VERSION=0.8.3
+
+PUBLISHER=mulle-nat
+
+
+usage()
+{
+   cat <<EOF >&2
+usage:
+   mulle-objc-init [options] [command]
+
+   Options:
+      -d <dir>   : use "dir" instead of working directory
+      --dev      : add conventional configurations for MulleObjC developers
+      --cache    : cache downloaded git repositories
+      -f         : overwrite existing files
+      -n         : don't actually do anything
+
+   Command:
+      check      : check current project
+      executable : create a mulle-objc executable project
+      library    : create a mulle-objc library project
+      version    : print mulle-objc-developer version
+EOF
+   exit 1
+}
+
+
+sanity_check()
+{
+   local library_path
+
+   library_path="`mulle-bootstrap library-path`" 2> /dev/null
+   [ -z "${library_path}" -o ! -d "${library_path}" ] && "mulle-bootstrap not in PATH"
+
+   . "${library_path}/mulle-bootstrap-logging.sh"
+
+   ([ -e .CC ]               && log_info ".CC exists")              || log_warning ".CC is missing"
+   ([ -e .CXX ]              && log_info ".CXX exists")             || log_warning ".CXX is missing"
+   ([ -e .bootstrap ]        && log_info ".bootstrap exists")       || log_warning ".bootstrap is missing"
+   ([ -e .bootstrap.local ]  && log_info ".bootstrap.local exists") || log_warning ".bootstrap.local is missing"
+   ([ -e src ]               && log_info "./src exists")            || log_warning "./src is missing"
+   ([ -e CMakeLists.txt ]    && log_info "CMakeLists.txt exists")   || log_warning "CMakeLists.txt is missing"
+}
+
+
+compiler_setup()
+{
+   if [ ! -e .CC -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor .CC echo "mulle-clang"
+   fi
+   if [ ! -e .CXX -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor .CXX echo "mulle-clang"
+   fi
+}
+
+
+bootstrap_setup()
+{
+   if [ "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor rm -rf .bootstrap 2> /dev/null
+      exekutor rm -rf .bootstrap.local 2> /dev/null
+   fi
+
+   if [ ! -e .bootstrap ]
+   then
+      exekutor mulle-bootstrap -s init -n
+   fi
+
+   if [ -z "`mulle-bootstrap setting -g -r repositories`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r repositories "${MULLE_OBJC_CLONE}"
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} expansion -g MULLE_OBJC_REPOSITORIES "${MULLE_OBJC_REPOSITORIES}"
+   fi
+}
+
+
+cache_setup()
+{
+   if [ "${OPTION_CACHE_CLONES}" = "YES" ]
+   then
+      case "${UNAME}" in
+         darwin)
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -u "clone_cache" "${HOME}/Library/Caches/mulle-bootstrap/clones"
+         ;;
+
+         *)
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -u "clone_cache" "${HOME}/.cache/mulle-bootstrap/clones"
+         ;;
+      esac
+   fi
+}
+
+
+developer_setup()
+{
+   if [ -z "`mulle-bootstrap config symlinks`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y symlinks
+   fi
+   if [ -z "`mulle-bootstrap config embedded_symlinks`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y embedded_symlinks
+   fi
+
+   if [ "${OPTION_MULLE_OBJC_DEVELOPER}" = "YES" ]
+   then
+      if [ -z "`mulle-bootstrap config dont_warn_scripts`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y dont_warn_scripts
+      fi
+
+      if [ -z "`mulle-bootstrap config embedded_symlinks`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config -y embedded_symlinks
+      fi
+
+      if [ -z "`mulle-bootstrap config override_branch`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config override_branch master
+      fi
+
+      if [ -z "`mulle-bootstrap config search_path`" -o "${FLAG_FORCE}" = "YES" ]
+      then
+         local search_path
+
+         search_path=""
+         if [ -d ../mulle-configuration ]
+         then
+            directory="`(cd .. ; pwd -P)`"
+            search_path="`add_path "${search_path}" "${directory}"`"
+         fi
+
+         if [ -d ../MulleObjC-master ]
+         then
+            directory="`(cd ../MulleObjC-master ; pwd -P)`"
+            search_path="`add_path "${search_path}" "${directory}"`"
+         fi
+
+         if [ ! -z "${search_path}" ]
+         then
+            exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} config search_path "${search_path}"
+         fi
+      fi
+   fi
+#   mulle-bootstrap config override_branch -master
+
+   # if [ -z "`mulle-bootstrap config caches_path`" -o "${FLAG_FORCE}" = "YES" ]
+   # then
+   #    local this
+   #    local parent
+
+   #    this="`pwd -P`"
+   #    parent="`dirname -- "${this}"`"
+
+   #    if [ "${parent}" != "." ]
+   #    then
+   #       local caches_path
+
+   #       caches_path="${parent}"
+   #       parent="`dirname -- "${parent}"`"
+
+   #       if [ "${parent}" != "." ]
+   #       then
+   #          caches_path="${caches_path}:${parent}"
+   #       fi
+   #       exekutor mulle-bootstrap config caches_path "${caches_path}"
+   #    fi
+   # fi
+}
+
+
+configuration_setup()
+{
+   if [ -z "`mulle-bootstrap setting -g -r embedded_repositories`" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r embedded_repositories "${MULLE_CONFIGURATION_CLONE}"
+      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r -a embedded_repositories "${MULLE_TESTS_CLONE}"
+   fi
+}
+
+
+common_setup()
+{
+   bootstrap_setup
+   compiler_setup
+   cache_setup
+   developer_setup
+   configuration_setup
+}
+
+
+emit_readme_md()
+{
+   cat <<EOF
+# ${PROJECT_NAME}
+
+This is a [mulle-objc](${MULLE_OBJC_REPOSITORIES}) project.
+
+
+## Install Prequisites
+
+Install
+[mulle-objc-developer](${MULLE_OBJC_REPOSITORIES}/mulle-objc-developer).
+
+This will give your the **mulle-clang** compiler that is necessary to build
+this project as well as
+[mulle-bootstrap](https://github.com/mulle-nat/mulle-bootstrap)
+to build the projects dependencies.
+
+
+### Install Prequisites on OS X:
+
+Get [homebrew](https://brew.sh) then
+
+\`\`\`
+brew install ${MULLE_OBJC_TAP}mulle-objc-developer
+mulle-bootstrap
+\`\`\`
+
+
+### Use **mulle-build** to build project
+
+\`\`\`
+mulle-build
+\`\`\`
+
+
+### Use **make** to build project
+
+\`\`\`
+mkdir build.d
+cd build.d
+cmake -G "Unix Makefiles" ..
+make
+\`\`\`
+
+### Use Xcode to build project
+
+\`\`\`
+mkdir build-xcode.d
+cd build-xcode.d
+cmake -G "Xcode" ..
+xcodebuild
+\`\`\`
+
+### Use Visual Studio to build project
+
+\`\`\`
+mkdir build-vs.d
+cd build-vs.d
+cmake -G "Visual Studio 12" ..
+msbuild
+\`\`\`
+
+EOF
+}
+
+
+emit_cmakelists_common_header()
+{
+   cat <<EOF
+cmake_minimum_required( VERSION 3.0)
+
+project( ${PROJECT_NAME})
+
+set( CMAKE_MODULE_PATH
+\${CMAKE_MODULE_PATH}
+"\${CMAKE_SOURCE_DIR}/mulle-configuration"
+)
+
+set( MULLE_LANGUAGE "ObjC")
+if( "\${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  include( Debug)
+else()
+  include( Release)
+endif()
+
+find_library( MULLE_OBJC_LIBRARY           NAMES ${MULLE_OBJC_LIBRARY_NAME})
+EOF
+
+   if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
+   then
+      cat <<EOF
+find_library( MULLE_ABA_LIBRARY            NAMES mulle_aba)
+find_library( MULLE_ALLOCATOR_LIBRARY      NAMES mulle_allocator)
+find_library( MULLE_CONCURRENT_LIBRARY     NAMES mulle_concurrent)
+find_library( MULLE_CONTAINER_LIBRARY      NAMES mulle_container)
+find_library( MULLE_OBJC_RUNTIME_LIBRARY   NAMES mulle_objc)
+find_library( MULLE_TEST_ALLOCATOR_LIBRARY NAMES mulle_test_allocator)
+find_library( MULLE_THREAD_LIBRARY         NAMES mulle_thread)
+
+message( STATUS "MULLE_ABA_LIBRARY is \${MULLE_ABA_LIBRARY}")
+message( STATUS "MULLE_ALLOCATOR_LIBRARY is \${MULLE_ALLOCATOR_LIBRARY}")
+message( STATUS "MULLE_CONCURRENT_LIBRARY is \${MULLE_CONCURRENT_LIBRARY}")
+message( STATUS "MULLE_CONTAINER_LIBRARY is \${MULLE_CONTAINER_LIBRARY}")
+message( STATUS "MULLE_OBJC_RUNTIME_LIBRARY is \${MULLE_OBJC_RUNTIME_LIBRARY}")
+message( STATUS "MULLE_TEST_ALLOCATOR_LIBRARY is \${MULLE_TEST_ALLOCATOR_LIBRARY}")
+message( STATUS "MULLE_THREAD_LIBRARY is \${MULLE_THREAD_LIBRARY}")
+EOF
+   fi
+
+   cat <<EOF
+message( STATUS "MULLE_OBJC_LIBRARY found as \${MULLE_OBJC_LIBRARY}")
+
+set( LIBRARIES
+EOF
+   if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
+   then
+      cat <<EOF
+\${MULLE_ABA_LIBRARY}
+\${MULLE_ALLOCATOR_LIBRARY}
+\${MULLE_CONCURRENT_LIBRARY}
+\${MULLE_CONTAINER_LIBRARY}
+\${MULLE_OBJC_RUNTIME_LIBRARY}
+\${MULLE_TEST_ALLOCATOR_LIBRARY}
+\${MULLE_THREAD_LIBRARY}
+EOF
+   fi
+
+   cat <<EOF
+\${MULLE_OBJC_LIBRARY}
+)
+EOF
+}
+
+
+emit_cmakelists_common_footer()
+{
+   :
+}
+
+
+emit_include_directories()
+{
+   local nicey
+
+   nicey="`sed 's|/$||' <<< "${FILE_PREFIX}"`"
+   if [ ! -z "${nicey}" ]
+   then
+      cat <<EOF
+include_directories(
+${nicey}
+)
+
+EOF
+   fi
+}
+
+
+emit_sources_and_headers_library()
+{
+   emit_include_directories
+
+   cat <<EOF
+
+set( SOURCES
+"${FILE_PREFIX}file.m"
+)
+
+set( HEADERS
+"${FILE_PREFIX}file.h"
+"${FILE_PREFIX}version.h"
+)
+EOF
+}
+
+
+emit_cmakelists_library()
+{
+   cat <<EOF
+
+###
+
+include( CMakeSourcesAndHeaders.txt)
+
+###
+
+add_library( "${PROJECT_NAME}"
+\${SOURCES}
+\${HEADERS}
+)
+
+target_link_libraries( "${PROJECT_NAME}" # SHARED
+\${LIBRARIES}
+)
+
+install( TARGETS "${BINARY_NAME}" DESTINATION "lib")
+install( TARGETS "${HEADERS}" DESTINATION "include")
+EOF
+}
+
+
+emit_sources_and_headers_executable()
+{
+   emit_include_directories
+
+   cat <<EOF
+set( SOURCES
+${FILE_PREFIX}main.m
+)
+
+set( HEADERS
+)
+EOF
+}
+
+
+emit_cmakelists_executable()
+{
+   cat <<EOF
+
+###
+
+include( CMakeSourcesAndHeaders.txt)
+
+###
+
+add_executable( "${PROJECT_NAME}"
+\${SOURCES}
+)
+EOF
+
+   if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
+   then
+      cat <<EOF
+target_link_libraries( "${PROJECT_NAME}"
+\${BEGIN_ALL_LOAD}
+\${LIBRARIES}
+\${END_ALL_LOAD}
+\${OS_SPECIFIC_LIBRARIES}
+)
+EOF
+   else
+      cat <<EOF
+target_link_libraries( "${PROJECT_NAME}"
+\${LIBRARIES}
+\${OS_SPECIFIC_LIBRARIES}
+)
+EOF
+   fi
+
+   cat <<EOF
+
+install( TARGETS "${PROJECT_NAME}" DESTINATION "bin")
+EOF
+}
+
+
+demo_version_h()
+{
+   cat <<EOF
+/*
+ *  version:  major, minor, patch
+ */
+#define ${PROJECT_IDENTIFIER}_VERSION  ((0 << 20) | (0 << 8) | 0)
+
+
+static inline unsigned int    get_version_major( void)
+{
+   return( ${PROJECT_IDENTIFIER}_VERSION >> 20);
+}
+
+
+static inline unsigned int    get_version_minor( void)
+{
+   return( (${PROJECT_IDENTIFIER}_VERSION >> 8) & 0xFFF);
+}
+
+
+static inline unsigned int    get_version_patch( void)
+{
+   return( ${PROJECT_IDENTIFIER}_VERSION & 0xFF);
+}
+
+EOF
+}
+
+
+demo_file_h()
+{
+   cat <<EOF
+#import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
+#import "version.h"
+
+@interface Foo : NSObject
+@end
+EOF
+}
+
+
+demo_file_m()
+{
+   cat <<EOF
+#import "foo.h"
+
+@implementation Foo
+
+- (NSString *) description
+{
+   return( [super description]);
+}
+
+@end
+EOF
+}
+
+
+demo_main_m()
+{
+   cat <<EOF
+#import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
+#import "version.h"
+EOF
+
+   if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
+   then
+      cat <<EOF
+
+
+#define STATIC_LINKED_FOUNDATION
+EOF
+   fi
+
+   cat <<EOF
+
+
+int  main( int argc, char *argv[])
+{
+#if defined( DEBUG) && defined( __MULLE_OBJC__)
+   if( mulle_objc_check_runtime())
+   {
+      extern void   mulle_objc_dotdump_runtime_to_tmp( void);
+
+      mulle_objc_dump_runtime_to_tmp();
+   }
+#endif
+   printf( "VfL Bochum 1848\n");
+   return( 0);
+}
+EOF
+
+   if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
+   then
+      cat <<EOF
+
+
+#ifdef STATIC_LINKED_FOUNDATION
+
+MULLE_C_CONST_RETURN  // always returns same value (in same thread)
+struct _mulle_objc_runtime  *__get_or_create_objc_runtime( void)
+{
+   struct _mulle_objc_runtime  *runtime;
+
+   runtime = __mulle_objc_get_runtime();
+   if( _mulle_objc_runtime_is_initialized( runtime))
+      return( runtime);
+
+   {
+      struct _ns_root_setupconfig   config;
+
+      memcpy( &config, ns_objc_get_default_setupconfig(), sizeof( config));
+      return( ns_objc_create_runtime( &config));
+   }
+}
+
+
+# ifdef __APPLE__
+//
+// see: https://stackoverflow.com/questions/35998488/where-is-the-eprintf-symbol-defined-in-os-x-10-11/36010972#36010972
+//
+__attribute__((visibility("hidden")))
+void __eprintf( const char* format, const char* file,
+               unsigned line, const char *expr)
+{
+   fprintf( stderr, format, file, line, expr);
+   abort();
+}
+# endif
+#endif
+EOF
+   fi
+}
+
+
+demo_library_files()
+{
+   if [ ! -e "README.md" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor README.md emit_readme_md
+   fi
+
+   if [ ! -d "src" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+   fi
+
+   if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/version.h" demo_version_h
+   fi
+
+   if [ ! -e "src/file.h" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/file.h" demo_file_h
+   fi
+
+   if [ ! -e "src/file.m" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/file.m" demo_file_m
+   fi
+}
+
+
+demo_executable_files()
+{
+   if [ ! -e "README.md" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor README.md emit_readme_md
+   fi
+
+   if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/version.h" demo_version_h
+   fi
+
+   if [ ! -e "src/main.m" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      mkdir_if_missing "src"
+      redirect_exekutor "src/main.m" demo_main_m
+   fi
+}
+
+
+library_setup()
+{
+   if [ ! -f "CMakeLists.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      local text
+
+      text="`
+      (
+         emit_cmakelists_common_header
+         emit_cmakelists_library
+         emit_cmakelists_common_footer
+      )`"
+
+      redirect_exekutor CMakeLists.txt echo "${text}"
+   fi
+
+   if [ ! -f "CMakeSourcesAndHeaders.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor CMakeSourcesAndHeaders.txt emit_sources_and_headers_library
+   fi
+
+   if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
+   then
+      if [ ! -d src ]
+      then
+         demo_library_files
+      fi
+   fi
+
+   common_setup
+}
+
+
+executable_setup()
+{
+   if [ ! -f "CMakeLists.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      local text
+
+      text="`
+      (
+         emit_cmakelists_common_header
+         emit_cmakelists_executable
+         emit_cmakelists_common_footer
+      )`"
+
+      redirect_exekutor CMakeLists.txt echo "${text}"
+   fi
+
+   if [ ! -f "CMakeSourcesAndHeaders.txt" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor CMakeSourcesAndHeaders.txt emit_sources_and_headers_executable
+   fi
+
+   if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
+   then
+      demo_executable_files
+   fi
+
+   common_setup
+}
+
+
+setup_bootstrap_environment()
+{
+   local libexec
+
+   libexec="`mulle-bootstrap library-path 2> /dev/null | head -1`"
+   if [ -z "${libexec}" ]
+   then
+      echo "mulle-bootstrap not installed or not in PATH: $PATH" >&2
+      exit 1
+   fi
+
+   PATH="${libexec}:${PATH}"
+
+   . mulle-bootstrap-logging.sh
+   . mulle-bootstrap-functions.sh
+   . mulle-bootstrap-local-environment.sh
+}
+
+
+
+main()
+{
+   setup_bootstrap_environment
+
+   # technical flags
+   local MULLE_FLAG_DONT_DEFER="NO"
+   local MULLE_FLAG_EXEKUTOR_DRY_RUN="NO"
+   local MULLE_FLAG_FOLLOW_SYMLINKS="YES"
+   local MULLE_FLAG_LOG_CACHE="NO"
+   local MULLE_FLAG_LOG_DEBUG="NO"
+   local MULLE_FLAG_LOG_EXEKUTOR="NO"
+   local MULLE_FLAG_LOG_FLUFF="NO"
+   local MULLE_FLAG_LOG_MERGE="NO"
+   local MULLE_FLAG_LOG_SCRIPTS="NO"
+   local MULLE_FLAG_LOG_SETTINGS="NO"
+   local MULLE_FLAG_LOG_VERBOSE="NO"
+   local MULLE_TRACE_PATHS_FLIP_X="NO"
+   local MULLE_TRACE_POSTPONE="NO"
+   local MULLE_TRACE_RESOLVER_FLIP_X="NO"
+   local MULLE_TRACE_SETTINGS_FLIP_X="NO"
+
+   local FLAG_FORCE="NO"
+   local FILE_PREFIX="src/"
+   local FLAG_OUTPUT_DEMO_FILES="YES"
+   local OPTION_MULLE_OBJC_DEVELOPER="NO"
+   local OPTION_STATIC_MULLE_OBJC="NO"
+   local OPTION_CACHE_CLONES="NO"
+
+   local directory
+
+   directory="."
+
+   #
+   # allow these to be set via environment for now
+   #
+   MULLE_OBJC_NAME="MulleObjC"
+   UPCASE_MULLE_OBJC_NAME="MULLE_OBJC"
+   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="MulleObjC"
+   MULLE_OBJC_LIBRARY_NAME="MulleObjCStandalone"
+
+
+   while [ $# -ne 0 ]
+   do
+      if bootstrap_technical_flags "$1"
+      then
+         shift
+         continue
+      fi
+
+      case "$1" in
+         -h|--help)
+            usage
+         ;;
+
+         -d|--directory)
+            shift
+            [ $# -eq 0 ] && usage
+
+            directory="$1"
+         ;;
+
+         -f|--force)
+            FLAG_FORCE="YES"
+         ;;
+
+         -n|--dry-run)
+            MULLE_FLAG_EXECUTOR_DRY_RUN="YES"
+         ;;
+
+         -s|--sparse)
+            FILE_PREFIX="# src/"
+            FLAG_OUTPUT_DEMO_FILES="NO"
+         ;;
+
+         --cache)
+            OPTION_CACHE_CLONES="YES"
+         ;;
+
+         --dev)
+            OPTION_MULLE_OBJC_DEVELOPER="YES"
+         ;;
+
+         --static-foundation)
+            OPTION_STATIC_MULLE_OBJC="YES"
+            MULLE_OBJC_LIBRARY_NAME="MulleObjC"
+         ;;
+
+         -*)
+            usage
+         ;;
+
+         *)
+            break
+         ;;
+      esac
+
+      shift
+   done
+
+   [ $# -eq 0 ] && usage
+
+   bootstrap_setup_trace "${MULLE_TRACE}"
+
+   local dir_name
+
+   case "${directory}" in
+      \.)
+         dir_name="`basename -- ${PWD}`"
+      ;;
+
+      *)
+         dir_name="`basename -- ${directory}`"
+      ;;
+   esac
+
+   PROJECT_NAME="${PROJECT_NAME:-${dir_name}}"
+   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
+
+   MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/${PUBLISHER}}"
+   MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
+
+
+   #
+   # a bit weird, but written for MulleFoundation and downgraded to
+   # MulleObjC
+   # There will be a mulle-foundation-init later
+   #
+   DEFAULT_MULLE_OBJC_CLONE="\${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME};;\${${UPCASE_MULLE_OBJC_NAME}_BRANCH:-release}"
+   DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
+   DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
+
+   MULLE_OBJC_CLONE="${MULLE_OBJC_CLONE:-${DEFAULT_MULLE_OBJC_CLONE}}"
+   MULLE_CONFIGURATION_CLONE="${MULLE_CONFIGURATION_CLONE:-${DEFAULT_MULLE_CONFIGURATION_CLONE}}"
+   MULLE_TESTS_CLONE="${MULLE_TESTS_CLONE:-${DEFAULT_MULLE_TESTS_CLONE}}"
+
+   case "${1}" in
+      check)
+         mkdir_if_missing "$1"
+         cd "${directory}" || fail "couldn't cd to \"${directory}\""
+         sanity_check
+      ;;
+
+      library)
+         mkdir_if_missing "${directory}"
+         exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
+         library_setup
+         log_info "Created cmake project for $1 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in ${C_RESET}${C_BOLD}${directory}"
+         log_info "Build it with:"
+         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; mulle-build --bootstrap"
+      ;;
+
+      executable)
+         mkdir_if_missing "${directory}"
+         exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
+         executable_setup
+         log_info "Created cmake project for $1 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in ${C_RESET}${C_BOLD}${directory}"
+         log_info "Build and run it with:"
+         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; mulle-build --bootstrap; ./build/${PROJECT_NAME}"
+      ;;
+
+      version)
+         echo "${MULLE_OBJC_DEVELOPER_VERSION}"
+         exit 0
+      ;;
+
+      *)
+         echo "unknown command \"$1\"" >&2
+         exit 1
+      ;;
+   esac
+}
+
+MULLE_EXECUTABLE="`basename -- "$0"`"
+MULLE_ARGUMENTS="$@"
+MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
+MULLE_EXECUTABLE_PID="$$"
+export MULLE_EXECUTABLE_PID
+
+
+main "$@"

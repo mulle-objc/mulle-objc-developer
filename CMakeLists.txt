@@ -1,13 +1,79 @@
 cmake_minimum_required (VERSION 3.0)
 
-project (mulle-objc-developer)
+project( mulle-objc-developer)
 
-set(SCRIPTS
-mulle-objc-clone.sh
+execute_process( COMMAND ./mulle-objc-init version
+                 WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                 OUTPUT_VARIABLE MULLE_OBJC_DEVELOPER_VERSION
+                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+message( STATUS "MULLE_OBJC_DEVELOPER_VERSION is ${MULLE_OBJC_DEVELOPER_VERSION} according to mulle-objc-init")
+
+set( PROJECT_VERSION "${MULLE_OBJC_DEVELOPER_VERSION}")
+
+
+set( SCRIPTS
+mulle-objc-clone
+mulle-objc-init
 )
+
+
+if( APPLE)
+  set( SCRIPTS
+${SCRIPTS}
+mulle-clang-add-to-xcode
+)
+endif()
+
 
 INSTALL( FILES ${SCRIPTS}
 PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
             GROUP_EXECUTE GROUP_READ
             WORLD_EXECUTE WORLD_READ
 DESTINATION "bin")
+
+#
+# Primarily used for packaging on Linux
+#
+# Debian:
+#
+# ```
+# mkdir package
+# cd package
+# cmake ..
+# cpack -G DEB
+# ```
+#
+
+
+#
+# CPack and project specific stuff
+#
+######
+
+set( CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set( CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set( CPACK_PACKAGE_CONTACT "Nat! <nat@mulle-kybernetik.de>")
+set( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.md")
+set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "🎁 Developer tools for mulle-objc ")
+set( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set( CPACK_STRIP_FILES false)
+
+# stuff needed for Debian
+# memo: its impossible to check for chosen generator here
+#
+# CPackDeb doesn't produce 100% proper debian file unfortunately
+#
+set( CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/mulle-nat/${PROJECT_NAME}")
+
+# not strictly required
+set( CPACK_DEBIAN_PACKAGE_DEPENDS "mulle-clang (>= 4.0.0.4), mulle-build (>= 3.6.4)")
+
+# stuff needed for RPM
+
+set( CPACK_RPM_PACKAGE_VENDOR "Mulle kybernetiK")
+
+######
+#
+# must be after CPACK_PACKAGE_VERSION
+include( CPack)
+

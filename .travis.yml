@@ -1,10 +1,14 @@
+# test runs on OS X, because llvm is not bottled
+# in linuxbrew (at the moment 11/2016)
+#
 language: objective-c
 
 before_install:
-   - brew tap mulle-kybernetik/software
-   - brew install mulle-build
-   - brew tap codeon-gmbh/software
-   - brew install mulle-clang
+   - brew update
+   - brew install mulle-kybernetik/software/mulle-objc-developer
+   - brew install cmake
 
 script:
-   - DONT_ASK=YES ./mulle-objc-clone.sh https://github.com/mulle-objc
+   - ( mkdir /tmp/a ; cd /tmp/a ; mulle-objc-clone )
+   - ( mkdir /tmp/b ; cd /tmp/b ; mulle-objc-init library ; mulle-build --bootstrap )
+   - ( mkdir /tmp/c ; cd /tmp/c ; mulle-objc-init executable ; mulle-build --bootstrap )
