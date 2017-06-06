@@ -94,7 +94,7 @@ bootstrap_setup()
       exekutor rm -rf .bootstrap.local 2> /dev/null
    fi
 
-   if [ ! -e .bootstrap  ]
+   if [ ! -e .bootstrap ]
    then
       exekutor mulle-bootstrap -s init -n
    fi
@@ -783,20 +783,14 @@ main()
 
    directory="."
 
-
    #
    # allow these to be set via environment for now
    #
-   PROJECT_NAME="${PROJECT_NAME:-`basename -- $PWD`}"
-   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
-
-   MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/mulle-nat}"
-   MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
-
    MULLE_OBJC_NAME="MulleObjC"
    UPCASE_MULLE_OBJC_NAME="MULLE_OBJC"
    MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="MulleObjC"
    MULLE_OBJC_LIBRARY_NAME="MulleObjCStandalone"
+
 
    while [ $# -ne 0 ]
    do
@@ -860,6 +854,25 @@ main()
 
    bootstrap_setup_trace "${MULLE_TRACE}"
 
+   local dir_name
+
+   case "${directory}" in
+      \.)
+         dir_name="`basename -- ${PWD}`"
+      ;;
+
+      *)
+         dir_name="`basename -- ${directory}`"
+      ;;
+   esac
+
+   PROJECT_NAME="${PROJECT_NAME:-${dir_name}}"
+   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
+
+   MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/mulle-nat}"
+   MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
+
+
    #
    # a bit weird, but written for MulleFoundation and downgraded to
    # MulleObjC
@@ -884,12 +897,18 @@ main()
          mkdir_if_missing "${directory}"
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          library_setup
+         log_info "Created cmake project for $1 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in ${C_RESET}${C_BOLD}${directory}"
+         log_info "Build it with:"
+         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; mulle-build --bootstrap"
       ;;
 
       executable)
          mkdir_if_missing "${directory}"
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          executable_setup
+         log_info "Created cmake project for $1 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in ${C_RESET}${C_BOLD}${directory}"
+         log_info "Build and run it with:"
+         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; mulle-build --bootstrap; ./build/${PROJECT_NAME}"
       ;;
 
       version)

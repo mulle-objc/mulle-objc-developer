@@ -63,7 +63,7 @@ ubuntu_releasename()
 }
 
 
-preliminaries_trusty()
+_preliminaries_trusty()
 {
    # depressing: cmake on debian is too old and add-apt-repository
    # requires python and a lot of crap
@@ -76,6 +76,12 @@ preliminaries_trusty()
    # build-essential is needed (?) by mulle-clang
    #
    add-apt-repository -y ppa:george-edison55/cmake-3.x
+}
+
+
+preliminaries_trusty()
+{
+   sudo _preliminaries_trusty
 }
 
 
@@ -92,10 +98,16 @@ preliminaries_zesty()
 }
 
 
-preliminaries_common()
+_preliminaries_common()
 {
    apt-get update &&
    apt-get -y install curl git build-essential cmake || exit 1
+}
+
+
+preliminaries_common()
+{
+   sudo _preliminaries_common
 }
 
 
@@ -106,7 +118,7 @@ install_compiler()
 
    # get mulle-clang first, if this fails you don't need to wait so long
    curl -O -L "${BOTTLES_URL}/mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb" &&
-   dpkg --install "mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb"
+   sudo dpkg --install "mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb"
 }
 
 
@@ -114,7 +126,7 @@ install_mulle_bootstrap()
 {
    curl -O -L "${BOOTSTRAP_URL}/mulle-bootstrap/archive/${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
    tar xfz "${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
-   ( cd mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}/ ; ./install.sh "${PREFIX}" )
+   ( cd mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}/ ; sudo ./install.sh "${PREFIX}" )
 }
 
 
@@ -122,7 +134,7 @@ install_mulle_build()
 {
    curl -O -L "${BOOTSTRAP_URL}/mulle-build/archive/${MULLE_BUILD_VERSION}.tar.gz" &&
    tar xfz "${MULLE_BUILD_VERSION}.tar.gz" &&
-   ( cd "mulle-build-${MULLE_BUILD_VERSION}" && ./install.sh "${PREFIX}" )
+   ( cd "mulle-build-${MULLE_BUILD_VERSION}" && sudo ./install.sh "${PREFIX}" )
 }
 
 
@@ -180,7 +192,7 @@ main()
       cd mulle-objc-developer
    fi
 
-   mulle-install --prefix "${PREFIX}"
+   sudo mulle-install --prefix "${PREFIX}"
 }
 
 
@@ -188,7 +200,8 @@ FAIL_EXE="`basename -- $0`"
 
 if [ "`id -u`" -ne 0 ]
 then
-   fail "use sudo to run this"
+   echo "This script will ask you to sudo quite often" >&2
+   sleep 2
 fi
 
 main "$@"
