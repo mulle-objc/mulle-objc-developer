@@ -31,8 +31,9 @@
 #
 
 MULLE_BUILD_MIN_MAJOR="3"
-MULLE_BUILD_MIN_MINOR="3"
+MULLE_BUILD_MIN_MINOR="6"
 
+PUBLISHER="mulle-nat"
 
 usage()
 {
@@ -44,7 +45,7 @@ usage: mulle-objc-clone [options]
       -b   : branch to checkout (default: release)
       -cb  : branch to checkout for C repositories (inherits -b)
       -eb  : branch to checkout for embedded repositories (inherits -cb)
-      -p   : prefix for repositories (default: https://github.com/mulle-objc/)
+      -p   : prefix for repositories (default: https://github.com/${PUBLISHER}/)
       -cp  : prefix for C repositories (inherits -p)
       -ep  : prefix for embedded repositories (inherits -cp)
 EOF
@@ -130,7 +131,7 @@ COMMAND="${1:-clone}"
 #
 # setup default values if not set by options
 #
-OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/mulle-objc/}"
+OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/${PUBLISHER}/}"
 OBJC_BRANCH="${OBJC_BRANCH:-release}"
 
 COMMON_REPOPREFIX="${COMMON_REPOPREFIX:-${OBJC_REPOPREFIX}}"

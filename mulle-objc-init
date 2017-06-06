@@ -31,6 +31,8 @@
 #
 MULLE_OBJC_DEVELOPER_VERSION=0.8.3
 
+PUBLISHER=mulle-nat
+
 
 usage()
 {
@@ -869,7 +871,7 @@ main()
    PROJECT_NAME="${PROJECT_NAME:-${dir_name}}"
    PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
 
-   MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/mulle-nat}"
+   MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/${PUBLISHER}}"
    MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
 
 
