@@ -31,7 +31,7 @@
 #   POSSIBILITY OF SUCH DAMAGE.
 
 MULLE_BUILD_VERSION=3.6.4
-MULLE_BOOTSTRAP_VERSION=3.6.4
+MULLE_BOOTSTRAP_VERSION=3.6.6
 MULLE_CLANG_VERSION=4.0.0.4
 
 PUBLISHER="mulle-objc"
@@ -53,6 +53,14 @@ fail()
    echo "${FAIL_EXE} error: $*" >&2
    exit 1
 }
+
+
+# colorize later or never
+log_verbose()
+{
+   echo "<(|)> $*" >&2
+}
+
 
 #
 # will return
@@ -102,6 +110,8 @@ preliminaries_common()
 
 install_compiler()
 {
+   log_verbose "Installing mulle-clang..."
+
    DIST="${UBUNTUNAME}-${ARCH}"
    DOWNLOAD_URL="${BOTTLES_URL}/mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb"
 
@@ -113,6 +123,8 @@ install_compiler()
 
 install_mulle_bootstrap()
 {
+   log_verbose "Installing mulle-bootstrap..."
+
    curl -O -L "${BOOTSTRAP_URL}/mulle-bootstrap/archive/${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
    tar xfz "${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
    ( cd mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}/ ; sudo ./install.sh "${PREFIX}" )
@@ -121,6 +133,8 @@ install_mulle_bootstrap()
 
 install_mulle_build()
 {
+   log_verbose "Installing mulle-build..."
+
    curl -O -L "${BOOTSTRAP_URL}/mulle-build/archive/${MULLE_BUILD_VERSION}.tar.gz" &&
    tar xfz "${MULLE_BUILD_VERSION}.tar.gz" &&
    ( cd "mulle-build-${MULLE_BUILD_VERSION}" && sudo ./install.sh "${PREFIX}" )
@@ -136,6 +150,8 @@ main()
    # figure out bottle
    #
    ARCH="`uname -i`" || fail "Failed to figure out architecture"
+
+   log_verbose "Installing prerequisites..."
 
    case "${ARCH}" in
       x86_64)
@@ -175,11 +191,16 @@ main()
    # build mulle-objc libraries
    # Don't do this, prefer people to use sandboxed stuff
    # mulle-install --prefix "${PREFIX}" --branch release "${MULLE_OBJC_URL}"/MulleObjC || exit 1
-   if [ ! -f "CMakeLists.txt" ]
+
+   if [ ! -f "CMakeLists.txt" -o ! -f "mulle-objc-init" ]
    then
+      log_verbose "Downloading mulle-objc-developer..."
+
       git clone "${MULLE_OBJC_URL}/mulle-objc-developer.git" mulle-objc-developer || exit 1
       cd mulle-objc-developer
    fi
+
+   log_verbose "Installing mulle-objc-developer..."
 
    sudo mulle-install --prefix "${PREFIX}"
 }

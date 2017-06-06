@@ -9,7 +9,7 @@ execute_process( COMMAND ./mulle-objc-init version
 message( STATUS "MULLE_OBJC_DEVELOPER_VERSION is ${MULLE_OBJC_DEVELOPER_VERSION} according to mulle-objc-init")
 
 set( PROJECT_VERSION "${MULLE_OBJC_DEVELOPER_VERSION}")
-
+set( PUBLISHER "mulle-objc")
 
 set( SCRIPTS
 mulle-objc-clone
@@ -63,7 +63,7 @@ set( CPACK_STRIP_FILES false)
 #
 # CPackDeb doesn't produce 100% proper debian file unfortunately
 #
-set( CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/mulle-nat/${PROJECT_NAME}")
+set( CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/${PUBLISHER}/${PROJECT_NAME}")
 
 # not strictly required
 set( CPACK_DEBIAN_PACKAGE_DEPENDS "mulle-clang (>= 4.0.0.4), mulle-build (>= 3.6.4)")
