@@ -27,8 +27,6 @@ brew install mulle-kybernetik/software/mulle-objc-developer
 This will install the [mulle-clang](//github.com/codeon-gmbh/mulle-clang)
 compiler and some necessary scripts .
 
-> See [mulle-objc Community](//mulle-objc.github.io) for more information.
-
 
 ### Install on Unbuntu Linux and WSL/bash
 
@@ -135,3 +133,7 @@ cd MulleObjC
 mulle-build -y --bootstrap
 mulle-test
 ```
+
+## Links
+
+Visit the [mulle-objc community](https://mulle-objc.github.io) for more information.
