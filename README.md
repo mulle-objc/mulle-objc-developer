@@ -1,8 +1,8 @@
 # mulle-objc-developer
 
-[![Build Status](https://travis-ci.org/mulle-nat/mulle-objc-developer.svg)](https://travis-ci.org/mulle-nat/mulle-objc-developer)
-![GitHub tag](https://img.shields.io/github/tag/mulle-nat/mulle-objc-developer.svg)
-![GitHub release](https://img.shields.io/github/release/mulle-nat/mulle-objc-developer.svg)
+[![Build Status](https://travis-ci.org/mulle-objc/mulle-objc-developer.svg)](https://travis-ci.org/mulle-objc/mulle-objc-developer)
+![GitHub tag](https://img.shields.io/github/tag/mulle-objc/mulle-objc-developer.svg)
+![GitHub release](https://img.shields.io/github/release/mulle-objc/mulle-objc-developer.svg)
 
 
 This project installs all required items together into a single formula and
