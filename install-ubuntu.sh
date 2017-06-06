@@ -63,25 +63,19 @@ ubuntu_releasename()
 }
 
 
-_preliminaries_trusty()
+preliminaries_trusty()
 {
    # depressing: cmake on debian is too old and add-apt-repository
    # requires python and a lot of crap
    # from software-properties-common
-   apt-get -y install software-properties-common &&
+   sudo apt-get -y install software-properties-common &&
 
    #
    # git is needed by mulle-bootstrap
    # cmake is needed by mulle-bootstrap
    # build-essential is needed (?) by mulle-clang
    #
-   add-apt-repository -y ppa:george-edison55/cmake-3.x
-}
-
-
-preliminaries_trusty()
-{
-   sudo _preliminaries_trusty
+   sudo add-apt-repository -y ppa:george-edison55/cmake-3.x
 }
 
 
@@ -98,16 +92,10 @@ preliminaries_zesty()
 }
 
 
-_preliminaries_common()
-{
-   apt-get update &&
-   apt-get -y install curl git build-essential cmake || exit 1
-}
-
-
 preliminaries_common()
 {
-   sudo _preliminaries_common
+   sudo apt-get update &&
+   sudo apt-get -y install curl git build-essential cmake || exit 1
 }
 
 
@@ -200,7 +188,7 @@ FAIL_EXE="`basename -- $0`"
 
 if [ "`id -u`" -ne 0 ]
 then
-   echo "This script will ask you to sudo quite often" >&2
+   echo "This script will invoke sudo quite often." >&2
    sleep 2
 fi
 
