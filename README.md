@@ -83,16 +83,10 @@ usage:
       version    : print mulle-objc-developer version
 ```
 
-## Xcode integration
+## Using Xcode integration
 
-### Xcode 8
- For *Xcode 7* we can use [`mulle-clang-add-to-xcode.sh`](mulle-clang-add-to-xcode.sh)  to integrate **mulle-clang** with project anyhow this doesn't work for *Xcode 8* since [Xcode 8 uses library validation.](https://github.com/alcatraz/Alcatraz/issues/475)
-
-**Xcode 8 integration for mulle-clang with CMake**
-
- ```bash
-cd <pathToProjectDir>/MulleObjC
-```
+If you want to use Xcode to edit your files, you can use **cmake** to generate 
+an Xcode project for your project.
 
 ```bash
 mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
@@ -100,19 +94,19 @@ mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
 
 ### Xcode 7
 
-You can get *Xcode 7* integration for **mulle-clang**. mulle-clang will appear as
-an available compiler in Xcode in the "Build Settings":
+You can get compiler integration for **mulle-clang** into *Xcode 7* ot earlier. 
+**mulle-clang** will appear as an available compiler in Xcode in the "Build Settings":
 
 ![Screeny](pix/xcode-integration.png)
 
 
 <br>
-Run [`mulle-clang-add-to-xcode.sh`](mulle-clang-add-to-xcode.sh) to integrate
+Run [mulle-clang-add-to-xcode](mulle-clang-add-to-xcode) to integrate
 the **mulle-clang** compiler into Xcode. This will install a plugin in
 `~/Volumes/Users/nat/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins`:
 
 ```
-mulle-clang-add-to-xcode.sh
+mulle-clang-add-to-xcode
 ```
 
 The `.xcconfig` string for the compiler is:
@@ -128,14 +122,7 @@ If you want to hack on `mulle-objc` it is easiest to use the supplied
 script [`mulle-objc-clone`](mulle-objc-clone) to setup things on
 your machine.
 
-
-This needs [mulle-build](//mulle-nat/mulle-build) as a pre-requisite.
-
-```
-brew install mulle-kybernetik/software/mulle-build
-```
-
-Now run `mulle-objc-clone.sh` in a directory, where you want the repositories +
+Run `mulle-objc-clone.sh` in a directory, where you want the repositories 
 to reside in. Then you can just compile and test any project conveniently
 with **mulle-build**:
 
@@ -146,6 +133,3 @@ cd MulleObjC
 mulle-build -y --bootstrap
 mulle-test
 ```
-
-You can use the supplied **Xcode** project files to edit and build the projects, but in order for them
-to work you must run `mulle-build -y` (or `mulle-bootstrap -y`) once.
