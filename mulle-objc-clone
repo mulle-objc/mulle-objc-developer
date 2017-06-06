@@ -380,7 +380,7 @@ clone()
       #
       # configure mulle-bootstrap to use symlinks if possible
       #
-      mulle-bootstrap config caches_path "${CACHE_DIR}"
+      mulle-bootstrap config search_path "${CACHE_DIR}"
 
       mulle-bootstrap config -y dont_warn_scripts
       mulle-bootstrap config -y embedded_symlinks

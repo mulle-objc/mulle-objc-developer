@@ -1,20 +1,10 @@
-0.8.9
-===
-
-* add --cache option, mostly for WSL/bash to speed things up a bit
-
-
-0.8.5
-===
-
-* added install_ubuntu.sh
-* fixed .bootstrap repository dependency on mulle-homebrew
-
-
 0.8.3
 ===
 
 * forgot cmake dependency
+* add --cache option, mostly for WSL/bash to speed things up a bit
+* added install_ubuntu.sh
+* fixed .bootstrap repository dependency on mulle-homebrew
 
 0.5.1
 ====
