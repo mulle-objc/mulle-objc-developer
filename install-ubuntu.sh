@@ -39,9 +39,9 @@ PUBLISHER="mulle-objc"
 # This script will eventually vanish and be replaced with proper deb
 # packages
 #
-BOTTLES_URL='http://download.codeon.de/bottles'
-BOOTSTRAP_URL='https://github.com/mulle-nat'
-MULLE_OBJC_URL='https://github.com/${PUBLISHER}'
+BOTTLES_URL="http://download.codeon.de/bottles"
+BOOTSTRAP_URL="https://github.com/mulle-nat"
+MULLE_OBJC_URL="https://github.com/${PUBLISHER}"
 
 PREFIX="/usr"
 
