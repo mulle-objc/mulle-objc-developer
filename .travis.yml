@@ -10,5 +10,5 @@ before_install:
 
 script:
    - ( mkdir /tmp/a ; cd /tmp/a ; mulle-objc-clone )
-   - ( mkdir /tmp/b ; cd /tmp/b ; mulle-objc-init library ; mulle-build )
-   - ( mkdir /tmp/c ; cd /tmp/c ; mulle-objc-init executable ; mulle-build )
+   - ( mkdir /tmp/b ; cd /tmp/b ; mulle-objc-init library ; mulle-build --bootstrap )
+   - ( mkdir /tmp/c ; cd /tmp/c ; mulle-objc-init executable ; mulle-build --bootstrap )
