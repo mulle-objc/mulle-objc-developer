@@ -6,7 +6,7 @@
 
 
 This project installs all required items together into a single formula and
-supplies you with a script `mulle-objc-init` to setup your own *mulle-objc*
+supplies you with a script `mulle-objc-init` to setup your own **mulle-objc**
 projects.
 
 This is also the goto project for
@@ -35,7 +35,7 @@ compiler and some necessary scripts .
 This methods works for **trusty**, **xenial** and **zesty**:
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh'
+curl -L -O 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/install-ubuntu.sh'
 chmod 755 install-ubuntu.sh
 ./install-ubuntu.sh
 ```
@@ -122,11 +122,13 @@ If you want to hack on `mulle-objc` it is easiest to use the supplied
 script [`mulle-objc-clone`](mulle-objc-clone) to setup things on
 your machine.
 
-Run `mulle-objc-clone.sh` in a directory, where you want the repositories 
+Run `mulle-objc-clone` in a directory, where you want the repositories 
 to reside in. Then you can just compile and test any project conveniently
 with **mulle-build**:
 
 ```
+mkdir rootdir
+cd rootdir
 mulle-objc-clone
 #
 cd MulleObjC
