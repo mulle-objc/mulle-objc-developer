@@ -37,14 +37,14 @@ This methods works for **trusty**, **xenial** and **zesty**:
 ```
 curl -L -O 'https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh'
 chmod 755 install-ubuntu.sh
-sudo ./install-ubuntu.sh
+./install-ubuntu.sh
 ```
 
+## Create a mulle-objc project
 
-## mulle-objc-init
+### mulle-objc-init
 
-Use `mulle-objc-init` to prepare the development environment, to get a hello
-world with MulleObjC program going. This will download and compile quite a
+Use `mulle-objc-init` to create a hello world project. This will download and compile quite a
 few dependencies.
 
 
@@ -59,6 +59,9 @@ Now run your Objective-C executable:
 ```
 ./build/demo
 ```
+
+Your code and your project is automatically portable across all supported platforms!
+
 
 ### mulle-objc-init usage
 
