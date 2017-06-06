@@ -33,7 +33,7 @@
 MULLE_BUILD_MIN_MAJOR="3"
 MULLE_BUILD_MIN_MINOR="6"
 
-PUBLISHER="mulle-nat"
+PUBLISHER="mulle-objc"
 
 usage()
 {

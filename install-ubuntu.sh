@@ -30,17 +30,18 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 
-MULLE_BUILD_VERSION=3.6.3
-MULLE_BOOTSTRAP_VERSION=3.6.2
+MULLE_BUILD_VERSION=3.6.4
+MULLE_BOOTSTRAP_VERSION=3.6.4
 MULLE_CLANG_VERSION=4.0.0.4
 
+PUBLISHER="mulle-objc"
 #
 # This script will eventually vanish and be replaced with proper deb
 # packages
 #
 BOTTLES_URL='http://download.codeon.de/bottles'
 BOOTSTRAP_URL='https://github.com/mulle-nat'
-MULLE_OBJC_URL='https://github.com/mulle-nat'
+MULLE_OBJC_URL='https://github.com/${PUBLISHER}'
 
 PREFIX="/usr"
 

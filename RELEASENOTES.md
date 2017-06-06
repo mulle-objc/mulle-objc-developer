@@ -1,3 +1,8 @@
+0.8.4
+===
+
+* community release
+
 0.8.3
 ===
 
@@ -34,6 +39,3 @@ Make `mulle-objc-clone.sh` more powerful
 ## 0.4
 
 # 0
-=======
-* Make `mulle-objc-clone.sh` more powerful
->>>>>>> fe62570c42ddaa9e7ae5d3af46dfe684fde6c8a2
