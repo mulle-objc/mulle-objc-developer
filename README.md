@@ -90,30 +90,6 @@ an Xcode project for your project.
 mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
 ```
 
-### Xcode 7
-
-You can get compiler integration for **mulle-clang** into *Xcode 7* ot earlier. 
-**mulle-clang** will appear as an available compiler in Xcode in the "Build Settings":
-
-![Screeny](pix/xcode-integration.png)
-
-
-<br>
-Run [mulle-clang-add-to-xcode](mulle-clang-add-to-xcode) to integrate
-the **mulle-clang** compiler into Xcode. This will install a plugin in
-`~/Volumes/Users/nat/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins`:
-
-```
-mulle-clang-add-to-xcode
-```
-
-The `.xcconfig` string for the compiler is:
-
-```
-GCC_VERSION = de.codeon.compilers.mulle-clang
-```
-
-
 ## Developing mulle-objc itself
 
 If you want to hack on `mulle-objc` it is easiest to use the supplied
