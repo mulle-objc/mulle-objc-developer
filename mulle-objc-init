@@ -33,7 +33,7 @@ MULLE_OBJC_DEVELOPER_VERSION=0.8.4
 
 VERSION="${VERSION:-${MULLE_OBJC_DEVELOPER_VERSION}}"
 PUBLISHER="${PUBLISHER:-mulle-nat}"
-
+MULLE_OBJC_DEVELOPER_TOOLS="${MULLE_OBJC_DEVELOPER_TOOLS:-mulle-objc-developer}"
 
 usage()
 {
@@ -229,17 +229,12 @@ emit_readme_md()
    cat <<EOF
 # ${PROJECT_NAME}
 
-This is a [mulle-objc](${MULLE_OBJC_REPOSITORIES}) project.
+This is a [mulle-objc](https://mulle-objc.github.io/) project.
+
 
 ## Install Prequisites
 
-Install
-[mulle-objc-developer](${MULLE_OBJC_REPOSITORIES}/mulle-objc-developer).
-
-This will give your the **mulle-clang** compiler that is necessary to build
-this project as well as
-[mulle-build](https://github.com/mulle-nat/mulle-build)
-to build the project plus its dependencies.
+Install the [developer tools](${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_TOOLS}).
 
 
 ## Use **mulle-build** to build project
@@ -248,6 +243,8 @@ to build the project plus its dependencies.
 mulle-build --bootstrap
 \`\`\`
 EOF
+
+   echo "${ADDITIONAL_README}"
 }
 
 
@@ -413,6 +410,7 @@ include( CMakeSourcesAndHeaders.txt)
 add_executable( "${PROJECT_NAME}"
 \${SOURCES}
 )
+
 EOF
 
    if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
@@ -718,7 +716,6 @@ setup_bootstrap_environment()
 }
 
 
-
 main()
 {
    setup_bootstrap_environment
@@ -754,12 +751,13 @@ main()
    #
    # allow these to be set via environment for now
    #
+   set -x
    MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
    UPCASE_MULLE_OBJC_NAME="${UPCASE_MULLE_OBJC_NAME:-MULLE_OBJC}"
    MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME:-${MULLE_OBJC_NAME}}"
    MULLE_OBJC_HEADER_NAME="${MULLE_OBJC_HEADER_NAME:-${MULLE_OBJC_NAME}}"
    MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_LIBRARY_NAME:-${MULLE_OBJC_NAME}Standalone}"
-
+   set +x
 
    while [ $# -ne 0 ]
    do
@@ -897,5 +895,6 @@ MULLE_ARGUMENTS="$@"
 MULLE_EXECUTABLE_PID="$$"
 export MULLE_EXECUTABLE_PID
 
+# env | egrep '^MULLE_' | sort >&2
 
 main "$@"
