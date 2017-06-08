@@ -14,6 +14,7 @@ set( PUBLISHER "mulle-objc")
 set( SCRIPTS
 mulle-objc-clone
 mulle-objc-init
+mulle-objc-change-publisher
 )
 
 

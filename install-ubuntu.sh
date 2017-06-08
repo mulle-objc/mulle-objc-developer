@@ -34,7 +34,7 @@ MULLE_BUILD_VERSION=3.6.4
 MULLE_BOOTSTRAP_VERSION=3.6.6
 MULLE_CLANG_VERSION=4.0.0.4
 
-PUBLISHER="mulle-nat"
+PUBLISHER="mulle-objc"
 #
 # This script will eventually vanish and be replaced with proper deb
 # packages
