@@ -81,7 +81,7 @@ usage:
       version    : print mulle-objc-developer version
 ```
 
-## Using Xcode integration
+## Using Xcode
 
 If you want to use Xcode to edit your files, you can use **cmake** to generate 
 an Xcode project for your project.
