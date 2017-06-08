@@ -1,3 +1,10 @@
+0.8.5
+===
+
+* merge community changes
+* prepare mulle-objc-init for reuse in mulle-objc-foundation
+
+
 0.8.4
 ===
 

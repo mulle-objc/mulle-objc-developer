@@ -33,12 +33,12 @@
 MULLE_BUILD_MIN_MAJOR="3"
 MULLE_BUILD_MIN_MINOR="6"
 
-PUBLISHER="mulle-objc"
+PUBLISHER="${PUBLISHER:-mulle-nat}"
 
 usage()
 {
    cat <<EOF >&2
-usage: mulle-objc-clone [options]
+usage: ${MULLE_EXECUTABLE} [options]
 
    Options
       -a   : don't ask
@@ -65,86 +65,6 @@ EOF
 # All REPOS are made to defer to MulleObjC-master
 #
 
-while [ $# -ne 0 ]
-do
-   case "$1" in
-      -a|-y)
-         DONT_ASK="YES"
-      ;;
-
-      -b|--branch|-ob|--objc-branch)
-         shift
-         [ $# -eq 0 ] && echo "branch missing" >&2 && exit 1
-         OBJC_BRANCH="$1"
-      ;;
-
-      -cb|--c-branch)
-         shift
-         [ $# -eq 0 ] && echo "c branch missing" >&2 && exit 1
-         COMMON_BRANCH="$1"
-      ;;
-
-      -eb|--embedded-branch)
-         shift
-         [ $# -eq 0 ] && echo "embedded branch missing" >&2 && exit 1
-         EMBEDDED_BRANCH="$1"
-      ;;
-
-      -p|--repository-prefix|-op|--objc-repository-prefix)
-         shift
-         [ $# -eq 0 ] && echo "repository prefix missing" >&2 && exit 1
-         OBJC_REPOPREFIX="$1"
-      ;;
-
-      -cp|--c-repository-prefix)
-         shift
-         [ $# -eq 0 ] && echo "c repository prefix missing" >&2 && exit 1
-         COMMON_REPOPREFIX="$1"
-      ;;
-
-      -ep|-embedded-repository-prefix)
-         shift
-         [ $# -eq 0 ] && echo "embeddes repository prefix missing" >&2 && exit 1
-         EMBEDDED_REPOPREFIX="$1"
-      ;;
-
-      -t)
-         set -x
-      ;;
-
-      -*)
-         echo "unknown option: $1" >&2
-         usage
-      ;;
-
-      *)
-         break
-      ;;
-   esac
-
-   shift
-done
-
-COMMAND="${1:-clone}"
-[ $# -ne 0 ] && shift
-
-#
-# setup default values if not set by options
-#
-OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/${PUBLISHER}/}"
-OBJC_BRANCH="${OBJC_BRANCH:-release}"
-
-COMMON_REPOPREFIX="${COMMON_REPOPREFIX:-${OBJC_REPOPREFIX}}"
-COMMON_BRANCH="${COMMON_BRANCH:-${OBJC_BRANCH}}"
-
-EMBEDDED_REPOPREFIX="${EMBEDDED_REPOPREFIX:-${COMMON_REPOPREFIX}}"
-EMBEDDED_BRANCH="${EMBEDDED_BRANCH:-${COMMON_BRANCH}}"
-
-
-MASTER_DIR="MulleObjC-${OBJC_BRANCH}"
-CACHE_DIR="`pwd -P`/MulleObjC-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must be absolute
-
-
 #
 # These are actualy non-bare repositories, that act like bare repositories.
 # You can push to them and from there you can push to the origin
@@ -152,27 +72,34 @@ CACHE_DIR="`pwd -P`/MulleObjC-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must 
 # from other repositories overwrite your changes!
 #
 
-EMBEDDED_REPOS='mulle-tests
+EMBEDDED_REPOS="mulle-tests
 mulle-configuration
-mulle-homebrew'
+mulle-homebrew
+${ADDITIONAL_EMBEDDED_REPOS}"
+
 
 #
 # They are regular repositories that push to the origin
 #
-COMMON_REPOS='mulle-aba
+COMMON_REPOS="mulle-aba
 mulle-allocator
 mulle-c11
 mulle-concurrent
 mulle-container
 mulle-thread
-mulle-vararg'
+mulle-vararg
+${ADDITIONAL_COMMON_REPOS}"
 
-OBJC_REPOS='mulle-objc-runtime
+
+OBJC_REPOS="mulle-objc-runtime
 mulle-objc-list
-MulleObjC'
+MulleObjC
+${ADDITIONAL_OBJC_REPOS}"
+
 
 REPOS="${COMMON_REPOS}
 ${OBJC_REPOS}"
+
 
 
 fail()
@@ -349,7 +276,7 @@ clone()
          fi
       done
 
-      local  last_repos
+      local last_repos
 
       for i in $OBJC_REPOS
       do
@@ -394,7 +321,7 @@ clone()
 ${last_repos} is now ready to be built with:
 
 cd '${MASTER_DIR}/${last_repos}'
-mulle-build
+mulle-build --bootstrap
 EOF
 
    ) || exit 1
@@ -425,6 +352,87 @@ run()
 
 main()
 {
+   MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
+
+   while [ $# -ne 0 ]
+   do
+      case "$1" in
+         -a|-y)
+            DONT_ASK="YES"
+         ;;
+
+         -b|--branch|-ob|--objc-branch)
+            shift
+            [ $# -eq 0 ] && echo "branch missing" >&2 && exit 1
+            OBJC_BRANCH="$1"
+         ;;
+
+         -cb|--c-branch)
+            shift
+            [ $# -eq 0 ] && echo "c branch missing" >&2 && exit 1
+            COMMON_BRANCH="$1"
+         ;;
+
+         -eb|--embedded-branch)
+            shift
+            [ $# -eq 0 ] && echo "embedded branch missing" >&2 && exit 1
+            EMBEDDED_BRANCH="$1"
+         ;;
+
+         -p|--repository-prefix|-op|--objc-repository-prefix)
+            shift
+            [ $# -eq 0 ] && echo "repository prefix missing" >&2 && exit 1
+            OBJC_REPOPREFIX="$1"
+         ;;
+
+         -cp|--c-repository-prefix)
+            shift
+            [ $# -eq 0 ] && echo "c repository prefix missing" >&2 && exit 1
+            COMMON_REPOPREFIX="$1"
+         ;;
+
+         -ep|-embedded-repository-prefix)
+            shift
+            [ $# -eq 0 ] && echo "embeddes repository prefix missing" >&2 && exit 1
+            EMBEDDED_REPOPREFIX="$1"
+         ;;
+
+         -t)
+            set -x
+         ;;
+
+         -*)
+            echo "unknown option: $1" >&2
+            usage
+         ;;
+
+         *)
+            break
+         ;;
+      esac
+
+      shift
+   done
+
+   COMMAND="${1:-clone}"
+   [ $# -ne 0 ] && shift
+
+   #
+   # setup default values if not set by options
+   #
+   OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/${PUBLISHER}/}"
+   OBJC_BRANCH="${OBJC_BRANCH:-release}"
+
+   COMMON_REPOPREFIX="${COMMON_REPOPREFIX:-${OBJC_REPOPREFIX}}"
+   COMMON_BRANCH="${COMMON_BRANCH:-${OBJC_BRANCH}}"
+
+   EMBEDDED_REPOPREFIX="${EMBEDDED_REPOPREFIX:-${COMMON_REPOPREFIX}}"
+   EMBEDDED_BRANCH="${EMBEDDED_BRANCH:-${COMMON_BRANCH}}"
+
+
+   MASTER_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}"
+   CACHE_DIR="`pwd -P`/${MULLE_OBJC_NAME}-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must be absolute
+
    case "${COMMAND}" in
       clone)
          clone "$@"
@@ -458,5 +466,12 @@ main()
    esac
 }
 
+
+# sometimes passed in
+if [ -z "${MULLE_EXECUTABLE}" ]
+then
+   MULLE_EXECUTABLE="`basename -- "$0"`"
+   MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
+fi
 
 main "$@"

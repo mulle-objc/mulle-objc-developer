@@ -31,27 +31,28 @@
 #
 MULLE_OBJC_DEVELOPER_VERSION=0.8.4
 
-PUBLISHER=mulle-objc
+VERSION="${VERSION:-${MULLE_OBJC_DEVELOPER_VERSION}}"
+PUBLISHER="${PUBLISHER:-mulle-nat}"
 
 
 usage()
 {
    cat <<EOF >&2
 usage:
-   mulle-objc-init [options] [command]
+   ${MULLE_EXECUTABLE} [options] [command]
 
    Options:
       -d <dir>   : use "dir" instead of working directory
-      --dev      : add conventional configurations for MulleObjC developers
+      --dev      : add conventional configurations for developers
       --cache    : cache downloaded git repositories
       -f         : overwrite existing files
       -n         : don't actually do anything
 
    Command:
       check      : check current project
-      executable : create a mulle-objc executable project
-      library    : create a mulle-objc library project
-      version    : print mulle-objc-developer version
+      executable : create a executable project
+      library    : create a library project
+      version    : print ${MULLE_EXECUTABLE} version
 EOF
    exit 1
 }
@@ -104,7 +105,6 @@ bootstrap_setup()
    if [ -z "`mulle-bootstrap setting -g -r repositories`" -o "${FLAG_FORCE}" = "YES" ]
    then
       exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r repositories "${MULLE_OBJC_CLONE}"
-      exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} expansion -g MULLE_OBJC_REPOSITORIES "${MULLE_OBJC_REPOSITORIES}"
    fi
 }
 
@@ -231,7 +231,6 @@ emit_readme_md()
 
 This is a [mulle-objc](${MULLE_OBJC_REPOSITORIES}) project.
 
-
 ## Install Prequisites
 
 Install
@@ -239,54 +238,15 @@ Install
 
 This will give your the **mulle-clang** compiler that is necessary to build
 this project as well as
-[mulle-bootstrap](https://github.com/mulle-nat/mulle-bootstrap)
-to build the projects dependencies.
+[mulle-build](https://github.com/mulle-nat/mulle-build)
+to build the project plus its dependencies.
 
 
-### Install Prequisites on OS X:
-
-Get [homebrew](https://brew.sh) then
+## Use **mulle-build** to build project
 
 \`\`\`
-brew install ${MULLE_OBJC_TAP}mulle-objc-developer
-mulle-bootstrap
+mulle-build --bootstrap
 \`\`\`
-
-
-### Use **mulle-build** to build project
-
-\`\`\`
-mulle-build
-\`\`\`
-
-
-### Use **make** to build project
-
-\`\`\`
-mkdir build.d
-cd build.d
-cmake -G "Unix Makefiles" ..
-make
-\`\`\`
-
-### Use Xcode to build project
-
-\`\`\`
-mkdir build-xcode.d
-cd build-xcode.d
-cmake -G "Xcode" ..
-xcodebuild
-\`\`\`
-
-### Use Visual Studio to build project
-
-\`\`\`
-mkdir build-vs.d
-cd build-vs.d
-cmake -G "Visual Studio 12" ..
-msbuild
-\`\`\`
-
 EOF
 }
 
@@ -310,7 +270,7 @@ else()
   include( Release)
 endif()
 
-find_library( MULLE_OBJC_LIBRARY           NAMES ${MULLE_OBJC_LIBRARY_NAME})
+find_library( ${UPCASE_MULLE_OBJC_NAME}_LIBRARY NAMES ${MULLE_OBJC_LIBRARY_NAME})
 EOF
 
    if [ "${OPTION_STATIC_MULLE_OBJC}" = "YES" ]
@@ -335,7 +295,7 @@ EOF
    fi
 
    cat <<EOF
-message( STATUS "MULLE_OBJC_LIBRARY found as \${MULLE_OBJC_LIBRARY}")
+message( STATUS "${UPCASE_MULLE_OBJC_NAME}_LIBRARY found as \${${UPCASE_MULLE_OBJC_NAME}_LIBRARY}")
 
 set( LIBRARIES
 EOF
@@ -353,7 +313,7 @@ EOF
    fi
 
    cat <<EOF
-\${MULLE_OBJC_LIBRARY}
+\${${UPCASE_MULLE_OBJC_NAME}_LIBRARY}
 )
 EOF
 }
@@ -389,11 +349,11 @@ emit_sources_and_headers_library()
    cat <<EOF
 
 set( SOURCES
-"${FILE_PREFIX}file.m"
+"${FILE_PREFIX}Foo.m"
 )
 
 set( HEADERS
-"${FILE_PREFIX}file.h"
+"${FILE_PREFIX}Foo.h"
 "${FILE_PREFIX}version.h"
 )
 EOF
@@ -419,8 +379,8 @@ target_link_libraries( "${PROJECT_NAME}" # SHARED
 \${LIBRARIES}
 )
 
-install( TARGETS "${BINARY_NAME}" DESTINATION "lib")
-install( TARGETS "${HEADERS}" DESTINATION "include")
+install( TARGETS "${PROJECT_NAME}" DESTINATION "lib")
+install( FILES "\${HEADERS}" DESTINATION "include/${PROJECT_NAME}")
 EOF
 }
 
@@ -514,10 +474,13 @@ EOF
 demo_file_h()
 {
    cat <<EOF
-#import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
-#import "version.h"
+#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
+
 
 @interface Foo : NSObject
+
+- (uint32_t) fooVersion;
+
 @end
 EOF
 }
@@ -526,13 +489,15 @@ EOF
 demo_file_m()
 {
    cat <<EOF
-#import "foo.h"
+#import "Foo.h"
+#import "version.h"
+
 
 @implementation Foo
 
-- (NSString *) description
+- (uint32_t) fooVersion;
 {
-   return( [super description]);
+   return( FOO_VERSION);
 }
 
 @end
@@ -543,7 +508,7 @@ EOF
 demo_main_m()
 {
    cat <<EOF
-#import <${MULLE_OBJC_NAME}/${MULLE_OBJC_NAME}.h>
+#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
 #import "version.h"
 EOF
 
@@ -564,9 +529,10 @@ int  main( int argc, char *argv[])
 #if defined( DEBUG) && defined( __MULLE_OBJC__)
    if( mulle_objc_check_runtime())
    {
-      extern void   mulle_objc_dotdump_runtime_to_tmp( void);
+      extern void   mulle_objc_dotdump_to_tmp( void);
 
-      mulle_objc_dump_runtime_to_tmp();
+      mulle_objc_dotdump_to_tmp();
+      exit( 1);
    }
 #endif
    printf( "VfL Bochum 1848\n");
@@ -582,7 +548,7 @@ EOF
 #ifdef STATIC_LINKED_FOUNDATION
 
 MULLE_C_CONST_RETURN  // always returns same value (in same thread)
-struct _mulle_objc_runtime  *__get_or_create_objc_runtime( void)
+struct _mulle_objc_runtime  *__get_or_create_mulle_objc_runtime( void)
 {
    struct _mulle_objc_runtime  *runtime;
 
@@ -635,16 +601,16 @@ demo_library_files()
       redirect_exekutor "src/version.h" demo_version_h
    fi
 
-   if [ ! -e "src/file.h" -o "${FLAG_FORCE}" = "YES" ]
+   if [ ! -e "src/Foo.h" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/file.h" demo_file_h
+      redirect_exekutor "src/Foo.h" demo_file_h
    fi
 
-   if [ ! -e "src/file.m" -o "${FLAG_FORCE}" = "YES" ]
+   if [ ! -e "src/Foo.m" -o "${FLAG_FORCE}" = "YES" ]
    then
       mkdir_if_missing "src"
-      redirect_exekutor "src/file.m" demo_file_m
+      redirect_exekutor "src/Foo.m" demo_file_m
    fi
 }
 
@@ -788,10 +754,11 @@ main()
    #
    # allow these to be set via environment for now
    #
-   MULLE_OBJC_NAME="MulleObjC"
-   UPCASE_MULLE_OBJC_NAME="MULLE_OBJC"
-   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="MulleObjC"
-   MULLE_OBJC_LIBRARY_NAME="MulleObjCStandalone"
+   MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
+   UPCASE_MULLE_OBJC_NAME="${UPCASE_MULLE_OBJC_NAME:-MULLE_OBJC}"
+   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME:-${MULLE_OBJC_NAME}}"
+   MULLE_OBJC_HEADER_NAME="${MULLE_OBJC_HEADER_NAME:-${MULLE_OBJC_NAME}}"
+   MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_LIBRARY_NAME:-${MULLE_OBJC_NAME}Standalone}"
 
 
    while [ $# -ne 0 ]
@@ -837,7 +804,7 @@ main()
 
          --static-foundation)
             OPTION_STATIC_MULLE_OBJC="YES"
-            MULLE_OBJC_LIBRARY_NAME="MulleObjC"
+            MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_NAME}"
          ;;
 
          -*)
@@ -872,21 +839,15 @@ main()
    PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
 
    MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/${PUBLISHER}}"
-   MULLE_OBJC_TAP="${MULLE_OBJC_TAP:-mulle-kybernetik/software/}"
-
 
    #
    # a bit weird, but written for MulleFoundation and downgraded to
    # MulleObjC
    # There will be a mulle-foundation-init later
    #
-   DEFAULT_MULLE_OBJC_CLONE="\${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME};;\${${UPCASE_MULLE_OBJC_NAME}_BRANCH:-release}"
-   DEFAULT_MULLE_CONFIGURATION_CLONE="\${MULLE_CONFIGURATION_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_CONFIGURATION_BRANCH:-release}"
-   DEFAULT_MULLE_TESTS_CLONE="\${MULLE_TESTS_CLONE:-${MULLE_OBJC_REPOSITORIES}}/mulle-configuration;;\${MULLE_TESTS_BRANCH:-release}"
-
-   MULLE_OBJC_CLONE="${MULLE_OBJC_CLONE:-${DEFAULT_MULLE_OBJC_CLONE}}"
-   MULLE_CONFIGURATION_CLONE="${MULLE_CONFIGURATION_CLONE:-${DEFAULT_MULLE_CONFIGURATION_CLONE}}"
-   MULLE_TESTS_CLONE="${MULLE_TESTS_CLONE:-${DEFAULT_MULLE_TESTS_CLONE}}"
+   MULLE_OBJC_CLONE="\${MULLE_OBJC_REPOSITORIES:-${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_NAME}};;\${MULLE_OBJC_BRANCH:-release}"
+   MULLE_CONFIGURATION_CLONE="\${MULLE_OBJC_REPOSITORIES:-${MULLE_OBJC_REPOSITORIES}/mulle-configuration};;\${MULLE_CONFIGURATION_BRANCH:-release}"
+   MULLE_TESTS_CLONE="\${MULLE_OBJC_REPOSITORIES:-${MULLE_OBJC_REPOSITORIES}/mulle-tests};;\${MULLE_TESTS_BRANCH:-release}"
 
    case "${1}" in
       check)
@@ -914,7 +875,7 @@ main()
       ;;
 
       version)
-         echo "${MULLE_OBJC_DEVELOPER_VERSION}"
+         echo "${VERSION}"
          exit 0
       ;;
 
@@ -925,9 +886,14 @@ main()
    esac
 }
 
-MULLE_EXECUTABLE="`basename -- "$0"`"
+# sometimes passed in
+if [ -z "${MULLE_EXECUTABLE}" ]
+then
+   MULLE_EXECUTABLE="`basename -- "$0"`"
+   MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
+fi
+
 MULLE_ARGUMENTS="$@"
-MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
 MULLE_EXECUTABLE_PID="$$"
 export MULLE_EXECUTABLE_PID
 
