@@ -1,0 +1,203 @@
+#! /usr/bin/env bash
+#
+#   Copyright (c) 2017 Nat! - Mulle kybernetiK
+#   All rights reserved.
+#
+#   Redistribution and use in source and binary forms, with or without
+#   modification, are permitted provided that the following conditions are met:
+#
+#   Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#   Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#   Neither the name of Mulle kybernetiK nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#   POSSIBILITY OF SUCH DAMAGE.
+#
+
+OLD_PUBLISHER="${1:-mulle-nat}"
+[ $# -ne 0 ] && shift
+
+NEW_PUBLISHER="${1:-mulle-objc}"
+[ $# -ne 0 ] && shift
+
+
+fail()
+{
+   echo "error: $*" >&2
+   exit 1
+}
+
+escaped_sed_pattern()
+{
+   sed -e 's/[]\/$*.^|[]/\\&/g' <<< "${1}"
+}
+
+
+sed_inline_replace()
+{
+   local eflag
+
+   eflag="-e"
+
+   case "`uname -s`" in
+      Darwin)
+         eflag="-E"
+      ;;
+   esac
+
+   sed -i '' "${eflag}" "$@"
+}
+
+brutal_replace()
+{
+   local filename="$1"
+
+   if fgrep -s "${OLD_PUBLISHER}" "${filename}" > /dev/null
+   then
+      echo "Globally replacing \"${OLD_PUBLISHER}\" with \"${NEW_PUBLISHER}\" in \"${filename}\" ..." >&2
+      sed_inline_replace "/mulle-build\|mulle-bootstrap/!${SED_PUBLISHER_REPLACE}" "${filename}"
+   fi
+}
+
+
+url_replace()
+{
+   local filename="$1"
+
+   if fgrep -s "${OLD_PUBLISHER}" "${filename}" > /dev/null
+   then
+      echo "URL replacing \"${OLD_PUBLISHER}\" with \"${NEW_PUBLISHER}\" in \"${filename}\"..." >&2
+      sed_inline_replace "/mulle-build\|mulle-bootstrap/!${SED_URL_REPLACE}" "${filename}"
+   fi
+}
+
+
+variable_replace()
+{
+   local filename="$1"
+
+   if fgrep -s "PUBLISHER" "${filename}" | fgrep -s "${OLD_PUBLISHER}" > /dev/null
+   then
+      echo "PUBLISHER replacing \"${OLD_PUBLISHER}\" with \"${NEW_PUBLISHER}\" in \"${filename}\"..." >&2
+      sed_inline_replace "/PUBLISHER=/${SED_PUBLISHER_REPLACE}" "${filename}"
+   fi
+}
+
+
+tagged_line_replace()
+{
+   local filename="$1"
+
+   if fgrep -s "__publisher-replace__" "${filename}" | fgrep -s "${OLD_PUBLISHER}" > /dev/null
+   then
+      echo "Tagged line replacing \"${OLD_PUBLISHER}\" with \"${NEW_PUBLISHER}\" in \"${filename}\"..." >&2
+      sed_inline_replace "/__publisher-replace__/${SED_PUBLISHER_REPLACE}" "${filename}"
+   fi
+}
+
+
+hack_documentation()
+{
+   #
+   # go through documentation
+   #
+   IFS="
+   "
+   for file in `find . -name "*.md" -not -path '*/\.*' -print`
+   do
+      filename="`basename -- ${file}`"
+      case "${filename}" in
+         RELEASE*|release*|[0-9]*)
+         ;;
+
+         *)
+            url_replace "${file}"
+            tagged_line_replace "${file}"
+         ;;
+      esac
+   done
+}
+
+
+hack_bootstrap()
+{
+   #
+   # go through .bootstrap
+   #
+   for file in `find .bootstrap -type f -not -path '*/\.*' -print`
+   do
+      filename="`basename -- ${file}`"
+      case "${filename}" in
+         MULLE*REPOSITORIES)
+            echo "Warning: distributing expansion ${filename} is obsolete" >&2
+         ;;
+
+         *)
+            brutal_replace "${file}"
+         ;;
+      esac
+   done
+
+}
+
+
+hack_scripts()
+{
+   #
+   # go through shell scripts
+   #
+   for file in `find . -perm "+111" -type f -not -path '*/\.*' -print`
+   do
+      filename="`basename -- ${file}`"
+      case "${filename}" in
+         *change-publisher*)
+         ;;
+
+         *)
+            url_replace "${file}"
+            variable_replace "${file}"
+            tagged_line_replace "${file}"
+         ;;
+      esac
+   done
+}
+
+
+#
+# URL changes are assumed to be safe
+# otherwise look for a '__publisher-replace__' in the line
+# In shell scripts look for PUBLISHER=  additionally
+#
+
+main()
+{
+   [ "${OLD_PUBLISHER}" = "${NEW_PUBLISHER}" ] && fail "no change in publisher"
+   [ -z "${OLD_PUBLISHER}" ] && fail "empty old publisher"
+   [ -z "${NEW_PUBLISHER}" ] && fail "empty new publisher"
+
+   SED_PUBLISHER_REPLACE="s/`escaped_sed_pattern "${OLD_PUBLISHER}"`/`escaped_sed_pattern "${NEW_PUBLISHER}"`/g"
+   SED_URL_REPLACE="s/:github.com\/`escaped_sed_pattern "${OLD_PUBLISHER}"`/:github.com\/`escaped_sed_pattern "${NEW_PUBLISHER}"`/g"
+
+   hack_bootstrap
+   hack_scripts
+   hack_documentation
+}
+
+
+main "$@"

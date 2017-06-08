@@ -1,3 +1,11 @@
+0.8.6
+===
+
+* community release
+* added mulle-objc-change-publisher to ease the pain of maintaining multiple
+forks
+
+
 0.8.5
 ===
 
