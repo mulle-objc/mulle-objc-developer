@@ -1,0 +1,341 @@
+#! /usr/bin/env bash
+#
+#   Copyright (c) 2016 Nat! - Mulle kybernetiK
+#   All rights reserved.
+#
+#   Redistribution and use in source and binary forms, with or without
+#   modification, are permitted provided that the following conditions are met:
+#
+#   Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#   Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#   Neither the name of Mulle kybernetiK nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#   POSSIBILITY OF SUCH DAMAGE.
+#
+
+usage()
+{
+   cat <<EOF >&2
+mulle-objc-create-templates <options>
+
+Runs through your .yml and .md files and creates .scion files for those that
+contain references to the PUBLISHER or PUBLISHER_TAP.
+The result will be stored in a templates folder, that mirrors your project
+directory structure.
+
+e.g. dox/foo.html turns into templates/dox/foo.html.scion
+
+You can use the shells script ./bin/tap-info.sh to define the publisher
+values, or use the following options.
+
+Options: (All options are required)
+   --publisher <name> : PUBLISHER to print (e.g. mulle-nat)
+   --tap <name>       : PUBLISHER_TAP to print (e.g. mulle-kybernetik/software)
+EOF
+   exit 1
+}
+
+
+assert_ack()
+{
+   local path
+   local version
+
+   path="`command -v ack`"
+   [ -z "${path}" ] && fail "ack not installed (https://beyondgrep.com/)"
+   version="`ack --version | head -1 | awk '{print $2}' 2> /dev/null`"
+
+   local minor
+   local major
+
+   major="$(cut -d. -f1 <<< "${version}")"
+   minor="$(cut -d. -f2 <<< "${version}")"
+
+   if [ "${major}" -lt "2" ] || [ "${major}" -eq "2" -a "${minor}" -lt "16" ]
+   then
+      fail "ack is outdated. v2.16 or better required"
+   fi
+}
+
+
+escaped_sed_pattern()
+{
+   sed -e 's/[]\/$*.^|[]/\\&/g' <<< "${1}"
+}
+
+
+create_templates()
+{
+   local templates="$1"
+
+   local directory
+   local output
+   local name
+
+   IFS="
+"
+   for i in `ack -l '^(?!.*(mulle-build|mulle-bootstrap)).*(mulle-kybernetik/software|github.com/mulle-nat)'`
+   do
+      log_fluff "Considering \"${i}\" ..."
+
+      # avoid common pitfall directories, ack doesn't prepend ./
+      case "${i}" in
+         .bootstrap*|.git|addictions/*|dependencies/*|build/*|build*.d/*|templates/*)
+            log_fluff "Ignored because of containing directory"
+            continue
+         ;;
+      esac
+
+      name="`basename -- "$i"`"
+      directory="`dirname -- "$i"`"
+
+      # only do documentation style files for now
+      case "${name}" in
+         CMake*.txt)
+            log_fluff "Ignored \"${name}\" because it's a CMake file"
+            continue
+         ;;
+         *.md|*.yml) # and .travis.yml too intentional
+         ;;
+
+         *)
+            log_fluff "Ignored \"${name}\" because not a .md or .yml file"
+            continue
+         ;;
+      esac
+
+      log_fluff "Coverting \"${i}\" into a template ..."
+
+      mkdir_if_missing "${templates}/${directory}" || exit 1
+
+      output="${templates}/${i}.scion"
+      if [ "${OPTION_FORCE}" = "YES" -o ! -f "${output}" ]
+      then
+         exekutor cat "$i" | \
+         exekutor sed "/mulle-build\|mulle-bootstrap/!${SED_PUBLISHER_REPLACE}" |
+         redirect_exekutor "${output}" sed "/mulle-build\|mulle-bootstrap/!${SED_TAP_REPLACE}" || exit 1
+         log_info "Created template \"${output}\""
+      else
+         log_verbose "\"${output}\" already exists"
+      fi
+   done
+}
+
+
+create_wrapper()
+{
+   local templates="$1"
+
+   if [ "${OPTION_WRITE_WRAPPER}" = "YES" ]
+   then
+      if [ -d "${templates}" ] &&
+         [ "${OPTION_FORCE}" = "YES" -o ! -f "${templates}/_wrapper.scion" ]
+      then
+         log_info "Creating wrapper \"${templates}/_wrapper.scion\" ..."
+         redirect_exekutor "${templates}/_wrapper.scion" cat <<EOF
+[comment]: <> ({{COMMENT}})
+{% includes TEMPLATE_FILE %}
+EOF
+      fi
+   else
+      log_fluff "Not writing a wrapper"
+   fi
+}
+
+
+create_readme()
+{
+   local templates="$1"
+
+   if [ "${OPTION_WRITE_README}" = "YES" ]
+   then
+      if [ -d "${templates}" ] &&
+         [ "${OPTION_FORCE}" = "YES" -o ! -f "${templates}/README.md" ]
+      then
+         log_info "Creating help file \"${templates}/README.md\" ..."
+         redirect_exekutor "${templates}/README.md" cat <<EOF
+# Templates to support forks
+
+The templates in this directory structure were initially created with
+\`mulle-objc-create-templates\`.
+
+Recreate the original files from the templates with
+
+\`\`\`
+mulle-objc-process-templates --publisher '${PUBLISHER}' --tap '${PUBLISHER_TAP}'
+\`\`\`
+
+or substitute with your own publisher information.
+
+---
+
+\`mulle-objc-process-templates\` and \`mulle-objc-create-templates\` are part of
+[mulle-objc-developer](https://github.com/mulle-objc/mulle-objc-developer)
+EOF
+      fi
+   else
+      log_fluff "Not writing a README.md"
+   fi
+}
+
+
+main()
+{
+   local USERARGS
+
+   local OPTION_READ_TAP_INFO="YES"
+   local OPTION_WRITE_WRAPPER="YES"
+   local OPTION_WRITE_README="YES"
+   local OPTION_FORCE="NO"
+   local OPTION_PUBLISHER
+   local OPTION_PUBLISHER_TAP
+
+   local varname
+
+   while [ $# -ne 0 ]
+   do
+      case "$1" in
+         -i|-ignore-tap-info)
+            OPTION_READ_TAP_INFO="NO"
+         ;;
+
+         -f)
+            OPTION_FORCE="YES"
+         ;;
+
+         -n|--dry-run)
+            MULLE_FLAG_EXEKUTOR_DRY_RUN="YES"
+         ;;
+
+
+         --no-readme)
+            OPTION_WRITE_README="NO"
+         ;;
+
+         --no-wrapper)
+            OPTION_WRITE_WRAPPER="NO"
+         ;;
+
+         -t)
+            set -x
+         ;;
+
+         -v)
+            MULLE_FLAG_LOG_VERBOSE="YES"
+         ;;
+
+         -vv)
+            MULLE_FLAG_LOG_VERBOSE="YES"
+            MULLE_FLAG_LOG_FLUFF="YES"
+         ;;
+
+         -vvv)
+            MULLE_FLAG_LOG_VERBOSE="YES"
+            MULLE_FLAG_LOG_FLUFF="YES"
+            MULLE_FLAG_LOG_EXEKUTOR="YES"
+         ;;
+
+         -V)
+            MULLE_FLAG_LOG_EXEKUTOR="YES"
+         ;;
+
+         --publisher)
+            [ $# -eq 1 ] && fail "missing argument to $1"
+            shift
+            OPTION_PUBLISHER="$1"
+         ;;
+
+         --tap|--publisher-tap)
+            [ $# -eq 1 ] && fail "missing argument to $1"
+            shift
+            OPTION_PUBLISHER_TAP="$1"
+         ;;
+
+         -*)
+            usage
+         ;;
+
+         *)
+            break
+         ;;
+      esac
+
+      shift
+   done
+
+   if [ "${OPTION_READ_TAP_INFO}" = "YES" ]
+   then
+      if [ -f "./bin/tap-info.sh" ]
+      then
+         log_verbose "Reading ./bin/tap-info.sh"
+         . ./bin/tap-info.sh
+      else
+         log_fluff "./bin/tap-info.sh not present"
+      fi
+   fi
+
+   PUBLISHER="${PUBLISHER:-${OPTION_PUBLISHER}}"
+   PUBLISHER_TAP="${PUBLISHER_TAP:-${OPTION_PUBLISHER_TAP}}"
+
+   [ -z "${PUBLISHER}" ]     && fail "PUBLISHER undefined"
+   [ -z "${PUBLISHER_TAP}" ] && fail "PUBLISHER_TAP undefined"
+
+   SED_PUBLISHER_REPLACE="s/\/`escaped_sed_pattern "${PUBLISHER}"`\//\/`escaped_sed_pattern "{{PUBLISHER}}"`\//g"
+   SED_TAP_REPLACE="s/`escaped_sed_pattern "${PUBLISHER_TAP}"`/`escaped_sed_pattern "{{PUBLISHER_TAP}}"`/g"
+
+   assert_ack
+
+   create_templates "templates"
+   create_wrapper "templates"
+   create_readme "templates"
+}
+
+
+_initialize()
+{
+   local directory
+
+   directory="`mulle-bootstrap library-path 2> /dev/null`"
+   [ ! -d "${directory}" ] && echo "Failed to locate mulle-bootstrap library. https://github.com/mulle-nat/mulle-bootstrap" >&2 && exit 1
+   PATH="${directory}:$PATH"
+
+   [ -z "${MULLE_BOOTSTRAP_LOGGING_SH}" ]   && . mulle-bootstrap-logging.sh
+   [ -z "${MULLE_BOOTSTRAP_FUNCTIONS_SH}" ] && . mulle-bootstrap-functions.sh
+}
+
+
+
+MULLE_EXECUTABLE="`basename -- "$0"`"
+MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
+MULLE_EXECUTABLE_PID=$$
+MULLE_ARGUMENTS="$@"
+
+_initialize "%@"
+
+#
+# don't kill the process group like mulle-bootstrap does (and shouldn't)
+#
+_bail()
+{
+   exit 1
+}
+
+
+main "$@"

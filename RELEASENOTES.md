@@ -1,3 +1,14 @@
+## 0.9.1
+
+* new scripts to add dependencies
+* mulle-objc-init with dependency support
+
+
+### 0.8.7
+
+* lotsa changes to make it more flexible
+
+
 0.8.6
 ===
 

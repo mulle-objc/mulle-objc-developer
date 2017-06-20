@@ -112,48 +112,48 @@ fail()
 }
 
 
-setup_hooks()
-{
-   cat <<EOF >> "$i/.git/hooks/pre-receive" || exit 1
-#!/bin/sh
+# setup_hooks()
+# {
+#    cat <<EOF >> "$i/.git/hooks/pre-receive" || exit 1
+# #!/bin/sh
 
-#
-# in case the user did some local edits: at least save them
-# in the stash
-#
-SRC_DIR="\`dirname -- "\$PWD"\`"
+# #
+# # in case the user did some local edits: at least save them
+# # in the stash
+# #
+# SRC_DIR="\`dirname -- "\$PWD"\`"
 
-(
-   GIT_DIR="\$PWD" &&
-   cd "\${SRC_DIR}" &&
-   git stash save
-)
-EOF
-   chmod 755 "$i/.git/hooks/pre-receive" || exit 1
+# (
+#    GIT_DIR="\$PWD" &&
+#    cd "\${SRC_DIR}" &&
+#    git stash save
+# )
+# EOF
+#    chmod 755 "$i/.git/hooks/pre-receive" || exit 1
 
-   cat <<EOF >> "$i/.git/hooks/post-receive" || exit 1
-#!/bin/sh
-#
-# ensure that pushes get reflected in the repository, so that
-# old files don't look like edits.
-#
-SRC_DIR="\`dirname -- "\$PWD"\`"
+#    cat <<EOF >> "$i/.git/hooks/post-receive" || exit 1
+# #!/bin/sh
+# #
+# # ensure that pushes get reflected in the repository, so that
+# # old files don't look like edits.
+# #
+# SRC_DIR="\`dirname -- "\$PWD"\`"
 
-(
-   GIT_DIR="\$PWD" &&
-   cd "\${SRC_DIR}" &&
-   git reset -q --hard
-)
-EOF
+# (
+#    GIT_DIR="\$PWD" &&
+#    cd "\${SRC_DIR}" &&
+#    git reset -q --hard
+# )
+# EOF
 
-   chmod 755 "$i/.git/hooks/post-receive" || exit 1
-}
+#    chmod 755 "$i/.git/hooks/post-receive" || exit 1
+# }
 
 
-enable_push()
-{
-   ( GIT_DIR="$1/.git" git config receive.denyCurrentBranch ignore ) || exit 1
-}
+# enable_push()
+# {
+#    ( GIT_DIR="$1/.git" git config receive.denyCurrentBranch ignore ) || exit 1
+# }
 
 
 blurb_and_ask()
@@ -352,7 +352,10 @@ run()
    local command="$1" ; shift
 
    (
-      cd "${MASTER_DIR}"
+      if [ "`basename -- "${PWD}"`" != "${MASTER_DIR}" ]
+      then
+         cd "${MASTER_DIR}" || exit 1
+      fi
 
       local i
 
@@ -361,7 +364,32 @@ run()
          if [ -d "$i" ]
          then
             echo "<<>> $i" >&2
-            ( cd "$i" && "${command}" "$@" ) || exit 1
+            ( cd "$i" && "${command}" "$@" ) || [ "${OPTION_LENIENT}" = "YES" ] || exit 1
+            echo >&2
+         fi
+      done
+   ) || return 1
+}
+
+
+run_eval()
+{
+   local command="$1"
+
+   (
+      if [ "`basename -- "${PWD}"`" != "${MASTER_DIR}" ]
+      then
+         cd "${MASTER_DIR}" || exit 1
+      fi
+
+      local i
+
+      for i in $REPOS
+      do
+         if [ -d "$i" ]
+         then
+            echo "<<>> $i" >&2
+            ( cd "$i" && eval ${command} ) || [ "${OPTION_LENIENT}" = "YES" ] || exit 1
             echo >&2
          fi
       done
@@ -373,9 +401,8 @@ main()
 {
    MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
 
-   COMMON_PUBLISHER="${COMMON_PUBLISHER:-${PUBLISHER}}"
-   EMBEDDED_PUBLISHER="${EMBEDDED_PUBLISHER:-${PUBLISHER}}"
-   ADDITIONAL_PUBLISHER="${ADDITIONAL_PUBLISHER:-${PUBLISHER}}"
+   local OPTION_LENIENT="NO"
+   local OPTION_EVAL="NO"
 
    while [ $# -ne 0 ]
    do
@@ -408,6 +435,20 @@ main()
             ADDITIONAL_BRANCH="$1"
          ;;
 
+         --eval)
+            OPTION_EVAL="YES"
+         ;;
+
+         --lenient)
+            OPTION_LENIENT="YES"
+         ;;
+
+         --name)
+            [ $# -eq 1 ] && echo "$1 argument missing" >&2 && exit 1
+            shift
+            MULLE_OBJC_NAME="$1"
+         ;;
+
          -v)
             VERBOSE="YES"
          ;;
@@ -432,9 +473,14 @@ main()
    COMMAND="${1:-clone}"
    [ $# -ne 0 ] && shift
 
+
    #
    # setup default values if not set by options
    #
+   COMMON_PUBLISHER="${COMMON_PUBLISHER:-${PUBLISHER}}"
+   EMBEDDED_PUBLISHER="${EMBEDDED_PUBLISHER:-${PUBLISHER}}"
+   ADDITIONAL_PUBLISHER="${ADDITIONAL_PUBLISHER:-${PUBLISHER}}"
+
    OBJC_REPOPREFIX="${OBJC_REPOPREFIX:-https://github.com/${PUBLISHER}/}"
    OBJC_BRANCH="${OBJC_BRANCH:-release}"
 
@@ -465,6 +511,10 @@ main()
          ) || exit 1
       ;;
 
+      status)
+         run git status -s --untracked-files="no" "$@" || exit 1
+      ;;
+
       update)
          run git fetch "$@" || exit 1
       ;;
@@ -474,7 +524,13 @@ main()
       ;;
 
       *)
-         run "${COMMAND}" "$@" || exit 1
+         if [ "${OPTION_EVAL}" = "YES" ]
+         then
+            [ $# -eq 0 ] || fail "in eval mode, pass the command as a single quoted string"
+            run_eval "${COMMAND}"  || exit 1
+         else
+            run "${COMMAND}" "$@" || exit 1
+         fi
       ;;
 
       *)

@@ -29,51 +29,20 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 #
-
-
-# Define your project and the dependencies for homebrew
-# DEPENDENCIES and BUILD_DEPENDENCIES will be evaled later!
-# Then run this as
-#   ./bin/release.sh --publisher mulle-nat --publisher-tap mulle-kybernetik/alpha/
 #
-
-PROJECT="MulleObjcDeveloper"      # your project name, requires camel-case
-DESC="mulle-objc Developer Environment"
-LANGUAGE="bash"             # c,cpp, objc, bash ...
-
-
+# For documentation and help see:
+#    https://github.com/mulle-nat/mulle-homebrew
 #
-# Keep these commented out, if the automatic detection works well
-# enough for you
+# Run this somewhat like this (for real: remove -n):
+#   ./bin/release.sh -v -n --publisher mulle-nat --publisher-tap mulle-kybernetik/software/
 #
-VERSIONFILE=mulle-objc-init
-VERSIONNAME=MULLE_OBJC_DEVELOPER_VERSION
-
-#
-# Specify needed homebrew packages by name as you would when saying
-# `brew install`.
-#
-# Use the ${DEPENDENCY_TAP} prefix for non-official dependencies.
-#
-# DEPENDENCIES='${DEPENDENCY_TAP}mulle-concurrent
-# libpng
-# '
-
-DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
-${BOOTSTRAP_TAP}mulle-build
-codeon-gmbh/software/mulle-clang'
-
-BUILD_DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
-${BOOTSTRAP_TAP}mulle-build
-cmake'
-
 
 #######
-# If you are using mulle-build, you don't hafta change anything after this
+# If you are using mulle-build, you don't hafta change anything
 #######
 
 #
-# Generate your `def install` `test do` lines here to stdout.
+# Generate your `def install` `test do` lines here. echo them to stdout.
 #
 generate_brew_formula_build()
 {
@@ -104,156 +73,66 @@ generate_brew_formula()
    _generate_brew_formula "$@"
 }
 
+
 #######
 # Ideally changes to the following values are done with the command line
 # which makes it easier for forks.
 #######
 
 MULLE_BOOTSTRAP_FAIL_PREFIX="`basename -- $0`"
-MULLE_HOMEBREW_VERSION="3.4.5"
-
-EXEC_DIR="`dirname -- $0`"
+MULLE_HOMEBREW_VERSION="5.0.0"
 
 #
 # prefer local mulle-homebrew if available
+# Do not embed it anymore!
 #
-if [ -x "${EXEC_DIR}/mulle-homebrew/mulle-homebrew-env" ]
-then
-   PATH="${EXEC_DIR}/mulle-homebrew:$PATH"
-fi
-
 if [ -z "`command -v mulle-homebrew-env`" ]
 then
-   echo "mulle-homebrew-env not found in PATH" >&2
+   cat <<EOF >&2
+mulle-homebrew-env not found in PATH.
+Visit the homepage for installation instructions:
+   https://github.com/mulle-nat/mulle-homebrew
+EOF
    exit 1
 fi
-
 
 INSTALLED_MULLE_HOMEBREW_VERSION="`mulle-homebrew-env version`" || exit 1
 LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
 
-. "${LIBEXEC_DIR}/mulle-homebrew.sh" || exit 1
-. "${LIBEXEC_DIR}/mulle-git.sh"      || exit 1
-
-if ! homebrew_is_compatible_version "${INSTALLED_MULLE_HOMEBREW_VERSION}" "${MULLE_HOMEBREW_VERSION}"
-then
-   fail "Installed mulle-homebrew version ${INSTALLED_MULLE_HOMEBREW_VERSION} is \
-not compatible with this script from version ${MULLE_HOMEBREW_VERSION}"
-fi
-
-# parse options
-homebrew_parse_options "$@"
-
-#
-# dial past options now as they have been parsed
-#
-while [ $# -ne 0 ]
-do
-   case "$1" in
-      -*)
-         shift
-      ;;
-
-      --*)
-         shift
-         shift
-      ;;
-
-      *)
-         break;
-      ;;
-   esac
-done
-
-# --- FORMULA GENERATION ---
-
-BOOTSTRAP_TAP="${BOOTSTRAP_TAP:-mulle-kybernetik/software/}"
-
-DEPENDENCY_TAP="${DEPENDENCY_TAP:-${PUBLISHER_TAP}}"
-
-#
-# these can usually be deduced, if you follow the conventions
-#
-if [ -z "${NAME}" ]
-then
-   NAME="`get_name_from_project "${PROJECT}" "${LANGUAGE}"`"
-fi
-
-if [ -z "${VERSIONFILE}" ]
-then
-   VERSIONFILE="`get_header_from_name "${NAME}"`"
-fi
-
-if [ -z "${VERSIONNAME}" ]
-then
-   VERSIONNAME="`get_versionname_from_project "${PROJECT}"`"
-fi
-
-if [ -f VERSION ]
-then
-   VERSION="`head -1 VERSION`"
-else
-   VERSION="`get_project_version "${VERSIONFILE}" "${VERSIONNAME}"`"
-   if [ -z "${VERSION}" ]
-   then
-      VERSION="`get_project_version "src/version.h" "${VERSIONNAME}"`"
-   fi
-fi
-
-# where homebrew grabs the archive off
-ARCHIVE_URL="${ARCHIVE_URL:-https://github.com/${PUBLISHER}/${NAME}/archive/${VERSION}.tar.gz}"
-
-# written into formula for homebrew, will be evaled
-HOMEPAGE_URL="${HOMEPAGE_URL:-https://github.com/${PUBLISHER}/${NAME}}"
-
-
-# --- HOMEBREW TAP ---
-# Specify to where and under what name to publish via your brew tap
-#
-if [ -z "${PUBLISHER_TAP}" ]
-then
-   fail "you need to specify a publisher tap with --publisher-tap (hint: <mulle-kybernetik/software/>)"
-fi
-
-TAPS_LOCATION="${TAPS_LOCATION:-..}"
-
-HOMEBREW_TAP="${HOMEBREW_TAP:-${TAPS_LOCATION}/homebrew-`basename -- ${PUBLISHER_TAP}`}"
-
-RBFILE="${RBFILE:-${NAME}.rb}"
-
-# --- GIT ---
-
-#
-# require PUBLISHER (and PUBLISHER_TAP) as command line parameter, so
-# that forks don't have to edit this constantly
-#
-if [ -z "${PUBLISHER}" ]
-then
-   fail "You need to specify a publisher with --publisher (hint: https://github.com/<publisher>)"
-fi
-
-if [ -z "${VERSION}" ]
-then
-   fail "Could not figure out the version. (hint: check VERSIONNAME, VERSIONFILE)"
-fi
-
-# tag to tag your release
-TAG="${TAG:-${TAG_PREFIX}${VERSION}}"
-
-# git remote to push to, usually origin
-ORIGIN="${ORIGIN:-origin}"
-
-# git remote to push to, usually github, can be empty
-GITHUB="${GITHUB:-github}"
-
-# git branch to release to, source is always current
-BRANCH="${BRANCH:-release}"
+. "${LIBEXEC_DIR}/mulle-files.sh"       || exit 1
+. "${LIBEXEC_DIR}/mulle-homebrew.sh"    || exit 1
+. "${LIBEXEC_DIR}/mulle-git.sh"         || exit 1
+. "${LIBEXEC_DIR}/mulle-version.sh"     || exit 1
+. "${LIBEXEC_DIR}/mulle-environment.sh" || exit 1
 
 
 main()
 {
-   # do the release
-   git_main "${BRANCH}" "${ORIGIN}" "${TAG}" "${GITHUB}" || exit 1
+   if [ "${DO_GIT_RELEASE}" != "YES" -a "${DO_GENERATE_FORMULA}" != "YES" ]
+   then
+      fail "Nothing to do! bin/version-info.sh and bin/formula-info.sh are missing"
+   fi
+
+   if [ "${DO_GIT_RELEASE}" = "YES" ]
+   then
+     # do the release
+      git_main "${BRANCH}" "${ORIGIN}" "${TAG}" "${GITHUB}" || exit 1
+   fi
+
+   if [ "${DO_GENERATE_FORMULA}" != "YES" ]
+   then
+       return
+   fi
+
+   if [ -z "${PUBLISHER}" ]
+   then
+      fail "You need to specify a publisher with --publisher (hint: https://github.com/<publisher>)"
+   fi
+
+   if [ -z "${PUBLISHER_TAP}" ]
+   then
+      fail "You need to specify a publisher tap with --tap (hint: <mulle-kybernetik/software>)"
+   fi
 
    # generate the formula and push it
    homebrew_main "${PROJECT}" \

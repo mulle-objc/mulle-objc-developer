@@ -1,0 +1,149 @@
+#! /usr/bin/env bash
+#
+#   Copyright (c) 2017 Nat! - Mulle kybernetiK
+#   All rights reserved.
+#
+#   Redistribution and use in source and binary forms, with or without
+#   modification, are permitted provided that the following conditions are met:
+#
+#   Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#   Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#   Neither the name of Mulle kybernetiK nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#   POSSIBILITY OF SUCH DAMAGE.
+#
+
+usage()
+{
+   cat <<EOF >&2
+Usage:
+   mulle-objc-change-tap <command> <old> <new>
+
+   Change the tap from <old> to <new>. A tap looks like:
+      mulle-kybernetik/software/
+
+Command:
+      documentation : change all .md files
+      all           : documentation
+EOF
+   exit 1
+}
+
+
+fail()
+{
+   echo "error: $*" >&2
+   exit 1
+}
+
+
+escaped_sed_pattern()
+{
+   sed -e 's/[]\/$*.^|[]/\\&/g' <<< "${1}"
+}
+
+
+sed_inline_replace()
+{
+   local eflag
+
+   eflag="-e"
+
+   case "`uname -s`" in
+      Darwin)
+         eflag="-E"
+      ;;
+   esac
+
+   sed -i ".bak" "${eflag}" "$@"
+}
+
+
+tagged_line_replace()
+{
+   local filename="$1"
+
+   if fgrep -s "__publisher-replace__" "${filename}" | fgrep -s "${OLD_TAP}" > /dev/null
+   then
+      echo "Tagged line replacing \"${OLD_TAP}\" with \"${NEW_TAP}\" in \"${filename}\"..." >&2
+      sed_inline_replace "/__publisher-replace__/${SED_TAP_REPLACE}" "${filename}"
+   fi
+}
+
+
+hack_documentation()
+{
+   #
+   # go through documentation
+   #
+   IFS="
+   "
+   for file in `find . -name "*.md" -not -path '*/\.*' -print`
+   do
+      filename="`basename -- ${file}`"
+      case "${filename}" in
+         */dependencies/*|*/addictions/*|*/tests*/|*/build/*)
+         ;;
+
+         RELEASE*|release*|[0-9]*)
+         ;;
+
+         *)
+            tagged_line_replace "${file}"
+         ;;
+      esac
+   done
+}
+
+
+main()
+{
+   local cmd
+
+   case "$1" in
+      all|documentation)
+         cmd="hack_$1"
+      ;;
+
+      ""|*)
+         usage
+      ;;
+   esac
+   shift
+
+   [ $# -eq 0 ] && usage
+   OLD_TAP="$1"
+   shift
+
+   [ $# -eq 0 ] && usage
+   NEW_TAP="$1"
+   shift
+
+   [ "${OLD_PUBLISHER}" = "${NEW_TAP}" ] && fail "no change in tap"
+   [ -z "${OLD_TAP}" ] && fail "empty old tap"
+   [ -z "${NEW_TAP}" ] && fail "empty new tap"
+
+   SED_TAP_REPLACE="s/`escaped_sed_pattern "${OLD_TAP}"`/`escaped_sed_pattern "${NEW_TAP}"`/g"
+
+   "$cmd" "$@"
+}
+
+
+main "$@"

@@ -30,11 +30,23 @@
 #   POSSIBILITY OF SUCH DAMAGE.
 #
 
-OLD_PUBLISHER="${1:-mulle-nat}"
-[ $# -ne 0 ] && shift
+usage()
+{
+   cat <<EOF >&2
+Usage:
+   mulle-objc-change-publisher <command> <old> <new>
 
-NEW_PUBLISHER="${1:-mulle-objc}"
-[ $# -ne 0 ] && shift
+   Change the publisher from <old> to <new>. A publisher looks like:
+      mulle-nat
+
+Command:
+      bootstrap     : change contents of .bootstrap folder
+      documentation : change all .md files
+      scripts       : change all executable script (!#) files
+      all           : bootstrap + documentation + scripts
+EOF
+   exit 1
+}
 
 
 fail()
@@ -42,6 +54,7 @@ fail()
    echo "error: $*" >&2
    exit 1
 }
+
 
 escaped_sed_pattern()
 {
@@ -61,18 +74,7 @@ sed_inline_replace()
       ;;
    esac
 
-   sed -i '' "${eflag}" "$@"
-}
-
-brutal_replace()
-{
-   local filename="$1"
-
-   if fgrep -s "${OLD_PUBLISHER}" "${filename}" > /dev/null
-   then
-      echo "Globally replacing \"${OLD_PUBLISHER}\" with \"${NEW_PUBLISHER}\" in \"${filename}\" ..." >&2
-      sed_inline_replace "/mulle-build\|mulle-bootstrap/!${SED_PUBLISHER_REPLACE}" "${filename}"
-   fi
+   sed -i ".bak" "${eflag}" "$@"
 }
 
 
@@ -123,6 +125,9 @@ hack_documentation()
    do
       filename="`basename -- ${file}`"
       case "${filename}" in
+         */dependencies/*|*/addictions/*|*/tests*/|*/build/*)
+         ;;
+
          RELEASE*|release*|[0-9]*)
          ;;
 
@@ -149,7 +154,7 @@ hack_bootstrap()
          ;;
 
          *)
-            brutal_replace "${file}"
+            url_replace "${file}"
          ;;
       esac
    done
@@ -164,18 +169,35 @@ hack_scripts()
    #
    for file in `find . -perm "+111" -type f -not -path '*/\.*' -print`
    do
-      filename="`basename -- ${file}`"
-      case "${filename}" in
-         *change-publisher*)
-         ;;
+      #
+      # only change scripts
+      #
+      if head -1 "${file}" | fgrep -s '#!' > /dev/null
+      then
+         filename="`basename -- ${file}`"
+         case "${filename}" in
+            */dependencies/*|*/addictions/*|*/tests*/|*/build/*)
+            ;;
 
-         *)
-            url_replace "${file}"
-            variable_replace "${file}"
-            tagged_line_replace "${file}"
-         ;;
-      esac
+            *change-publisher*)
+            ;;
+
+            *)
+               url_replace "${file}"
+               variable_replace "${file}"
+               tagged_line_replace "${file}"
+            ;;
+         esac
+      fi
    done
+}
+
+
+hack_all()
+{
+   hack_bootstrap &&
+   hack_scripts &&
+   hack_documentation
 }
 
 
@@ -187,6 +209,27 @@ hack_scripts()
 
 main()
 {
+   local cmd
+
+   case "$1" in
+      all|bootstrap|documentation|scripts)
+         cmd="hack_$1"
+      ;;
+
+      ""|*)
+         usage
+      ;;
+   esac
+   shift
+
+   [ $# -eq 0 ] && usage
+   OLD_PUBLISHER="$1"
+   shift
+
+   [ $# -eq 0 ] && usage
+   NEW_PUBLISHER="$1"
+   shift
+
    [ "${OLD_PUBLISHER}" = "${NEW_PUBLISHER}" ] && fail "no change in publisher"
    [ -z "${OLD_PUBLISHER}" ] && fail "empty old publisher"
    [ -z "${NEW_PUBLISHER}" ] && fail "empty new publisher"
@@ -194,9 +237,7 @@ main()
    SED_PUBLISHER_REPLACE="s/`escaped_sed_pattern "${OLD_PUBLISHER}"`/`escaped_sed_pattern "${NEW_PUBLISHER}"`/g"
    SED_URL_REPLACE="s/:github.com\/`escaped_sed_pattern "${OLD_PUBLISHER}"`/:github.com\/`escaped_sed_pattern "${NEW_PUBLISHER}"`/g"
 
-   hack_bootstrap
-   hack_scripts
-   hack_documentation
+   "$cmd" "$@"
 }
 
 

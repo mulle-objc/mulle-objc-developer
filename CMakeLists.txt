@@ -12,9 +12,13 @@ set( PROJECT_VERSION "${MULLE_OBJC_DEVELOPER_VERSION}")
 set( PUBLISHER "mulle-objc")
 
 set( SCRIPTS
-mulle-objc-clone
-mulle-objc-init
 mulle-objc-change-publisher
+mulle-objc-change-tap
+mulle-objc-clone
+mulle-objc-create-templates
+mulle-objc-init
+mulle-objc-make-dependencies-inc
+mulle-objc-print-templates
 )
 
 

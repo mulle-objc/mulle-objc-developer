@@ -1,0 +1,4 @@
+.DS_Store
+*.bak
+*.old
+tap-info.sh
