@@ -503,24 +503,24 @@ demo_version_h()
 /*
  *  version:  major, minor, patch
  */
-#define ${PROJECT_IDENTIFIER}_VERSION  ((0 << 20) | (0 << 8) | 0)
+#define ${PROJECT_UPCASE_IDENTIFIER}_VERSION  ((0 << 20) | (0 << 8) | 0)
 
 
-static inline unsigned int    get_version_minor_major( void)
+static inline unsigned int    ${PROJECT_IDENTIFIER}_get_version_major( void)
 {
-   return( ${PROJECT_IDENTIFIER}_VERSION >> 20);
+   return( ${PROJECT_UPCASE_IDENTIFIER}_VERSION >> 20);
 }
 
 
-static inline unsigned int    get_version_minor( void)
+static inline unsigned int    ${PROJECT_IDENTIFIER}_get_version_minor( void)
 {
-   return( (${PROJECT_IDENTIFIER}_VERSION >> 8) & 0xFFF);
+   return( (${PROJECT_UPCASE_IDENTIFIER}_VERSION >> 8) & 0xFFF);
 }
 
 
-static inline unsigned int    get_version_patch( void)
+static inline unsigned int    ${PROJECT_IDENTIFIER}_get_version_patch( void)
 {
-   return( ${PROJECT_IDENTIFIER}_VERSION & 0xFF);
+   return( ${PROJECT_UPCASE_IDENTIFIER}_VERSION & 0xFF);
 }
 
 EOF
@@ -553,7 +553,7 @@ demo_file_m()
 
 - (uint32_t) projectVersion;
 {
-   return( ${PROJECT_IDENTIFIER}_VERSION);
+   return( ${PROJECT_UPCASE_IDENTIFIER}_VERSION);
 }
 
 @end
@@ -949,8 +949,8 @@ main()
    esac
 
    PROJECT_NAME="${PROJECT_NAME:-${dir_name}}"
-   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[a-z]' '[A-Z]'`"
-
+   PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[A-Z]' '[a-z]'`"
+   PROJECT_UPCASE_IDENTIFIER="`echo "${PROJECT_IDENTIFIER}" | tr '[a-z]' '[A-Z]'`"
    MULLE_OBJC_REPOSITORIES="${MULLE_OBJC_REPOSITORIES:-https://github.com/${PUBLISHER}}"
 
    #
