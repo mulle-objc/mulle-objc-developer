@@ -576,7 +576,7 @@ EOF
 demo_loader_m()
 {
    cat <<EOF
-#import "MulleObjCLoader+${PROJECT_NAME}.h>
+#import "MulleObjCLoader+${PROJECT_NAME}.h"
 
 
 @implementation MulleObjCLoader( ${PROJECT_NAME})
