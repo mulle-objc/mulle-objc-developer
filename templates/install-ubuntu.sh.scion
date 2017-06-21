@@ -29,12 +29,12 @@
 #   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
-MULLE_DEVELOPER_VERSION=0.9.1
+MULLE_OBJC_DEVELOPER_VERSION=0.9.1
 
 MULLE_BUILD_VERSION=3.8.1
 MULLE_BOOTSTRAP_VERSION=3.7.0
 MULLE_CLANG_VERSION=4.0.0.4
-MULLE_OBJC_TOOLS_VERSION="${MULLE_DEVELOPER_VERSION}"
+MULLE_OBJC_TOOLS_VERSION="${MULLE_OBJC_DEVELOPER_VERSION}"
 
 
 PUBLISHER="{{PUBLISHER}}"
@@ -147,8 +147,22 @@ install_mulle_build()
 
 install_mulle_objc_init()
 {
-   curl -O -L "https://raw.githubusercontent.com/${PUBLISHER}/mulle-objc-tools/${MULLE_OBJC_TOOLS_VERSION}/mulle-objc-init" &&
-   sudo install -m 755 mulle-objc-init "${PREFIX}/bin"
+   #
+   # build mulle-objc libraries
+   # Don't do this, prefer people to use sandboxed stuff
+   # mulle-install --prefix "${PREFIX}" --branch release "${MULLE_OBJC_URL}"/MulleObjC || exit 1
+
+   if [ ! -f "CMakeLists.txt" -o ! -f "mulle-objc-init" ]
+   then
+      log_verbose "Downloading mulle-objc-developer..."
+
+      git clone "${MULLE_OBJC_URL}/mulle-objc-developer.git" mulle-objc-developer || exit 1
+      cd mulle-objc-developer
+   fi
+
+   log_verbose "Installing mulle-objc-developer..."
+
+   sudo mulle-install --prefix "${PREFIX}"
 }
 
 
@@ -187,6 +201,26 @@ main()
       ;;
    esac
 
+   while [ "$#" -ne 0 ]
+   do
+      case "$1" in
+         --version)
+            echo "${MULLE_OBJC_DEVELOPER_VERSION}"
+            return 0
+         ;;
+
+         -*)
+            fail "unknown option $1"
+         ;;
+
+         *)
+            break
+         ;;
+      esac
+
+      shift
+   done
+
    preliminaries_common || exit 1
 
    install_compiler || exit  1
@@ -198,7 +232,7 @@ main()
    install_mulle_build || exit 1
 
    # get mulle-build
-   install_mulle_objc_init || exit 1
+   install_mulle_objc_developer || exit 1
 }
 
 

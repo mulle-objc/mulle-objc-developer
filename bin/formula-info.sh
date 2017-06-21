@@ -17,9 +17,10 @@ LANGUAGE="bash"             # c,cpp, objc, bash ...
 # DEPENDENCIES and BUILD_DEPENDENCIES will be evaled later!
 # So keep them single quoted.
 #
-# DEPENDENCIES='${DEPENDENCY_TAP}mulle-concurrent
-# libpng
-# '
+DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
+${BOOTSTRAP_TAP}mulle-build
+codeon-gmbh/software/mulle-clang
+'
 
 #
 # Build via mulle-build. If you don't like this
