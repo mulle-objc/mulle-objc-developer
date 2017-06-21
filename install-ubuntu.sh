@@ -145,7 +145,7 @@ install_mulle_build()
 }
 
 
-install_mulle_objc_init()
+install_mulle_objc_developer()
 {
    #
    # build mulle-objc libraries
