@@ -5,14 +5,12 @@
 ![GitHub release](https://img.shields.io/github/release/mulle-objc/mulle-objc-developer.svg)
 
 
-This project installs all required items together into a single formula and
-supplies you with a script `mulle-objc-init` to setup your own **mulle-objc**
-projects.
+This project installs the minimally required items for developing
+**mulle-objc** on your system.
 
-This is also the goto project for
-[issues on GitHub](https://github.com/mulle-objc/mulle-objc-developer/issues),
-that don't match any of the other projects or where it's unclear where they
-belong.
+It will install the compiler **mulle-clang** and a
+script **mulle-objc-init**, with that you can start developing.
+
 
 ## Installation
 
@@ -23,9 +21,6 @@ You install **mulle-objc-developer** with [brew](//brew.sh):
 ```
 brew install mulle-kybernetik/software/mulle-objc-developer
 ```
-
-This will install the [mulle-clang](//github.com/codeon-gmbh/mulle-clang)
-compiler and some necessary scripts .
 
 
 ### Install on Unbuntu Linux and WSL/bash
@@ -42,8 +37,8 @@ chmod 755 install-ubuntu.sh
 
 ### mulle-objc-init
 
-Use `mulle-objc-init` to create a hello world project. This will download and compile quite a
-few dependencies.
+Use `mulle-objc-init` to create a hello world project. This will download and
+compile quite a few dependencies.
 
 
 ```
@@ -61,8 +56,8 @@ Now run your Objective-C executable:
 Your code and your project is automatically portable across all supported platforms!
 
 
-### mulle-objc-init usage
 
+### mulle-objc-init usage
 
 ```
 usage:
@@ -81,34 +76,17 @@ usage:
       version    : print mulle-objc-developer version
 ```
 
-## Using Xcode integration
+### Using Xcode
 
-If you want to use Xcode to edit your files, you can use **cmake** to generate 
+If you want to use Xcode to edit your files, you can use **cmake** to generate
 an Xcode project for your project.
 
 ```bash
 mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
 ```
 
-## Developing mulle-objc itself
 
-If you want to hack on `mulle-objc` it is easiest to use the supplied
-script [`mulle-objc-clone`](mulle-objc-clone) to setup things on
-your machine.
 
-Run `mulle-objc-clone` in a directory, where you want the repositories 
-to reside in. Then you can just compile and test any project conveniently
-with **mulle-build**:
-
-```
-mkdir rootdir
-cd rootdir
-mulle-objc-clone
-#
-cd MulleObjC
-mulle-build -y --bootstrap
-mulle-test
-```
 
 ## Links
 

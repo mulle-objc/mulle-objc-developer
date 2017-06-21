@@ -1,3 +1,4 @@
+#! /usr/bin/env bash
 #
 #   Copyright (c) 2017 Nat! - Mulle kybernetiK
 #   Copyright (c) 2017 Nat! - Codeon GmbH
@@ -36,7 +37,7 @@ MULLE_CLANG_VERSION=4.0.0.4
 MULLE_OBJC_TOOLS_VERSION="${MULLE_DEVELOPER_VERSION}"
 
 
-PUBLISHER="mulle-nat"
+PUBLISHER="{{PUBLISHER}}"
 
 #
 # This script will eventually vanish and be replaced with proper deb

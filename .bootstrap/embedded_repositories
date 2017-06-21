@@ -1,5 +1,0 @@
-#
-# overide the branches with e.g.
-# `echo "master" > .bootstrap.local/MULLE_TESTS_BRANCH`
-
-${MULLE_REPOSITORIES:-https://github.com/mulle-nat}/mulle-homebrew;bin/mulle-homebrew;${MULLE_HOMEBREW_BRANCH:-release}

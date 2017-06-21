@@ -1,7 +1,6 @@
 ## 0.9.1
 
-* new scripts to add dependencies
-* mulle-objc-init with dependency support
+* split off tools from mulle-objc-developer into new repository mulle-objc-tools
 
 
 ### 0.8.7
