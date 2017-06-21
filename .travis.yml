@@ -5,4 +5,11 @@ script:
   - curl -L -O 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/install-ubuntu.sh'
   - chmod 755 install-ubuntu.sh
   - ./install-ubuntu.sh
-  - sudo mulle-install --prefix /tmp --branch release https://github.com/mulle-objc/mulleobjc
+  - mulle-objc-init -d /tmp/Exe executable
+  - cd /tmp/Exe
+  - mulle-build -v -V --bootstrap
+  - ./build/Exe
+  - mulle-objc-init -d /tmp/Lib library
+  - cd /tmp/Lib && mulle-build -v -V --bootstrap
+  - mkdir /tmp/clone
+  - mulle-objc-clone -a

@@ -40,7 +40,7 @@ usage()
 {
    cat <<EOF >&2
 usage:
-   ${MULLE_EXECUTABLE} [options] [command]
+   ${MULLE_EXECUTABLE} [options] <command>
 
    Options:
       -d <dir>   : use "dir" instead of working directory
