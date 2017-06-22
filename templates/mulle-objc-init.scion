@@ -355,6 +355,9 @@ emit_dependencies_common()
    cat <<EOF
 include( \${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt)
 
+# useful on OS X to avoid /System/..Foundation.framework
+set( CMAKE_FIND_FRAMEWORK LAST)
+
 if( NOT ${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY)
    find_library( ${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY NAMES ${MULLE_OBJC_LIBRARY_NAME})
    message(STATUS "${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY is \${${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY}")
