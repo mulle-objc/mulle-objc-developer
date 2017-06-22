@@ -150,7 +150,7 @@ install_mulle_build()
 
    log_verbose "Installing mulle-build from \"${archive}\"..."
 
-   curl -v -O -L "${archive}" &&
+   curl -O -L "${archive}" &&
    tar xfz "${MULLE_BUILD_VERSION}.tar.gz" &&
    ( cd "mulle-build-${MULLE_BUILD_VERSION}" && sudo ./install.sh "${PREFIX}" )
 }
