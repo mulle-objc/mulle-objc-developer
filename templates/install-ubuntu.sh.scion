@@ -138,7 +138,7 @@ install_mulle_bootstrap()
 
    curl -O -L "${archive}" &&
    tar xfz "${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
-   ( cd mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}/ ; sudo ./install.sh "${PREFIX}" )
+   ( cd "mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}" ; sudo ./install.sh "${PREFIX}" )
 }
 
 
@@ -173,7 +173,7 @@ install_mulle_objc_developer()
 
       curl -O -L "${archive}" &&
       tar xfz "${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
-      cd mulle-objc-developer
+      cd "mulle-objc-developer-${MULLE_OBJC_DEVELOPER_VERSION}"
    fi
 
    log_verbose "Installing mulle-objc-developer..."
