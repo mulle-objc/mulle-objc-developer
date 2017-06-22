@@ -114,22 +114,29 @@ preliminaries_common()
 
 install_compiler()
 {
-   log_verbose "Installing mulle-clang..."
+   local deb
+   local dist
 
-   DIST="${UBUNTUNAME}-${ARCH}"
-   DOWNLOAD_URL="${BOTTLES_URL}/mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb"
+   dist="${UBUNTUNAME}-${ARCH}"
+   deb="${BOTTLES_URL}/mulle-clang-${MULLE_CLANG_VERSION}-${dist}.deb"
+
+   log_verbose "Installing mulle-clang from \"${deb}\"..."
 
    # get mulle-clang first, if this fails you don't need to wait so long
-   curl -O -L "${BOTTLES_URL}/mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb" &&
-   sudo dpkg --install "mulle-clang-${MULLE_CLANG_VERSION}-${DIST}.deb"
+   curl -O -L "${archive}" &&
+   sudo dpkg --install "mulle-clang-${MULLE_CLANG_VERSION}-${dist}.deb"
 }
 
 
 install_mulle_bootstrap()
 {
+   local archive
+
+   archive="${BOOTSTRAP_URL}/mulle-bootstrap/archive/${MULLE_BOOTSTRAP_VERSION}.tar.gz"
+
    log_verbose "Installing mulle-bootstrap..."
 
-   curl -O -L "${BOOTSTRAP_URL}/mulle-bootstrap/archive/${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
+   curl -O -L "${archive}" &&
    tar xfz "${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&
    ( cd mulle-bootstrap-${MULLE_BOOTSTRAP_VERSION}/ ; sudo ./install.sh "${PREFIX}" )
 }
@@ -137,9 +144,13 @@ install_mulle_bootstrap()
 
 install_mulle_build()
 {
-   log_verbose "Installing mulle-build..."
+   local archive
 
-   curl -O -L "${BOOTSTRAP_URL}/mulle-build/archive/${MULLE_BUILD_VERSION}.tar.gz" &&
+   archive="${BOOTSTRAP_URL}/mulle-build/archive/${MULLE_BUILD_VERSION}.tar.gz"
+
+   log_verbose "Installing mulle-build from \"${archive}\"..."
+
+   curl -v -O -L "${archive}" &&
    tar xfz "${MULLE_BUILD_VERSION}.tar.gz" &&
    ( cd "mulle-build-${MULLE_BUILD_VERSION}" && sudo ./install.sh "${PREFIX}" )
 }
@@ -147,16 +158,20 @@ install_mulle_build()
 
 install_mulle_objc_developer()
 {
+   local archive
+
+   archive="${MULLE_OBJC_URL}/mulle-objc-developer/archive/${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz"
+
    #
    # build mulle-objc libraries
    # Don't do this, prefer people to use sandboxed stuff
    # mulle-install --prefix "${PREFIX}" --branch release "${MULLE_OBJC_URL}"/MulleObjC || exit 1
-
+   #
    if [ ! -f "CMakeLists.txt" -o ! -f "mulle-objc-init" ]
    then
-      log_verbose "Downloading mulle-objc-developer ${MULLE_OBJC_DEVELOPER_VERSION}..."
+      log_verbose "Downloading mulle-objc-developer archive \"${archive}\"..."
 
-      curl -O -L "${MULLE_OBJC_URL}/mulle-objc-developer/archive/${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
+      curl -O -L "${archive}" &&
       tar xfz "${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
       cd mulle-objc-developer
    fi
