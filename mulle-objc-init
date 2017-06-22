@@ -31,9 +31,20 @@
 #
 MULLE_OBJC_DEVELOPER_VERSION=0.9.1
 
+#
+# allow these to be set via environment
+#
 VERSION="${VERSION:-${MULLE_OBJC_DEVELOPER_VERSION}}"
 PUBLISHER="${PUBLISHER:-mulle-nat}"
 MULLE_OBJC_DEVELOPER_TOOLS="${MULLE_OBJC_DEVELOPER_TOOLS:-mulle-objc-developer}"
+
+MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
+UPCASE_MULLE_OBJC_NAME="${UPCASE_MULLE_OBJC_NAME:-MULLE_OBJC}"
+MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME:-${MULLE_OBJC_NAME}}"
+MULLE_OBJC_HEADER_NAME="${MULLE_OBJC_HEADER_NAME:-${MULLE_OBJC_NAME}}"
+MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_LIBRARY_NAME:-${MULLE_OBJC_NAME}Standalone}"
+MULLE_OBJC_STANDALONE_HEADER_NAME="${MULLE_OBJC_STANDALONE_HEADER_NAME:-ns_objc_setup}"
+MULLE_OBJC_STANDALONE_INC_NAME="${MULLE_OBJC_STANDALONE_INC_NAME:-ns_objc_standalone}"
 
 
 usage()
@@ -190,9 +201,10 @@ developer_setup()
             search_path="`add_path "${search_path}" "${directory}"`"
          fi
 
-         if [ -d ../MulleObjC-master ]
+         # hacque for moi
+         if [ -d "../${MULLE_OBJC_NAME}-master" ]
          then
-            directory="`(cd ../MulleObjC-master ; pwd -P)`"
+            directory="`(cd ../${MULLE_OBJC_NAME}-master ; pwd -P)`"
             search_path="`add_path "${search_path}" "${directory}"`"
          fi
 
@@ -333,18 +345,18 @@ EOF
 emit_dependencies_common()
 {
    cat <<EOF
-include( \${DEPENDENCIES_DIR}/include/MulleObjC/CMakeDependencies.txt)
+include( \${DEPENDENCIES_DIR}/include/${MULLE_OBJC_NAME}/CMakeDependencies.txt)
 
-if( NOT MULLE_OBJC_LIBRARY)
-   find_library( MULLE_OBJC_LIBRARY NAMES MulleObjC)
-   message(STATUS "MULLE_OBJC_LIBRARY is \${MULLE_OBJC_LIBRARY}")
+if( NOT ${UPCASE_MULLE_OBJC_NAME}_LIBRARY)
+   find_library( ${UPCASE_MULLE_OBJC_NAME}_LIBRARY NAMES ${MULLE_OBJC_NAME})
+   message(STATUS "${UPCASE_MULLE_OBJC_NAME}_LIBRARY is \${MULLE_OBJC_LIBRARY}")
    set( OBJC_DEPENDENCY_LIBRARIES
 \${MULLE_OBJC_LIBRARY}
 \${OBJC_DEPENDENCY_LIBRARIES}
 CACHE INTERNAL "need to cache this"
 )
    set( OBJC_DEPENDENCY_NAMES
-MulleObjC
+${MULLE_OBJC_NAME}
 \${OBJC_DEPENDENCY_NAMES}
 CACHE INTERNAL "need to cache this too"
 )
@@ -863,16 +875,6 @@ main()
 
    directory="."
 
-   #
-   # allow these to be set via environment for now
-   #
-   MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
-   UPCASE_MULLE_OBJC_NAME="${UPCASE_MULLE_OBJC_NAME:-MULLE_OBJC}"
-   MULLE_OBJC_DEVELOPER_REPOSITORY_NAME="${MULLE_OBJC_DEVELOPER_REPOSITORY_NAME:-${MULLE_OBJC_NAME}}"
-   MULLE_OBJC_HEADER_NAME="${MULLE_OBJC_HEADER_NAME:-${MULLE_OBJC_NAME}}"
-   MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_LIBRARY_NAME:-${MULLE_OBJC_NAME}Standalone}"
-   MULLE_OBJC_STANDALONE_HEADER_NAME="${MULLE_OBJC_STANDALONE_HEADER_NAME:-ns_objc_setup}"
-   MULLE_OBJC_STANDALONE_INC_NAME="${MULLE_OBJC_STANDALONE_INC_NAME:-ns_objc_standalone}"
 
    while [ $# -ne 0 ]
    do

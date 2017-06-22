@@ -154,9 +154,10 @@ install_mulle_objc_developer()
 
    if [ ! -f "CMakeLists.txt" -o ! -f "mulle-objc-init" ]
    then
-      log_verbose "Downloading mulle-objc-developer..."
+      log_verbose "Downloading mulle-objc-developer ${MULLE_OBJC_DEVELOPER_VERSION}..."
 
-      git clone "${MULLE_OBJC_URL}/mulle-objc-developer.git" mulle-objc-developer || exit 1
+      curl -O -L "${MULLE_OBJC_URL}/mulle-objc-developer/archive/${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
+      tar xfz "${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
       cd mulle-objc-developer
    fi
 
