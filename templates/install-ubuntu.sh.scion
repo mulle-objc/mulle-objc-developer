@@ -123,7 +123,7 @@ install_compiler()
    log_verbose "Installing mulle-clang from \"${deb}\"..."
 
    # get mulle-clang first, if this fails you don't need to wait so long
-   curl -O -L "${archive}" &&
+   curl -O -L "${deb}" &&
    sudo dpkg --install "mulle-clang-${MULLE_CLANG_VERSION}-${dist}.deb"
 }
 
