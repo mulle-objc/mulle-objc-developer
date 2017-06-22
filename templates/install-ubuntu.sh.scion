@@ -225,6 +225,13 @@ main()
             return 0
          ;;
 
+         --prefix)
+            [ $# -eq 1 ] && fail "missing parameter for $1"
+            shift
+
+            PREFIX="$1"
+         ;;
+
          -*)
             fail "unknown option $1"
          ;;
