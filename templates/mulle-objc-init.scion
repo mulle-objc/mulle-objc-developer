@@ -466,7 +466,13 @@ emit_sources_and_headers_executable()
 
    cat <<EOF
 set( SOURCES
-${FILE_PREFIX}main.m
+"${FILE_PREFIX}Foo.m"
+"${FILE_PREFIX}main.m"
+)
+
+set( PROJECT_HEADERS
+"${FILE_PREFIX}Foo.h"
+"${FILE_PREFIX}version.h"
 )
 EOF
 }
@@ -526,7 +532,7 @@ demo_version_h()
 /*
  *  version:  major, minor, patch
  */
-#define ${PROJECT_UPCASE_IDENTIFIER}_VERSION  ((0 << 20) | (0 << 8) | 0)
+#define ${PROJECT_UPCASE_IDENTIFIER}_VERSION  ((0 << 20) | (7 << 8) | 56)
 
 
 static inline unsigned int    ${PROJECT_IDENTIFIER}_get_version_major( void)
@@ -558,7 +564,7 @@ demo_file_h()
 
 @interface Foo : NSObject
 
-- (uint32_t) projectVersion;
++ (uint32_t) projectVersion;
 
 @end
 EOF
@@ -574,7 +580,7 @@ demo_file_m()
 
 @implementation Foo
 
-- (uint32_t) projectVersion;
++ (uint32_t) projectVersion;
 {
    return( ${PROJECT_UPCASE_IDENTIFIER}_VERSION);
 }
@@ -634,7 +640,8 @@ EOF
 demo_standalone_m()
 {
    cat <<EOF
-#include <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_HEADER_NAME}.h>
+#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
+#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_HEADER_NAME}.h>
 #include <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_INC_NAME}.inc>
 
 // that's all folks
@@ -647,6 +654,7 @@ demo_main_m()
 {
    cat <<EOF
 #import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
+#include "Foo.h"
 #include "version.h"
 
 EOF
@@ -678,23 +686,18 @@ int  main( int argc, char *argv[])
       exit( 1);
    }
 #endif
-   printf( "VfL Bochum 1848\n");
+   printf( "VfL Bochum %d\n", [Foo projectVersion]);
    return( 0);
 }
 EOF
 }
 
 
-demo_library_files()
+demo_common_files()
 {
    if [ ! -e "README.md" -o "${FLAG_FORCE}" = "YES" ]
    then
       redirect_exekutor README.md emit_readme_md
-   fi
-
-   if [ ! -d "src" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      mkdir_if_missing "src"
    fi
 
    if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
@@ -714,6 +717,13 @@ demo_library_files()
       mkdir_if_missing "src"
       redirect_exekutor "src/Foo.m" demo_file_m
    fi
+
+}
+
+
+demo_library_files()
+{
+   demo_common_files
 
    if [ ! -e "src/${PROJECT_NAME}Standalone.c" -o "${FLAG_FORCE}" = "YES" ]
    then
@@ -743,16 +753,7 @@ demo_library_files()
 
 demo_executable_files()
 {
-   if [ ! -e "README.md" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      redirect_exekutor README.md emit_readme_md
-   fi
-
-   if [ ! -e "src/version.h" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      mkdir_if_missing "src"
-      redirect_exekutor "src/version.h" demo_version_h
-   fi
+   demo_common_files
 
    if [ ! -e "src/main.m" -o "${FLAG_FORCE}" = "YES" ]
    then

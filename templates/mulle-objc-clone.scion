@@ -182,12 +182,16 @@ blurb_and_ask()
       echo "The branch \"${EMBEDDED_BRANCH}\" of \"${repo}\" from \"${EMBEDDED_REPOPREFIX}\" will be cloned into \"${CACHE_DIR}\"."
    done
 
-   cat <<EOF
+   echo ""
+   echo "Then everything will be set up in a convenient way using mulle-bootstrap."
 
-Then everything will be set up in a convenient way using mulle-bootstrap.
+   if [ -z "${OPTIONAL_BASE_REPOS}${OPTIONAL_OBJC_REPOS}${OPTIONAL_ADDITIONAL_REPOS}" ]
+   then
+      echo "Some warnings may appear, if optional packages can not be found"
+   fi
 
-Press [RETURN] to continue, [CTRL]-[C] to abort
-EOF
+   echo ""
+   echo "Press [RETURN] to continue, [CTRL]-[C] to abort"
 
    read
 }
