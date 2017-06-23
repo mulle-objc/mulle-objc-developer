@@ -311,6 +311,10 @@ cmake_minimum_required( VERSION 3.0)
 
 project( ${PROJECT_NAME})
 
+if( NOT EXISTS "\${CMAKE_SOURCE_DIR}/mulle-configuration")
+   message( FATAL_ERROR "mulle-configuration is missing. you must \`mulle-bootstrap\` first.")
+endif()
+
 set( CMAKE_MODULE_PATH
 \${CMAKE_MODULE_PATH}
 "\${CMAKE_SOURCE_DIR}/mulle-configuration/cmake"
@@ -353,7 +357,12 @@ EOF
 emit_dependencies_common()
 {
    cat <<EOF
-include( \${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt)
+
+if( EXISTS "\${CMAKE_SOURCE_DIR}/mulle-configuration")
+   include( \${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt)
+else()
+   message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} is missing. \`mulle-bootstrap\` first")
+endif()
 
 # useful on OS X to avoid /System/..Foundation.framework
 set( CMAKE_FIND_FRAMEWORK LAST)
