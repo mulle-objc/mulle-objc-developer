@@ -37,7 +37,7 @@ MULLE_CLANG_VERSION=4.0.0.4
 MULLE_OBJC_TOOLS_VERSION="${MULLE_OBJC_DEVELOPER_VERSION}"
 
 
-PUBLISHER=""
+PUBLISHER="mulle-nat"
 
 #
 # This script will eventually vanish and be replaced with proper deb
@@ -134,7 +134,7 @@ install_mulle_bootstrap()
 
    archive="${BOOTSTRAP_URL}/mulle-bootstrap/archive/${MULLE_BOOTSTRAP_VERSION}.tar.gz"
 
-   log_verbose "Installing mulle-bootstrap..."
+   log_verbose "Installing mulle-bootstrap from \"${archive}\"..."
 
    curl -O -L "${archive}" &&
    tar xfz "${MULLE_BOOTSTRAP_VERSION}.tar.gz" &&

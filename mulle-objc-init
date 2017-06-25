@@ -943,6 +943,11 @@ main()
             MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_NAME}"
          ;;
 
+         --version)
+            echo "${MULLE_OBJC_DEVELOPER_VERSION}"
+            exit 0
+         ;;
+         
          -*)
             usage
          ;;
