@@ -173,7 +173,7 @@ install_mulle_objc_developer()
 
       curl -O -L "${archive}" &&
       tar xfz "${MULLE_OBJC_DEVELOPER_VERSION}.tar.gz" &&
-      cd "mulle-objc-developer-${MULLE_OBJC_DEVELOPER_VERSION}"
+      cd "mulle-objc-developer-${MULLE_OBJC_DEVELOPER_VERSION}" || exit 1
    fi
 
    log_verbose "Installing mulle-objc-developer..."
