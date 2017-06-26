@@ -358,8 +358,8 @@ emit_dependencies_common()
 {
    cat <<EOF
 
-if( EXISTS "\${CMAKE_SOURCE_DIR}/mulle-configuration")
-   include( \${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt)
+if( EXISTS "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
+   include( "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
 else()
    message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} is missing. \`mulle-bootstrap\` first")
 endif()
@@ -947,7 +947,7 @@ main()
             echo "${MULLE_OBJC_DEVELOPER_VERSION}"
             exit 0
          ;;
-         
+
          -*)
             usage
          ;;
