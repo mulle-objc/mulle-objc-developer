@@ -22,6 +22,8 @@ ${BOOTSTRAP_TAP}mulle-build
 codeon-gmbh/software/mulle-clang
 '
 
+DEBIAN_DEPENDENCIES="mulle-clang, mulle-build, mulle-bootstrap, binutils, git, curl, cmake (>= 3.0.0), make"
+
 #
 # Build via mulle-build. If you don't like this
 # edit bin/release.sh. Need to specify mulle-build dependencies
@@ -30,3 +32,5 @@ codeon-gmbh/software/mulle-clang
 BUILD_DEPENDENCIES='${BOOTSTRAP_TAP}mulle-build
 ${BOOTSTRAP_TAP}mulle-bootstrap
 cmake'
+
+

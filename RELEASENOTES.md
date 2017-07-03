@@ -1,6 +1,8 @@
 ## 0.9.1
 
 * split off tools from mulle-objc-developer into new repository mulle-objc-tools
+* make mirroring the default
+* make project language C default
 
 
 ### 0.8.7

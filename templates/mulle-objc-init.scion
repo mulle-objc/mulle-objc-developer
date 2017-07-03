@@ -309,7 +309,7 @@ emit_cmakelists_common_header()
    cat <<EOF
 cmake_minimum_required( VERSION 3.0)
 
-project( ${PROJECT_NAME})
+project( ${PROJECT_NAME} C)
 
 if( NOT EXISTS "\${CMAKE_SOURCE_DIR}/mulle-configuration")
    message( FATAL_ERROR "mulle-configuration is missing. you must \`mulle-bootstrap\` first.")
@@ -890,7 +890,7 @@ main()
    local FLAG_OUTPUT_DEMO_FILES="YES"
    local OPTION_MULLE_OBJC_DEVELOPER="NO"
    local OPTION_DYNAMIC_LINKED="NO"
-   local OPTION_MIRROR_CLONES="NO"
+   local OPTION_MIRROR_CLONES="YES"
 
    local directory
 
@@ -932,6 +932,10 @@ main()
 
          --mirror)
             OPTION_MIRROR_CLONES="YES"
+         ;;
+
+         --no-mirror)
+            OPTION_MIRROR_CLONES="NO"
          ;;
 
          --dev)
