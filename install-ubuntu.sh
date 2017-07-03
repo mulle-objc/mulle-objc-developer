@@ -4,6 +4,9 @@ PUBLISHER_PUBLICKEY_URL="http://www.mulle-kybernetik.com/dists/admin-pub.asc"
 PUBLISHER_DEBIAN_URL="http://www.mulle-kybernetik.com"
 PUBLISHER_DOMAIN="mulle-kybernetik.com"
 
+[ -z "${PUBLISHER_PUBLICKEY_URL}" ] && echo "PUBLISHER_PUBLICKEY_URL is missing" >&2 && exit 1
+[ -z "${PUBLISHER_DEBIAN_URL}" ] && echo "PUBLISHER_DEBIAN_URL is missing" >&2 && exit 1
+[ -z "${PUBLISHER_DOMAIN}" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
 
 CURLFLAGS="-sS -O"
 WGETFLAGS="-q -O -"
@@ -21,8 +24,8 @@ then
 
    if [ -z "`command -v "wget"`" ]
    then
-      sudo apt-get update &&
-      sudo apt-get "$@" install wget
+      sudo apt-get update ${APTFLAGS}  &&
+      sudo apt-get install ${APTFLAGS} "$@"  wget || exit 1
    fi
 fi
 
@@ -30,14 +33,14 @@ fi
 #
 # add Codeon debian/ubuntu key and repository
 #
-${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" | sudo apt-key add -
-sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" > /etc/apt/sources.list.d/codeon.de-main.list
+${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" | sudo apt-key add - &&
+sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" > /etc/apt/sources.list.d/codeon.de-main.list || exit 1
 
 #
 # add Mulle kybernetiK debian/ubuntu key and repository
 #
-${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" | sudo apt-key add -
-sudo echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} `lsb_release -c -s` main" > /etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list
+${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" | sudo apt-key add - &&
+sudo echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} `lsb_release -c -s` main" > /etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list || exit 1
 
 #
 # We need cmake >= 3.0.0 eventually, so add it for older linux versions
@@ -49,8 +52,8 @@ case `lsb_release -c -s` in
      # doesn't require software-properties-common which adds 40MB for just
      # these two lines
      #
-     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys  0x084ECFC5828AB726
-     sudo echo "deb http://ppa.launchpad.net/george-edison55/cmake-3.x/ubuntu  `lsb_release -c -s` main" > /etc/apt/sources.list.d/george-edison55-main.list
+     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys  0x084ECFC5828AB726 &&
+     sudo echo "deb http://ppa.launchpad.net/george-edison55/cmake-3.x/ubuntu `lsb_release -c -s` main" > /etc/apt/sources.list.d/george-edison55-main.list || exit 1
    ;;
 esac
 
@@ -58,8 +61,8 @@ esac
 #
 # Now update and install
 #
-sudo apt-get update &&
-sudo apt-get "$@" install "${DEVELOPER_PACKAGE:-mulle-objc-developer}"
+sudo apt-get update ${APTFLAGS} &&
+sudo apt-get install ${APTFLAGS} "$@" "${DEVELOPER_PACKAGE:-mulle-objc-developer}" || exit 1
 
 #
 # Make known as a viable c compiler
