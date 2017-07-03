@@ -1,9 +1,9 @@
 #! /bin/sh
 
-env >&2
-
 if [ ! -z "${TRACE}" ]
 then
+   echo "$0" >&2
+   env | sort >&2
    set -x
 fi
 
