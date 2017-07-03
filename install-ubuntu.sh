@@ -1,5 +1,7 @@
 #! /bin/sh
 
+env >&2
+
 if [ ! -z "${TRACE}" ]
 then
    set -x
@@ -9,6 +11,7 @@ PUBLISHER_PUBLICKEY_URL="http://www.mulle-kybernetik.com/dists/admin-pub.asc"
 PUBLISHER_DEBIAN_URL="http://www.mulle-kybernetik.com"
 PUBLISHER_DOMAIN="mulle-kybernetik.com"
 DEVELOPER_PACKAGE="${DEVELOPER_PACKAGE:-mulle-objc-developer}"
+CC_PRIORITY="${CC_PRIORITY:-18}"
 
 [ -z "${PUBLISHER_PUBLICKEY_URL}" ] && echo "PUBLISHER_PUBLICKEY_URL is missing" >&2 && exit 1
 [ -z "${PUBLISHER_DEBIAN_URL}" ] && echo "PUBLISHER_DEBIAN_URL is missing" >&2 && exit 1
@@ -96,6 +99,8 @@ main()
    #
    # Now update and install
    #
+   log_verbose "Install ${DEVELOPER_PACKAGE}"
+
    sudo apt-get update ${APTFLAGS} &&
    sudo apt-get install ${APTFLAGS} "$@" "${DEVELOPER_PACKAGE}" || exit 1
 
@@ -103,10 +108,12 @@ main()
    # Make known as a viable c compiler
    # Should the priority be above gcc ? Probably not
    #
+   log_verbose "Set mulle-clang as cc with priority ${CC_PRIORITY}"
+
    sudo update-alternatives --install "/usr/bin/cc" \
                                       "cc" \
                                       "/usr/bin/mulle-clang" \
-                                      "${CC_PRIORITY:-18}"
+                                      "${CC_PRIORITY}"
 }
 
 main "$@"
