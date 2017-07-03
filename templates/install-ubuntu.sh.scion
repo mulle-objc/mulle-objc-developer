@@ -37,7 +37,7 @@ sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" 
 # add Mulle kybernetiK debian/ubuntu key and repository
 #
 ${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" | sudo apt-key add -
-sudo echo "deb [arch=all] ${PUBLISHER_DEB_URL} `lsb_release -c -s` main" > /etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list
+sudo echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} `lsb_release -c -s` main" > /etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list
 
 #
 # We need cmake >= 3.0.0 eventually, so add it for older linux versions
