@@ -17,7 +17,7 @@ CC_PRIORITY="${CC_PRIORITY:-18}"
 [ -z "${PUBLISHER_DEBIAN_URL}" ] && echo "PUBLISHER_DEBIAN_URL is missing" >&2 && exit 1
 [ -z "${PUBLISHER_DOMAIN}" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
 
-CURLFLAGS="-sS -O"
+CURLFLAGS="-sS"
 WGETFLAGS="-q -O -"
 
 HTTPGET="curl"
