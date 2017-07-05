@@ -114,6 +114,19 @@ main()
                                       "cc" \
                                       "/usr/bin/mulle-clang" \
                                       "${CC_PRIORITY}"
+
+   if [ -f "mulle-objc-logo-opaque-48x48.txt" ]
+   then
+      cat "mulle-objc-logo-opaque-48x48.txt"
+   fi
+
+   DEVELOPER_INIT="`echo "${DEVELOPER_PACKAGE}" | sed 's/developer/init/'`"
+   cat <<EOF
+
+Done! For starters try:
+   ${DEVELOPER_INIT} -d hello executable
+
+EOF
 }
 
 main "$@"
