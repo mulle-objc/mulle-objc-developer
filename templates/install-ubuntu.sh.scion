@@ -39,6 +39,52 @@ log_verbose()
 }
 
 
+# run with sudo
+add_codeon_apt_source()
+{
+   local osrelease="$1"
+
+   log_verbose "Add Codeon GmbH apt source"
+
+   ${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" |
+      apt-key add - &&
+      echo "deb [arch=amd64] http://download.codeon.de ${osrelease} main" \
+         > "/etc/apt/sources.list.d/codeon.de-main.list"
+}
+
+
+add_mulle_apt_source()
+{
+   local osrelease="$1"
+
+   log_verbose "Add Mulle kybernetiK apt source"
+
+   ${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" |
+      apt-key add - &&
+      echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} ${osrelease} main" \
+         > "/etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list"
+}
+
+
+#
+# same as `sudo add-apt-repository ppa:george-edison55/cmake-3.x`, but
+# doesn't require software-properties-common which adds 40MB for just
+# these two lines
+#
+
+add_cmake_3_apt_source()
+{
+   local osrelease="$1"
+
+   log_verbose "Install cmake 3.x from george-edison55"
+
+   apt-key adv --keyserver keyserver.ubuntu.com \
+                    --recv-keys  0x084ECFC5828AB726 &&
+   echo "deb http://ppa.launchpad.net/george-edison55/cmake-3.x/ubuntu ${osrelease} main" \
+      > "/etc/apt/sources.list.d/george-edison55-main.list"
+}
+
+
 main()
 {
    #
@@ -64,46 +110,27 @@ main()
       sudo mkdir -p /etc/apt/sources.list.d
    fi
 
-   # needed for travis but why ???
-   sudo chown 755 /etc/apt/sources.list.d
+   local osrelease
+
+   osrelease="`lsb_release -c -s`" || exit 1
+
 
    #
    # add Codeon debian/ubuntu key and repository
    #
-   log_verbose "Add Codeon GmbH apt source"
-
-   ${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" |
-      sudo apt-key add -
-
-    sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" \
-       > "/etc/apt/sources.list.d/codeon.de-main.list" || exit 1
+   sudo add_codeon_apt_source "${osrelease}" || exit 1
 
    #
    # add Mulle kybernetiK debian/ubuntu key and repository
    #
-   log_verbose "Add Mulle kybernetiK apt source"
-
-   ${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" |
-      sudo apt-key add - &&
-      sudo echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} `lsb_release -c -s` main" \
-         > "/etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list" || exit 1
+   sudo add_mulle_apt_source "${osrelease}" || exit 1
 
    #
    # We need cmake >= 3.0.0 eventually, so add it for older linux versions
    #
-   case `lsb_release -c -s` in
+   case "${osrelease}" in
       trusty|xenial|wily)
-        #
-        # same as `sudo add-apt-repository ppa:george-edison55/cmake-3.x`, but
-        # doesn't require software-properties-common which adds 40MB for just
-        # these two lines
-        #
-        log_verbose "Install cmake 3.x from george-edison55"
-
-        sudo apt-key adv --keyserver keyserver.ubuntu.com \
-                         --recv-keys  0x084ECFC5828AB726 &&
-        sudo echo "deb http://ppa.launchpad.net/george-edison55/cmake-3.x/ubuntu `lsb_release -c -s` main" \
-           > "/etc/apt/sources.list.d/george-edison55-main.list" || exit 1
+        sudo add_cmake_3_apt_source "${osrelease}" || exit 1
       ;;
    esac
 
