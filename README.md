@@ -29,9 +29,7 @@ brew install mulle-kybernetik/software/mulle-objc-developer
 This methods works for **trusty**, **xenial** and **zesty**:
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh'
-chmod 755 install-ubuntu.sh
-./install-ubuntu.sh
+wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
 ```
 
 ## Create a mulle-objc project

@@ -2,9 +2,7 @@ dist: trusty
 sudo: required
 
 script:
-  - curl -L -O 'https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/release/install-ubuntu.sh'
-  - chmod 755 install-ubuntu.sh
-  - ./install-ubuntu.sh
+  - wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
   - mulle-objc-init -d /tmp/Exe executable
   - cd /tmp/Exe
   - mulle-build -v -V --bootstrap
