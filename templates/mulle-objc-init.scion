@@ -36,6 +36,7 @@ MULLE_OBJC_DEVELOPER_VERSION=0.9.1
 #
 VERSION="${VERSION:-${MULLE_OBJC_DEVELOPER_VERSION}}"
 PUBLISHER="${PUBLISHER:-{{PUBLISHER}}}"
+PUBLISHER_LOGO="{{PUBLISHER_LOGO}}"
 
 MULLE_OBJC_DEVELOPER_TOOLS="${MULLE_OBJC_DEVELOPER_TOOLS:-mulle-objc-developer}"
 MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
@@ -810,6 +811,26 @@ library_setup()
 }
 
 
+show_logo()
+{
+   local filename
+
+   filename="${MULLE_EXECUTABLE_DIR}/../share/${MULLE_EXECUTABLE}/${PUBLISHER_LOGO}"
+   if [ -f "${filename}" ]
+   then
+      cat "${filename}"
+      return
+   fi
+
+   filename="${MULLE_EXECUTABLE_DIR}/${PUBLISHER_LOGO}"
+   if [ -f "${filename}" ]
+   then
+      cat "${filename}"
+      return
+   fi
+}
+
+
 executable_setup()
 {
    if [ ! -f "CMakeLists.txt" -o "${FLAG_FORCE}" = "YES" ]
@@ -891,6 +912,7 @@ main()
    local OPTION_MULLE_OBJC_DEVELOPER="NO"
    local OPTION_DYNAMIC_LINKED="NO"
    local OPTION_MIRROR_CLONES="YES"
+   local OPTION_SHOW_LOGO="${OPTION_SHOW_LOGO:-YES}"
 
    local directory
 
@@ -932,6 +954,10 @@ main()
 
          --mirror)
             OPTION_MIRROR_CLONES="YES"
+         ;;
+
+         --no-logo)
+            OPTION_SHOW_LOGO="NO"
          ;;
 
          --no-mirror)
@@ -1002,8 +1028,15 @@ main()
 
       library)
          mkdir_if_missing "${directory}"
+
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          library_setup
+
+         if [ "${OPTION_SHOW_LOGO}" = "YES" ]
+         then
+            show_logo
+         fi
+
          log_info "Your project for $1 \
 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
 ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
@@ -1016,6 +1049,12 @@ mulle-build --bootstrap"
          mkdir_if_missing "${directory}"
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          executable_setup
+
+         if [ "${OPTION_SHOW_LOGO}" = "YES" ]
+         then
+            show_logo
+         fi
+
          log_info "Your project for $1 \
 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
 ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
@@ -1042,6 +1081,16 @@ then
    MULLE_EXECUTABLE="`basename -- "$0"`"
    MULLE_EXECUTABLE_FAIL_PREFIX="${MULLE_EXECUTABLE}"
 fi
+
+MULLE_EXECUTABLE_DIR="`dirname -- "$0"`"
+case "${MULLE_EXECUTABLE_DIR}" in
+   /*)
+   ;;
+
+   *)
+      MULLE_EXECUTABLE_DIR="${PWD}/${MULLE_EXECUTABLE_DIR}"
+   ;;
+esac
 
 MULLE_ARGUMENTS="$@"
 MULLE_EXECUTABLE_PID="$$"
