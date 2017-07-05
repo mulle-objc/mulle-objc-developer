@@ -57,13 +57,22 @@ main()
    fi
 
    #
+   # travis doesn't have this ?
+   #
+   if [ ! -d "/etc/apt/sources.list.d" ]
+   then
+      sudo mkdir -p /etc/apt/sources.list.d
+   fi
+
+   #
    # add Codeon debian/ubuntu key and repository
    #
    log_verbose "Add Codeon GmbH apt source"
 
    ${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" |
-      sudo apt-key add - &&
-      sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" \
+      sudo apt-key add -
+
+    sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" \
        > "/etc/apt/sources.list.d/codeon.de-main.list" || exit 1
 
    #
