@@ -39,7 +39,6 @@ log_verbose()
 }
 
 
-# run with sudo
 add_codeon_apt_source()
 {
    local osrelease="$1"
@@ -67,7 +66,7 @@ add_mulle_apt_source()
 
 
 #
-# same as `sudo add-apt-repository ppa:george-edison55/cmake-3.x`, but
+# same as `add-apt-repository ppa:george-edison55/cmake-3.x`, but
 # doesn't require software-properties-common which adds 40MB for just
 # these two lines
 #
@@ -97,8 +96,8 @@ main()
 
       if [ -z "`command -v "wget"`" ]
       then
-         sudo apt-get update ${APTFLAGS} &&
-         sudo apt-get install ${APTFLAGS} "$@" wget || exit 1
+         apt-get update ${APTFLAGS} &&
+         apt-get install ${APTFLAGS} "$@" wget || exit 1
       fi
    fi
 
@@ -107,7 +106,7 @@ main()
    #
    if [ ! -d "/etc/apt/sources.list.d" ]
    then
-      sudo mkdir -p /etc/apt/sources.list.d
+      mkdir -p /etc/apt/sources.list.d
    fi
 
    local osrelease
@@ -118,19 +117,19 @@ main()
    #
    # add Codeon debian/ubuntu key and repository
    #
-   sudo add_codeon_apt_source "${osrelease}" || exit 1
+   add_codeon_apt_source "${osrelease}" || exit 1
 
    #
    # add Mulle kybernetiK debian/ubuntu key and repository
    #
-   sudo add_mulle_apt_source "${osrelease}" || exit 1
+   add_mulle_apt_source "${osrelease}" || exit 1
 
    #
    # We need cmake >= 3.0.0 eventually, so add it for older linux versions
    #
    case "${osrelease}" in
       trusty|xenial|wily)
-        sudo add_cmake_3_apt_source "${osrelease}" || exit 1
+        add_cmake_3_apt_source "${osrelease}" || exit 1
       ;;
    esac
 
@@ -140,8 +139,8 @@ main()
    #
    log_verbose "Install ${DEVELOPER_PACKAGE}"
 
-   sudo apt-get update ${APTFLAGS} &&
-   sudo apt-get install ${APTFLAGS} "$@" "${DEVELOPER_PACKAGE}" || exit 1
+   apt-get update ${APTFLAGS} &&
+   apt-get install ${APTFLAGS} "$@" "${DEVELOPER_PACKAGE}" || exit 1
 
    #
    # Make known as a viable c compiler
@@ -149,10 +148,10 @@ main()
    #
    log_verbose "Set mulle-clang as cc with priority ${CC_PRIORITY}"
 
-   sudo update-alternatives --install "/usr/bin/cc" \
-                                      "cc" \
-                                      "/usr/bin/mulle-clang" \
-                                      "${CC_PRIORITY}"
+   update-alternatives --install "/usr/bin/cc" \
+                                 "cc" \
+                                 "/usr/bin/mulle-clang" \
+                                 "${CC_PRIORITY}"
 
    DEVELOPER_INIT="`echo "${DEVELOPER_PACKAGE}" | sed 's/developer/init/'`"
    cat <<EOF
