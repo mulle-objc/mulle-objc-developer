@@ -64,6 +64,9 @@ main()
       sudo mkdir -p /etc/apt/sources.list.d
    fi
 
+   # needed for travis but why ???
+   sudo chown 755 /etc/apt/sources.list.d
+
    #
    # add Codeon debian/ubuntu key and repository
    #
