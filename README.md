@@ -26,10 +26,29 @@ brew install mulle-kybernetik/software/mulle-objc-developer
 
 ### Install on Unbuntu Linux and WSL/bash
 
-This methods works for **trusty**, **xenial** and **zesty**:
+#### Install in a docker container
+
+This builds a docker container based on `ubuntu:trusty`:
 
 ```
-wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
+docker build -t "mulle-objc-developer" github.com/mulle-nat/mulle-objc-developer
+docker run -i -t "mulle-objc-developer" /bin/bash
+```
+
+#### Install with `apt-get`
+
+This methods works for **trusty** and **xenial**:
+
+```
+apt-get update && apt-get -y install wget
+wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/0.9.1/install-ubuntu.sh | sudo APTFLAGS="-y" sh
+```
+
+For **zesty** use:
+
+```
+apt-get update && apt-get -y install wget
+wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/0.9.1/install-ubuntu.sh | sudo APTFLAGS="-y --allow-unauthenticated" sh
 ```
 
 ## Create a mulle-objc project
