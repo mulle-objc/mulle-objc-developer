@@ -1,5 +1,6 @@
-## 0.9.1
+### 0.9.1
 
+* modernize for mulle-configuration 2.0
 * split off tools from mulle-objc-developer into new repository mulle-objc-tools
 * make mirroring the default
 * make project language C default

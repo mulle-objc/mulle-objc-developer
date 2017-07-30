@@ -140,6 +140,9 @@ bootstrap_setup()
       return
    fi
 
+   #
+   # mulle-objc-list will pull mulle-build
+   #
    if [ -z "`mulle-bootstrap setting -g -r repositories`" -o "${FLAG_FORCE}" = "YES" ]
    then
       exekutor mulle-bootstrap ${MULLE_BOOTSTRAP_FLAGS} setting -g -r repositories "${MULLE_OBJC_CLONE}"
@@ -294,10 +297,11 @@ This is a [mulle-objc](https://mulle-objc.github.io/) project.
 Install the [developer tools](${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_TOOLS}).
 
 
-## Use **mulle-build** to build project
+## Use **mulle-sde** and **mulle-build** to build project
 
 \`\`\`
-mulle-build --bootstrap
+mulle-sde
+mulle-build
 \`\`\`
 EOF
 
@@ -355,36 +359,35 @@ EOF
 }
 
 
-emit_dependencies_common()
+emit_dependencies_library()
 {
    cat <<EOF
+if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
+   set( __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__ ON)
 
-if( EXISTS "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
-   include( "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
-else()
-   message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} is missing. \`mulle-bootstrap\` first")
+   if( EXISTS "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
+      include( "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
+   else()
+      message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} is missing. \`mulle-bootstrap\` first")
+   endif()
+
+   if( NOT ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY)
+      find_library( ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY NAMES ${PROJECT_NAME})
+      message(STATUS "${PROJECT_UPCASE_IDENTIFIER}_LIBRARY is \${${PROJECT_UPCASE_IDENTIFIER}_LIBRARY}")
+      set( OBJC_DEPENDENCY_LIBRARIES
+         \${${PROJECT_UPCASE_IDENTIFIER}_LIBRARY}
+         \${OBJC_DEPENDENCY_LIBRARIES}
+         CACHE INTERNAL "need to cache this"
+      )
+      set( OBJC_DEPENDENCY_NAMES
+         ${PROJECT_NAME}
+         \${OBJC_DEPENDENCY_NAMES}
+         CACHE INTERNAL "need to cache this too"
+      )
+   endif()
+
+   message( STATUS "# Included \"${PROJECT_NAME}\" CMakeDependencies.txt")
 endif()
-
-# useful on OS X to avoid /System/..Foundation.framework
-set( CMAKE_FIND_FRAMEWORK LAST)
-
-if( NOT ${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY)
-   find_library( ${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY NAMES ${MULLE_OBJC_LIBRARY_NAME})
-   message(STATUS "${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY is \${${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY}")
-   set( OBJC_DEPENDENCY_LIBRARIES
-\${${UPCASE_MULLE_OBJC_LIBRARY_NAME}_LIBRARY}
-\${OBJC_DEPENDENCY_LIBRARIES}
-CACHE INTERNAL "need to cache this"
-)
-   set( OBJC_DEPENDENCY_NAMES
-${MULLE_OBJC_LIBRARY_NAME}
-\${OBJC_DEPENDENCY_NAMES}
-CACHE INTERNAL "need to cache this too"
-)
-endif()
-
-message( STATUS "# Included \"${PROJECT_NAME}\" CMakeDependencies.txt")
-
 EOF
 }
 
@@ -486,8 +489,10 @@ emit_cmakelists_library()
 
 ###
 
-include( CMakeSourcesAndHeaders.txt)
+set( ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY ON)
 include( CMakeDependencies.txt)
+
+include( CMakeSourcesAndHeaders.txt)
 
 ###
 
@@ -495,6 +500,7 @@ add_library( "${PROJECT_NAME}"
 \${SOURCES}
 \${PUBLIC_HEADERS}
 \${PRIVATE_HEADERS}
+CMakeLists.txt
 CMakeDependencies.txt
 CMakeSourcesAndHeaders.txt
 )
@@ -505,10 +511,24 @@ add_library( "${PROJECT_NAME}Standalone" SHARED
 
 add_dependencies( "${PROJECT_NAME}Standalone" "${PROJECT_NAME}")
 
+
+set( TARGET_ALL_LOAD_LIBRARIES
+\$<TARGET_FILE:${PROJECT_NAME}>
+\${OBJC_DEPENDENCY_LIBRARIES}
+)
+
+if( FORCE_LOAD)
+   set( TMP)
+   foreach( library \${TARGET_ALL_LOAD_LIBRARIES})
+      list( APPEND TMP "\${FORCE_LOAD} \${library}")
+   endforeach( library)
+   set( TARGET_ALL_LOAD_LIBRARIES \${TMP})
+endif()
+
+
 target_link_libraries( "${PROJECT_NAME}Standalone"
 \${BEGIN_ALL_LOAD}
-${PROJECT_NAME}
-\${OBJC_DEPENDENCY_LIBRARIES}
+\${TARGET_ALL_LOAD_LIBRARIES}
 \${C_DEPENDENCY_LIBRARIES}
 \${END_ALL_LOAD}
 \${OS_SPECIFIC_LIBRARIES}
@@ -559,10 +579,13 @@ emit_cmakelists_executable()
 {
    cat <<EOF
 
+option( USE_OBJC_COVERAGE "Enable mulle-objc coverage based link optimization" OFF)
+
 ###
 
+include( "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
+
 include( CMakeSourcesAndHeaders.txt)
-include( CMakeDependencies.txt)
 
 ###
 
@@ -572,6 +595,7 @@ add_executable( "\${EXECUTABLE_NAME}"
 \${SOURCES}
 \${PUBLIC_HEADERS}
 \${PRIVATE_HEADERS}
+CMakeLists.txt
 CMakeDependencies.txt
 CMakeSourcesAndHeaders.txt
 CMakeObjCCoverage.txt
@@ -890,7 +914,7 @@ library_setup()
 
    if [ ! -f "CMakeDependencies.txt" -o "${FLAG_FORCE}" = "YES" ]
    then
-      redirect_exekutor CMakeDependencies.txt emit_dependencies_common
+      redirect_exekutor CMakeDependencies.txt emit_dependencies_library
    fi
 
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
@@ -902,6 +926,23 @@ library_setup()
    fi
 
    common_setup
+
+   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
+      then
+         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
+      else
+         remove_file_if_present ".bootstrap/motd"
+      fi
+
+      cat <<EOF >> ".bootstrap/motd"
+Dependencies for ${PROJECT_NAME} have been built.
+Now build it with mulle-build:
+   mulle-build
+   ls ./build/*${PROJECT_NAME}*
+EOF
+   fi
 }
 
 
@@ -946,16 +987,10 @@ executable_setup()
       redirect_exekutor CMakeSourcesAndHeaders.txt emit_sources_and_headers_executable
    fi
 
-   if [ ! -f "CMakeDependencies.txt" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      redirect_exekutor CMakeDependencies.txt emit_dependencies_common
-   fi
-
    if [ ! -f "CMakeObjCCoverage.txt" -o "${FLAG_FORCE}" = "YES" ]
    then
       redirect_exekutor CMakeObjCCoverage.txt emit_objc_coverage
    fi
-
 
    if [ "${FLAG_OUTPUT_DEMO_FILES}" = "YES" ]
    then
@@ -963,6 +998,23 @@ executable_setup()
    fi
 
    common_setup
+
+   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
+      then
+         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
+      else
+         remove_file_if_present ".bootstrap/motd"
+      fi
+
+      cat <<EOF >> ".bootstrap/motd"
+Dependencies for ${PROJECT_NAME} have been built.
+Now build it with mulle-build:
+   mulle-build
+   ./build/${PROJECT_NAME}
+EOF
+   fi
 }
 
 
@@ -1145,8 +1197,8 @@ main()
 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
 ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
          log_info "Build it with:"
-         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; \
-mulle-build --bootstrap"
+         log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
+   mulle-build"
       ;;
 
       executable)
@@ -1163,8 +1215,9 @@ mulle-build --bootstrap"
 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
 ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
          log_info "Build and run it with:"
-         log_info "  ${C_RESET}${C_BOLD}cd \"${directory}\" ; \
-mulle-build --bootstrap; ./build/${PROJECT_NAME}"
+         log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
+   mulle-build
+   ./build/${PROJECT_NAME}"
       ;;
 
       version)

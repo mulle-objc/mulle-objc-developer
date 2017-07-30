@@ -19,10 +19,11 @@ LANGUAGE="bash"             # c,cpp, objc, bash ...
 #
 DEPENDENCIES='${BOOTSTRAP_TAP}mulle-bootstrap
 ${BOOTSTRAP_TAP}mulle-build
+${BOOTSTRAP_TAP}mulle-sde
 codeon-gmbh/software/mulle-clang
 '
 
-DEBIAN_DEPENDENCIES="mulle-clang, mulle-build, mulle-bootstrap, binutils, git, curl, cmake (>= 3.0.0), make"
+DEBIAN_DEPENDENCIES="mulle-clang, mulle-sde, mulle-build, mulle-bootstrap, binutils, git, curl, cmake (>= 3.0.0), make"
 
 #
 # Build via mulle-build. If you don't like this
