@@ -4,5 +4,5 @@
 # enough for you. If you don't have this file, there will be
 # not git operations.
 #
-VERSIONFILE=mulle-objc-init
+VERSIONFILE=templates/mulle-objc-init.scion
 VERSIONNAME=MULLE_OBJC_DEVELOPER_VERSION
