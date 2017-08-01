@@ -26,6 +26,8 @@ brew install mulle-kybernetik/software/mulle-objc-developer
 
 ### Install on Unbuntu Linux and WSL/bash
 
+> All commands need to be run with sudo. Use `sudo -s`
+
 #### Install in a docker container
 
 This builds a docker container based on `ubuntu:trusty`:
@@ -51,28 +53,34 @@ apt-get update && apt-get -y install wget
 wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/0.9.1/install-ubuntu.sh | sudo APTFLAGS="-y --allow-unauthenticated" sh
 ```
 
+
 ## Create a mulle-objc project
 
 ### mulle-objc-init
 
-Use `mulle-objc-init` to create a hello world project. This will download and
-compile quite a few dependencies.
+Use `mulle-objc-init` to create a hello world project.
 
 
 ```
-mulle-objc-init --cache -d /tmp/demo executable
-cd /tmp/demo
-mulle-build --bootstrap
+mulle-objc-init -d /tmp/demo executable
 ```
 
-Now run your Objective-C executable:
+The enter the virtual environment created for this project with `mulle-sde`.
+This will download and compile quite a few dependencies.
 
 ```
+mulle-sde /tmp/demo -y
+```
+
+Now build and run your Objective-C executable:
+
+```
+mulle-build
 ./build/demo
 ```
 
-Your code and your project is automatically portable across all supported platforms!
-
+Your code and your project is portable across all supported
+platforms from the start!
 
 
 ### mulle-objc-init usage
@@ -118,8 +126,9 @@ mkdir rootdir
 cd rootdir
 mulle-objc-clone
 #
+mulle-sde -y
 cd MulleObjC
-mulle-build -y --bootstrap
+mulle-build
 mulle-test
 ```
 
