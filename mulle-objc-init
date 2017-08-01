@@ -596,7 +596,6 @@ add_executable( "\${EXECUTABLE_NAME}"
 \${PUBLIC_HEADERS}
 \${PRIVATE_HEADERS}
 CMakeLists.txt
-CMakeDependencies.txt
 CMakeSourcesAndHeaders.txt
 CMakeObjCCoverage.txt
 )
