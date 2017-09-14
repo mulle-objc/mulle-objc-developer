@@ -8,8 +8,16 @@
 This project installs the minimally required items for developing
 **mulle-objc** on your system.
 
-It will install the compiler **mulle-clang** and a
-script **mulle-objc-init**, with that you can start developing.
+It will install the compiler **mulle-clang** and some scripts to help
+you start developing **mulle-objc** projects.
+
+
+Script                     | Description                | Dox
+---------------------------|----------------------------|-----------------
+`mulle-objc-init`          | Create a complete library or executable project with the proper environment                | [INIT.md](INIT.md)
+`mulle-objc-clone`         | For hacking on **mulle-objc**  itself, clones all necessary repositories               | [CLONE.md](CLONE.md)
+`mulle-clang-add-to-xcode` | Make the **mulle-clang** compiler available in Xcode                      | [XCODE.md](XCODE.md)
+
 
 
 ## Installation
@@ -50,85 +58,6 @@ For **zesty** use:
 ```
 apt-get update && apt-get -y install wget
 wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/{{VERSION}}/install-ubuntu.sh | sudo APTFLAGS="-y --allow-unauthenticated" sh
-```
-
-
-## Create a mulle-objc project
-
-### mulle-objc-init
-
-Use `mulle-objc-init` to create a hello world project.
-
-
-```
-mulle-objc-init -d /tmp/demo executable
-```
-
-The enter the virtual environment created for this project with `mulle-sde`.
-This will download and compile quite a few dependencies.
-
-```
-mulle-sde /tmp/demo -y
-```
-
-Now build and run your Objective-C executable:
-
-```
-mulle-build
-./build/demo
-```
-
-Your code and your project is portable across all supported
-platforms from the start!
-
-
-### mulle-objc-init usage
-
-```
-usage:
-   mulle-objc-init [options] [command]
-
-   Options:
-      -d <dir>   : use "dir" instead of working directory
-      --dev      : add conventional configurations for MulleObjC developers
-      -f         : overwrite existing files
-      -n         : don't actually do anything
-
-   Command:
-      check      : check current project
-      executable : create a mulle-objc executable project
-      library    : create a mulle-objc library project
-      version    : print mulle-objc-developer version
-```
-
-### Using Xcode
-
-If you want to use Xcode to edit your files, you can use **cmake** to generate
-an Xcode project for your project.
-
-```bash
-mkdir build-xcode.d ; cd build-xcode.d ; cmake -G "Xcode" .. ; open *.xcodeproj
-```
-
-## Developing mulle-objc itself
-
-If you want to hack on **mulle-objc** it is easiest to use the supplied
-script [`mulle-objc-clone`](mulle-objc-clone) to setup things on
-your machine.
-
-Run `mulle-objc-clone` in a directory, where you want the repositories
-to reside in. Then you can just compile and test any project conveniently
-with **mulle-build**:
-
-```
-mkdir rootdir
-cd rootdir
-mulle-objc-clone
-#
-mulle-sde -y
-cd MulleObjC
-mulle-build
-mulle-test
 ```
 
 ## Links

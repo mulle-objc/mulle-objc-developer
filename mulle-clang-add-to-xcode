@@ -53,7 +53,7 @@ fi
 
 fail()
 {
-	echo "fatal error:" "$@" >&2
+	printf "fatal error:" "$@" "\n"  >&2
 	exit 1
 }
 
@@ -66,9 +66,22 @@ XCODE_DEVELOPER_PATH="`"xcode-select" -p`"
 
 XCODE_BUILD_VERSION=$(xcodebuild -version | grep -o '[0-9].[0-9].[0-9]$') # => major.minor.patch
 MAJOR_VERSION=(${XCODE_BUILD_VERSION//./ }[0]) # => split to array and take major value
-if [[ $MAJOR_VERSION > 7 ]]; then
-  fail "Xcode ${XCODE_BUILD_VERSION} uses library validation. It won't load in-process plugins anymore. See https://github.com/alcatraz/Alcatraz/issues/475"
-fi
+
+#
+# Still works for me as of Xcode 8.3.3. Don't know why really :)
+#
+
+#if [[ $MAJOR_VERSION > 7 ]]; then
+#   complaint="Xcode ${XCODE_BUILD_VERSION} uses library validation.
+# It won't load in-process plugins anymore.
+# See https://github.com/alcatraz/Alcatraz/issues/475"
+#	if [ "${OPTION_FORCE}" = "NO" ]
+#	then
+#      fail "${complaint}"
+#   else
+#   	echo "${complaint}"
+#   fi
+#fi
 
 XCODE_CONTENTS_PATH="`dirname ${XCODE_DEVELOPER_PATH}`"
 
@@ -97,26 +110,25 @@ MULLE_XCPLUGIN="${HOME}/Library/Application Support/Developer/Shared/Xcode/Plug-
 MULLE_XCPLUGIN_NAME="`basename "${MULLE_XCPLUGIN}" .xcplugin`"
 
 echo ""
-echo "${C_GREEN}This script will now create the plugin${C_RESET}
-\"${MULLE_XCPLUGIN}\""
+printf "${C_GREEN}This script will now create the plugin${C_RESET}\n\"${MULLE_XCPLUGIN}\"\n"
 
 if [ ! -z "${sudo}" ]
 then
 	echo "sudo will be needed for this."
 fi
-echo "${C_YELLOW}press RETURN to continue${C_RESET}"
+printf "${C_YELLOW}press RETURN to continue${C_RESET}\n"
 read -r
 
 if [ -e "${MULLE_XCPLUGIN}" ]
 then
-	echo "${C_RED}\"${MULLE_XCPLUGIN}\" already exists${C_RESET}"
+	printf "${C_RED}\"${MULLE_XCPLUGIN}\" already exists${C_RESET}\n"
 	echo "It will be erased."
 
 	if [ ! -z "${sudo}" ]
 	then
 		echo "sudo will be needed for this."
 	fi
-	echo "${C_YELLOW}press RETURN to continue${C_RESET}"
+	printf "${C_YELLOW}press RETURN to continue${C_RESET}\n"
 	read -r
 
 	${sudo} rm -rf "${MULLE_XCPLUGIN}"

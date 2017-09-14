@@ -75,7 +75,7 @@ set( CPACK_STRIP_FILES false)
 set( CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/${PUBLISHER}/${PROJECT_NAME}")
 
 # not strictly required
-set( CPACK_DEBIAN_PACKAGE_DEPENDS "mulle-clang (>= 4.0.0.4), mulle-build (>= 3.8.0)")
+set( CPACK_DEBIAN_PACKAGE_DEPENDS "mulle-clang (>= 4.0.0.5), mulle-build (>= 3.8.0)")
 
 # stuff needed for RPM
 
