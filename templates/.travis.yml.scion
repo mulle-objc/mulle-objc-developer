@@ -3,7 +3,7 @@ sudo: required
 
 script:
   - wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
-| - sudo apt-get -y "{{PUBLISHER}}/software/mulle-sde"
+| - sudo apt-get -y install "mulle-sde"
   - mulle-objc-init -d /tmp/Exe executable
   - cd /tmp/Exe
   - mulle-build -v -V --bootstrap
