@@ -1,3 +1,8 @@
+### 0.10.1
+
+* modernize for mulle-configuration 3.0
+* improve documentation
+
 ### 0.9.1
 
 * modernize for mulle-configuration 2.0

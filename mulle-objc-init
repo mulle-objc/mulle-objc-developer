@@ -29,7 +29,7 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 #
-MULLE_OBJC_DEVELOPER_VERSION=0.9.2
+MULLE_OBJC_DEVELOPER_VERSION=0.10.1
 
 #
 # allow these to be set via environment
@@ -89,7 +89,6 @@ sanity_check()
    . "${library_path}/mulle-bootstrap-logging.sh"
 
    ([ -e .CC ]               && log_info ".CC exists")              || log_warning ".CC is missing"
-   ([ -e .CXX ]              && log_info ".CXX exists")             || log_warning ".CXX is missing"
    ([ -e .bootstrap ]        && log_info ".bootstrap exists")       || log_warning ".bootstrap is missing"
    ([ -e .bootstrap.local ]  && log_info ".bootstrap.local exists") || log_warning ".bootstrap.local is missing"
    ([ -e src ]               && log_info "./src exists")            || log_warning "./src is missing"
@@ -102,10 +101,6 @@ compiler_setup()
    if [ ! -e .CC -o "${FLAG_FORCE}" = "YES" ]
    then
       redirect_exekutor .CC echo "mulle-clang"
-   fi
-   if [ ! -e .CXX -o "${FLAG_FORCE}" = "YES" ]
-   then
-      redirect_exekutor .CXX echo "mulle-clang"
    fi
 }
 
@@ -507,6 +502,7 @@ CMakeSourcesAndHeaders.txt
 
 add_library( "${PROJECT_NAME}Standalone" SHARED
 \${STANDALONE_SOURCES}
+\$<TARGET_FILE:${PROJECT_NAME}> # fix problem with FORCE_LOAD obscuring
 )
 
 add_dependencies( "${PROJECT_NAME}Standalone" "${PROJECT_NAME}")
