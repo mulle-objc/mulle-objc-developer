@@ -3,7 +3,7 @@
 # formula operations.
 #
 PROJECT="mulle-objc-developer"      # your project/repository name
-DESC="🎁  Developer tools for mulle-objc"
+DESC="🎁 Developer tools for mulle-objc"
 LANGUAGE="bash"             # c,cpp, objc, bash ...
 
 # LANGUAGE="c"             # c,cpp, objc, bash ...
