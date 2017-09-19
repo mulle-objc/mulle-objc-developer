@@ -349,7 +349,7 @@ clone()
          last_repos="$i"
       done
 
-      for i in ${OPTIONAL_ADDITIONAL_REPOS}S
+      for i in ${OPTIONAL_ADDITIONAL_REPOS}
       do
          if [ ! -d "$i" ]
          then

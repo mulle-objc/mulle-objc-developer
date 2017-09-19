@@ -109,6 +109,14 @@ main()
       mkdir -p /etc/apt/sources.list.d
    fi
 
+   if dpkg -l mulle-clang > /dev/null
+   then
+      echo "This script is only useful for an initial installation." >&2
+      echo "But mulle-clang is already installed. Please just use" >&2
+      echo "   sudo apt-get upgrade mulle-objc-developer" >&2
+      exit 1
+   fi
+
    local osrelease
 
    osrelease="`lsb_release -c -s`" || exit 1
