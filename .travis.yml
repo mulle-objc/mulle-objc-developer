@@ -14,6 +14,6 @@ script:
   - cd /tmp/Lib
   - mulle-bootstrap -v -V
   - PATH="`pwd`/dependencies/bin:$PATH" mulle-build -v -V
-  - test -f ./build/Lib.a
+  - test -f ./build/libLib.a
   - mkdir /tmp/clone
   - mulle-objc-clone -a
