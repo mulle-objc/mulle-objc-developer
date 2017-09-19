@@ -1,3 +1,8 @@
+## 0.11.1
+
+* adapt to mulle-configuration 3.1
+
+
 ### 0.10.1
 
 * modernize for mulle-configuration 3.0

@@ -382,6 +382,14 @@ if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
       message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} is missing. \`mulle-bootstrap\` first")
    endif()
 
+   #
+   # Put your find_library() statements here to import other libraries
+   #
+   # Put all ObjC into OBJC_DEPENDENCY_LIBRARIES
+   # Add .bootstrap C dependencies to C_DEPENDENCIES_LIBRARIES
+   # Add OS specific C dependencies (rest) to OS_SPECIFIC_LIBRARIES
+   #
+
    if( NOT ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY)
       find_library( ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY NAMES ${PROJECT_NAME})
       message(STATUS "${PROJECT_UPCASE_IDENTIFIER}_LIBRARY is \${${PROJECT_UPCASE_IDENTIFIER}_LIBRARY}")
@@ -395,6 +403,13 @@ if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
          \${OBJC_DEPENDENCY_NAMES}
          CACHE INTERNAL "need to cache this too"
       )
+   endif()
+
+   #
+   # For benefit of Windows
+   #
+   if( MSVC)
+      set( ${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS \${${MULLE_OBJC_LIBRARY_NAME}_DEFINITIONS})
    endif()
 endif()
 EOF
@@ -470,7 +485,7 @@ CMakeSourcesAndHeaders.txt
 
 set( STANDALONE_BASE_NAME "${PROJECT_NAME}")
 set( STANDALONE_NAME "${PROJECT_NAME}Standalone")
-
+set( STANDALONE_DEFINITIONS \${${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS})
 set( STANDALONE_ALL_LOAD_LIBRARIES
     \$<TARGET_FILE:\${STANDALONE_BASE_NAME}>
     \${OBJC_DEPENDENCY_LIBRARIES}
