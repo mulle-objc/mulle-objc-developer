@@ -109,7 +109,7 @@ ${OPTIONAL_ADDITIONAL_REPOS}
 
 fail()
 {
-   echo "%@" >&2
+   echo "$*" >&2
    exit 1
 }
 
@@ -411,6 +411,10 @@ run()
    (
       if [ "`basename -- "${PWD}"`" != "${MASTER_DIR}" ]
       then
+         if [ ! -d "${MASTER_DIR}" ]
+         then
+            fail "\"${MASTER_DIR}\" does not exist"
+         fi
          cd "${MASTER_DIR}" || exit 1
       fi
 
@@ -495,6 +499,20 @@ main()
             ADDITIONAL_BRANCH="$1"
          ;;
 
+         -d|--directory)
+            [ $# -eq 1 ] && echo "$1 argument missing" >&2 && exit 1
+            shift
+
+            MASTER_DIR="$1"
+         ;;
+
+         --cache)
+            [ $# -eq 1 ] && echo "$1 argument missing" >&2 && exit 1
+            shift
+
+            CACHE_DIR="$1"
+         ;;
+
          --eval)
             OPTION_EVAL="YES"
          ;;
@@ -553,8 +571,15 @@ main()
    ADDITIONAL_REPOPREFIX="${ADDITIONAL_REPOPREFIX:-https://github.com/${ADDITIONAL_PUBLISHER}/}"
    ADDITIONAL_BRANCH="${ADDITIONAL_BRANCH:-${OBJC_BRANCH}}"
 
-   MASTER_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}"
-   CACHE_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must be relative
+   if [ -z "${MASTER_DIR}" ]
+   then
+      MASTER_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}"
+   fi
+
+   if [ -z "${CACHE_DIR}" ]
+   then
+      CACHE_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must be relative
+   fi
 
    case "${COMMAND}" in
       clone)

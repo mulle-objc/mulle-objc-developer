@@ -29,7 +29,7 @@
 #   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #   POSSIBILITY OF SUCH DAMAGE.
 #
-MULLE_OBJC_DEVELOPER_VERSION=0.10.1
+MULLE_OBJC_DEVELOPER_VERSION=0.12.1
 
 #
 # allow these to be set via environment
@@ -72,6 +72,7 @@ usage:
       -d <dir>       : use "dir" instead of working directory
       -f             : overwrite existing files
       -n             : don't actually do anything
+      -p <name>      : give project a name
 
    Command:
       check      : check current project
@@ -387,9 +388,16 @@ if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
    #
    # Put all ObjC into OBJC_DEPENDENCY_LIBRARIES
    # Add .bootstrap C dependencies to C_DEPENDENCIES_LIBRARIES
-   # Add OS specific C dependencies (rest) to OS_SPECIFIC_LIBRARIES
+   # Add OS specific C dependencies (rest) to OS_SPECIFIC_LIBRARIES and
+   # OBJC_DEPENDENCY_NAMES
    #
 
+
+   #
+   # For the benefit of users of your library, provide the find_library
+   # statement to find yours and add it to OBJC_DEPENDENCY_LIBRARIES and
+   # OBJC_DEPENDENCY_NAMES
+   #
    if( NOT ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY)
       find_library( ${PROJECT_UPCASE_IDENTIFIER}_LIBRARY NAMES ${PROJECT_NAME})
       message(STATUS "${PROJECT_UPCASE_IDENTIFIER}_LIBRARY is \${${PROJECT_UPCASE_IDENTIFIER}_LIBRARY}")
@@ -409,7 +417,7 @@ if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
    # For benefit of Windows
    #
    if( MSVC)
-      set( ${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS \${${MULLE_OBJC_LIBRARY_NAME}_DEFINITIONS})
+      set( ${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS \${${UPCASE_MULLE_OBJC_LIBRARY_NAME}_DEFINITIONS})
    endif()
 endif()
 EOF
@@ -418,8 +426,16 @@ EOF
 
 emit_sources_and_headers_library()
 {
-   cat <<EOF
+   if [ ! -z "${FILE_PREFIX}" ]
+   then
+      cat <<EOF
+set( INCLUDE_DIRS)
+"${FILE_PREFIX}"
+)
+EOF
+   fi
 
+   cat <<EOF
 set( SOURCES
 "${FILE_PREFIX}Foo.m"
 "${FILE_PREFIX}MulleObjCLoader+${PROJECT_NAME}.m"
@@ -466,6 +482,11 @@ include( CMakeDependencies.txt)
 include( CMakeSourcesAndHeaders.txt)
 
 ###
+
+# cmake doesn't know AAM files
+include( AAMSupport)
+
+include_directories( ${INCLUDE_DIRS})
 
 
 set( PUBLIC_HEADERS
@@ -527,11 +548,20 @@ option( USE_OBJC_COVERAGE "Enable mulle-objc coverage based link optimization" O
 
 ###
 
+if( NOT EXISTS "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
+   message( FATAL_ERROR "${MULLE_OBJC_LIBRARY_NAME} not found. You must \`mulle-bootstrap -f build\` first.")
+endif()
+
+
 include( "\${DEPENDENCIES_DIR}/include/${MULLE_OBJC_LIBRARY_NAME}/CMakeDependencies.txt")
 
 include( CMakeSourcesAndHeaders.txt)
 
 ###
+
+# cmake doesn't know AAM files
+include( AAMSupport)
+
 
 add_executable( "${PROJECT_NAME}"
 \${SOURCES}
@@ -574,8 +604,10 @@ endif()
 # prepend force-all for OS X, other use BEGIN_ALL_LOAD
 
 set( EXECUTABLE_NAME "${PROJECT_NAME}")
-set( EXECUTABLE_ALL_LOAD_LIBRARIES \${TARGET_ALL_LOAD_LIBRARIES})
 set( EXECUTABLE_NORMAL_LOAD_LIBRARIES \${TARGET_NORMAL_LOAD_LIBRARIES})
+set( EXECUTABLE_ALL_LOAD_LIBRARIES \${TARGET_ALL_LOAD_LIBRARIES})
+\${OBJC_STARTUP_LIBRARY}
+)
 
 include( ExecutableObjC)
 
@@ -872,7 +904,7 @@ library_setup()
 
       cat <<EOF >> ".bootstrap/motd"
 Ready to build ${PROJECT_NAME} with:
-   mulle-build   # results will be in ./build
+   mulle-build
 EOF
    fi
 }
@@ -937,7 +969,7 @@ executable_setup()
 
       cat <<EOF >> ".bootstrap/motd"
 Ready to build ${PROJECT_NAME}:
-   mulle-build   # will produce executable ./build/${PROJECT_NAME}
+   mulle-build
 EOF
    fi
 }
@@ -1015,6 +1047,13 @@ main()
             [ $# -eq 0 ] && usage
 
             directory="$1"
+         ;;
+
+         -p|--project-name)
+            shift
+            [ $# -eq 0 ] && usage
+
+            PROJECT_NAME="$1"
          ;;
 
          --search)
