@@ -86,6 +86,22 @@ add_cmake_3_apt_source()
 
 main()
 {
+   case "$1" in
+      -h|--help)
+         cat <<EOF  >&2
+Usage: install-ubuntu
+
+This script uses apt-get to install. There are no options.
+
+It will add a public key to your apt gpg keys.
+Add a source to your apt sources.
+Install cmake requirements for mulle-clang if necessary.
+Install mulle-clang.
+EOF
+         return 0
+      ;;
+   esac
+
    #
    # use wget because it's more lightweight
    #
@@ -96,7 +112,7 @@ main()
 
       if [ -z "`command -v "wget"`" ]
       then
-         apt-get update ${APTFLAGS} &&
+         apt-get update ${APTFLAGS} "$@"  # ignore failures here
          apt-get install ${APTFLAGS} "$@" wget || exit 1
       fi
    fi
@@ -147,7 +163,7 @@ main()
    #
    log_verbose "Install ${DEVELOPER_PACKAGE}"
 
-   apt-get update ${APTFLAGS} &&
+   apt-get update ${APTFLAGS} "$@"  # ignore failures
    apt-get install ${APTFLAGS} "$@" "${DEVELOPER_PACKAGE}" || exit 1
 
    #

@@ -31,6 +31,9 @@
 #
 MULLE_OBJC_DEVELOPER_VERSION=0.12.1
 
+MULLE_BOOTSTRAP_MIN_MAJOR="3"
+MULLE_BOOTSTRAP_MIN_MINOR="12"
+
 #
 # allow these to be set via environment
 #
@@ -973,6 +976,35 @@ Ready to build ${PROJECT_NAME}:
 EOF
    fi
 }
+
+
+mulle_bootstrap_version_too_old()
+{
+   local version
+   local major
+   local minor
+
+   version="`"${MULLE_BOOTSTRAP_EXE}" version | head -1`"
+   [ -z "${version}" ] && fail "mulle-bootstrap did not provide a version"
+
+   major="`echo "${version}" | cut -s -d. -f1`"
+   if [ "${major}" -lt "${MULLE_BOOTSTRAP_MIN_MAJOR}" ]
+   then
+      return 0
+   fi
+
+   if [ "${major}" -eq "${MULLE_BOOTSTRAP_MIN_MAJOR}" ]
+   then
+      minor="`echo "${version}" | cut -s -d. -f2`"
+      if [ "${minor}" -lt "${MULLE_BOOTSTRAP_MIN_MINOR}" ]
+      then
+         return 0
+      fi
+   fi
+
+   return 1
+}
+
 
 
 setup_bootstrap_environment()
