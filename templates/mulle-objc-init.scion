@@ -432,7 +432,7 @@ emit_sources_and_headers_library()
    if [ ! -z "${FILE_PREFIX}" ]
    then
       cat <<EOF
-set( INCLUDE_DIRS)
+set( INCLUDE_DIRS
 "${FILE_PREFIX}"
 )
 EOF
@@ -513,6 +513,7 @@ set( STANDALONE_DEFINITIONS \${${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS})
 set( STANDALONE_ALL_LOAD_LIBRARIES
     \$<TARGET_FILE:\${STANDALONE_BASE_NAME}>
     \${OBJC_DEPENDENCY_LIBRARIES}
+    \${OBJC_STARTUP_LIBRARY}
     \${C_DEPENDENCY_LIBRARIES}
 )
 
@@ -608,7 +609,7 @@ endif()
 
 set( EXECUTABLE_NAME "${PROJECT_NAME}")
 set( EXECUTABLE_NORMAL_LOAD_LIBRARIES \${TARGET_NORMAL_LOAD_LIBRARIES})
-set( EXECUTABLE_ALL_LOAD_LIBRARIES \${TARGET_ALL_LOAD_LIBRARIES})
+set( EXECUTABLE_ALL_LOAD_LIBRARIES \${TARGET_ALL_LOAD_LIBRARIES}
 \${OBJC_STARTUP_LIBRARY}
 )
 
@@ -754,23 +755,6 @@ demo_main_m()
 #import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
 #include "Foo.h"
 #include "version.h"
-
-EOF
-
-   if [ "${OPTION_DYNAMIC_LINKED}" = "YES" ]
-   then
-      echo "#define DYNAMIC_LINKED_${UPCASE_MULLE_OBJC_NAME}"
-   else
-      echo "// #define DYNAMIC_LINKED_${UPCASE_MULLE_OBJC_NAME}"
-   fi
-
-   cat <<EOF
-#ifndef DYNAMIC_LINKED_${UPCASE_MULLE_OBJC_NAME}
-
-#include <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_HEADER_NAME}.h>
-#include <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_INC_NAME}.inc>
-
-#endif
 
 
 int  main( int argc, char *argv[])
@@ -1125,7 +1109,7 @@ main()
             OPTION_MULLE_OBJC_DEVELOPER="YES"
          ;;
 
-         --dynamic-linked)
+         --link-with-shared)
             OPTION_DYNAMIC_LINKED="YES"
             MULLE_OBJC_LIBRARY_NAME="${MULLE_OBJC_NAME}"
          ;;
@@ -1192,18 +1176,6 @@ main()
 
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          library_setup
-
-         if [ "${OPTION_SHOW_LOGO}" = "YES" ]
-         then
-            show_logo
-         fi
-
-         log_info "Your project for $1 \
-${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
-${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
-         log_info "Build it with:"
-         log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
-   mulle-build"
       ;;
 
       executable)
@@ -1211,18 +1183,6 @@ ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
          exekutor cd "${directory}" || fail "couldn't cd to \"${directory}\""
          executable_setup
 
-         if [ "${OPTION_SHOW_LOGO}" = "YES" ]
-         then
-            show_logo
-         fi
-
-         log_info "Your project for $1 \
-${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
-${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
-         log_info "Build and run it with:"
-         log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
-   mulle-build
-   ./build/${PROJECT_NAME}"
       ;;
 
       version)
@@ -1235,6 +1195,18 @@ ${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
          exit 1
       ;;
    esac
+
+   if [ "${OPTION_SHOW_LOGO}" = "YES" ]
+   then
+      show_logo
+   fi
+
+   log_info "Your project for $1 \
+${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
+${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
+   log_info "Build it with:"
+   log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
+   mulle-build"
 }
 
 # sometimes passed in
