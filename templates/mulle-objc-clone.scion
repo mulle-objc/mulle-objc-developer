@@ -254,6 +254,10 @@ clone()
 
    [ "${DONT_ASK}" != "YES" ] && blurb_and_ask
 
+   local ABSOLUTE_CACHE_DIR
+
+   ABSOLUTE_CACHE_DIR="`pwd`/${CACHE_DIR}"
+
    mkdir -p "${CACHE_DIR}" 2> /dev/null
    (
       cd "${CACHE_DIR}"
@@ -383,7 +387,7 @@ clone()
       #
       # configure mulle-bootstrap to use symlinks if possible
       #
-      mulle-bootstrap config search_path "`pwd`/${CACHE_DIR}"
+      mulle-bootstrap config search_path "${ABSOLUTE_CACHE_DIR}"
 
       mulle-bootstrap config -y dont_warn_scripts
       mulle-bootstrap config -y embedded_symlinks
@@ -578,7 +582,7 @@ main()
 
    if [ -z "${CACHE_DIR}" ]
    then
-      CACHE_DIR="${MULLE_OBJC_NAME}-${OBJC_BRANCH}/embeds-${EMBEDDED_BRANCH}"  # must be relative
+      CACHE_DIR="${MASTER_DIR}/embeds-${EMBEDDED_BRANCH}"  # must be relative
    fi
 
    case "${COMMAND}" in
