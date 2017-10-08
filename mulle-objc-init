@@ -1,4 +1,3 @@
-#! /usr/bin/env bash
 #
 #   Copyright (c) 2017 Nat! - Mulle kybernetiK
 #   All rights reserved.
@@ -44,8 +43,6 @@ PUBLISHER_LOGO="mulle-logo-48x48.txt"
 MULLE_OBJC_DEVELOPER_TOOLS="${MULLE_OBJC_DEVELOPER_TOOLS:-mulle-objc-developer}"
 MULLE_OBJC_NAME="${MULLE_OBJC_NAME:-MulleObjC}"
 UPCASE_MULLE_OBJC_NAME="${UPCASE_MULLE_OBJC_NAME:-MULLE_OBJC}"
-MULLE_OBJC_STANDALONE_HEADER_NAME="${MULLE_OBJC_STANDALONE_HEADER_NAME:-ns_objc_setup}"
-MULLE_OBJC_STANDALONE_INC_NAME="${MULLE_OBJC_STANDALONE_INC_NAME:-ns_objc_standalone}"
 
 #
 # these can be deduced and may not need to be set
@@ -420,7 +417,7 @@ if( NOT __${PROJECT_UPCASE_IDENTIFIER}_CMAKE_DEPENDENCIES_TXT__)
    # For benefit of Windows
    #
    if( MSVC)
-      set( ${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS \${${UPCASE_MULLE_OBJC_LIBRARY_NAME}_DEFINITIONS})
+      set( ${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS \${${UPCASE_MULLE_OBJC_LIBRARY_IDENTIFIER}_DEFINITIONS})
    endif()
 endif()
 EOF
@@ -448,11 +445,6 @@ set( PUBLIC_HEADERS
 "${FILE_PREFIX}Foo.h"
 "${FILE_PREFIX}version.h"
 )
-
-set( STANDALONE_SOURCES
-"${FILE_PREFIX}${PROJECT_NAME}Standalone.m"
-)
-
 EOF
 
    emit_include_directories
@@ -509,6 +501,7 @@ CMakeSourcesAndHeaders.txt
 
 set( STANDALONE_BASE_NAME "${PROJECT_NAME}")
 set( STANDALONE_NAME "${PROJECT_NAME}Standalone")
+set( STANDALONE_SOURCE "src/${PROJECT_NAME}Standalone.m")
 set( STANDALONE_DEFINITIONS \${${PROJECT_UPCASE_IDENTIFIER}_DEFINITIONS})
 set( STANDALONE_ALL_LOAD_LIBRARIES
     \$<TARGET_FILE:\${STANDALONE_BASE_NAME}>
@@ -677,6 +670,8 @@ demo_file_m()
 #import "version.h"
 
 
+int   __${PROJECT_UPCASE_IDENTIFIER}_ranlib__;
+
 @implementation Foo
 
 + (uint32_t) projectVersion;
@@ -739,9 +734,7 @@ EOF
 demo_standalone_m()
 {
    cat <<EOF
-#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_HEADER_NAME}.h>
-#import <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_HEADER_NAME}.h>
-#include <${MULLE_OBJC_HEADER_NAME}/${MULLE_OBJC_STANDALONE_INC_NAME}.inc>
+int   __${PROJECT_IDENTIFIER}_unused__;
 
 // that's all folks
 EOF
@@ -889,10 +882,9 @@ library_setup()
          remove_file_if_present ".bootstrap/motd"
       fi
 
-      cat <<EOF >> ".bootstrap/motd"
-Ready to build ${PROJECT_NAME} with:
-   mulle-build
-EOF
+      printf "%b" "${C_INFO}Ready to build ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} with:
+${C_RESET}${C_BOLD}   mulle-build${C_RESET}
+" >> ".bootstrap/motd"
    fi
 }
 
@@ -1150,6 +1142,7 @@ main()
    PROJECT_NAME="${PROJECT_NAME:-${dir_name}}"
    PROJECT_IDENTIFIER="`echo "${PROJECT_NAME}" | tr '-' '_' | tr '[A-Z]' '[a-z]'`"
    PROJECT_UPCASE_IDENTIFIER="`echo "${PROJECT_IDENTIFIER}" | tr '[a-z]' '[A-Z]'`"
+   UPCASE_MULLE_OBJC_LIBRARY_IDENTIFIER="`echo "${UPCASE_MULLE_OBJC_LIBRARY_NAME}" | tr '-' '_'`"
 
    #
    # a bit weird, but written for MulleFoundation and downgraded to
