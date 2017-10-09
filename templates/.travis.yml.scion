@@ -4,15 +4,15 @@ sudo: required
 script:
   - wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
   - sudo apt-get -y install mulle-sde
-  - mulle-objc-init -d /tmp/Exe executable
-  - cd /tmp/Exe
+  - mulle-objc-init -d /tmp/a executable
+  - cd /tmp/a
   - mulle-bootstrap -v -V
   - PATH="`pwd`/dependencies/bin:$PATH" mulle-build -v -V
-  - ./build/Exe
-  - mulle-objc-init -d /tmp/Lib library
-  - cd /tmp/Lib
+  - ./build/a
+  - mulle-objc-init -d /tmp/b library
+  - cd /tmp/b
   - mulle-bootstrap -v -V
   - PATH="`pwd`/dependencies/bin:$PATH" mulle-build -v -V
-  - test -f ./build/Lib.a
+  - test -f ./build/libb.a
   - mkdir /tmp/clone
   - mulle-objc-clone -a
