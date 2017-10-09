@@ -7,9 +7,9 @@ then
    set -x
 fi
 
-PUBLISHER_PUBLICKEY_URL="http://www./dists/admin-pub.asc"
-PUBLISHER_DEBIAN_URL="http://www."
-PUBLISHER_DOMAIN=""
+PUBLISHER_PUBLICKEY_URL="http://www.mulle-kybernetik.com/dists/admin-pub.asc"
+PUBLISHER_DEBIAN_URL="http://www.mulle-kybernetik.com"
+PUBLISHER_DOMAIN="mulle-kybernetik.com"
 DEVELOPER_PACKAGE="${DEVELOPER_PACKAGE:-mulle-objc-developer}"
 CC_PRIORITY="${CC_PRIORITY:-18}"
 
