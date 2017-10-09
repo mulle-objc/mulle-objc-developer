@@ -1,3 +1,7 @@
+### 0.12.2
+
+* community release
+
 ## 0.11.1
 
 * don't run install if mulle-clang is already installed

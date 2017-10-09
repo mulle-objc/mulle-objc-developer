@@ -3,7 +3,7 @@ dist: trusty
 sudo: required
 
 script:
-  - wget -q -O- https://raw.githubusercontent.com/mulle-nat/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
+  - wget -q -O- https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/install-ubuntu.sh | sudo APTFLAGS=-y sh
   - sudo apt-get -y install mulle-sde
   - mulle-objc-init -d /tmp/Exe executable
   - cd /tmp/Exe
@@ -14,6 +14,6 @@ script:
   - cd /tmp/Lib
   - mulle-bootstrap -v -V
   - PATH="`pwd`/dependencies/bin:$PATH" mulle-build -v -V
-  - test -f ./build/libLib.a
+  - test -f ./build/Lib.a
   - mkdir /tmp/clone
   - mulle-objc-clone -a

@@ -9,7 +9,7 @@ execute_process( COMMAND mulle-objc-init --version
 message( STATUS "MULLE_OBJC_DEVELOPER_VERSION is ${MULLE_OBJC_DEVELOPER_VERSION} according to mulle-objc-init")
 
 set( PROJECT_VERSION "${MULLE_OBJC_DEVELOPER_VERSION}")
-set( PUBLISHER "mulle-nat")
+set( PUBLISHER "mulle-objc")
 
 set( SCRIPTS
 mulle-objc-init
@@ -17,7 +17,7 @@ mulle-objc-clone
 )
 
 set( RESOURCES
-mulle-logo-48x48.txt
+mulle-objc-logo-opaque-48x48.txt
 )
 
 
@@ -79,7 +79,7 @@ set( CPACK_DEBIAN_PACKAGE_DEPENDS "mulle-clang (>= 4.0.0.5), mulle-build (>= 3.8
 
 # stuff needed for RPM
 
-set( CPACK_RPM_PACKAGE_VENDOR "Mulle kybernetiK")
+set( CPACK_RPM_PACKAGE_VENDOR "mulle-objc community")
 
 ######
 #
