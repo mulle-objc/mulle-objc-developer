@@ -6,8 +6,8 @@
 ![GitHub release](https://img.shields.io/github/release/mulle-objc/mulle-objc-developer.svg)
 
 
-This project installs the minimally required items for developing
-**mulle-objc** on your system.
+This project installs the [required items](dox/releases/0.12.2.md)
+for developing **mulle-objc** on your system.
 
 It will install the compiler **mulle-clang** and some scripts to help
 you start developing **mulle-objc** projects.
@@ -18,6 +18,7 @@ Script                     | Description                | Dox
 `mulle-objc-init`          | Create a complete library or executable project with the proper environment                | [INIT.md](INIT.md)
 `mulle-objc-clone`         | For hacking on **mulle-objc**  itself, clones all necessary repositories               | [CLONE.md](CLONE.md)
 `mulle-clang-add-to-xcode` | Make the **mulle-clang** compiler available in Xcode                      | [XCODE.md](XCODE.md)
+
 
 
 
