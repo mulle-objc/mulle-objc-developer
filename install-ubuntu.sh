@@ -133,7 +133,7 @@ EOF
       mkdir -p /etc/apt/sources.list.d
    fi
 
-   if dpkg -l mulle-clang > /dev/null
+   if dpkg -l mulle-clang > /dev/null 2>&1
    then
       echo "This script is only useful for an initial installation." >&2
       echo "But mulle-clang is already installed. Please just use" >&2
