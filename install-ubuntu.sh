@@ -7,15 +7,17 @@ then
    set -x
 fi
 
-PUBLISHER_PUBLICKEY_URL="http://www.mulle-kybernetik.com/dists/admin-pub.asc"
-PUBLISHER_DEBIAN_URL="http://www.mulle-kybernetik.com"
+# sanity check for template fails
+[ -z "www.mulle-kybernetik.com/mulle-objc-community/dists/admin-pub.asc" ] && echo "PUBLISHER_DEBIAN_GPG_PATH is missing" >&2 && exit 1
+[ -z "/www.mulle-kybernetik.com/mulle-objc-community" ] && echo "PUBLISHER_DEBIAN_DISTS_PATH is missing" >&2 && exit 1
+[ -z "mulle-kybernetik.com" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
+
+PUBLISHER_PUBLICKEY_URL="https://www.mulle-kybernetik.com/mulle-objc-community/dists/admin-pub.asc"
+PUBLISHER_DEBIAN_URL="http:///www.mulle-kybernetik.com/mulle-objc-community"
 PUBLISHER_DOMAIN="mulle-kybernetik.com"
 DEVELOPER_PACKAGE="${DEVELOPER_PACKAGE:-mulle-objc-developer}"
 CC_PRIORITY="${CC_PRIORITY:-18}"
 
-[ -z "${PUBLISHER_PUBLICKEY_URL}" ] && echo "PUBLISHER_PUBLICKEY_URL is missing" >&2 && exit 1
-[ -z "${PUBLISHER_DEBIAN_URL}" ] && echo "PUBLISHER_DEBIAN_URL is missing" >&2 && exit 1
-[ -z "${PUBLISHER_DOMAIN}" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
 
 CURLFLAGS="-sS"
 WGETFLAGS="-q -O -"

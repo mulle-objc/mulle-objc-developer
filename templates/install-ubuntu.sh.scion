@@ -7,15 +7,17 @@ then
    set -x
 fi
 
-PUBLISHER_PUBLICKEY_URL="{{PUBLISHER_PUBLICKEY_URL}}"
-PUBLISHER_DEBIAN_URL="{{PUBLISHER_DEBIAN_URL}}"
+# sanity check for template fails
+[ -z "{{PUBLISHER_DEBIAN_GPG_PATH}}" ] && echo "PUBLISHER_DEBIAN_GPG_PATH is missing" >&2 && exit 1
+[ -z "{{PUBLISHER_DEBIAN_DISTS_PATH}}" ] && echo "PUBLISHER_DEBIAN_DISTS_PATH is missing" >&2 && exit 1
+[ -z "{{PUBLISHER_DOMAIN}}" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
+
+PUBLISHER_PUBLICKEY_URL="https://{{PUBLISHER_DEBIAN_GPG_PATH}}"
+PUBLISHER_DEBIAN_URL="http://{{PUBLISHER_DEBIAN_DISTS_PATH}}"
 PUBLISHER_DOMAIN="{{PUBLISHER_DOMAIN}}"
 DEVELOPER_PACKAGE="${DEVELOPER_PACKAGE:-mulle-objc-developer}"
 CC_PRIORITY="${CC_PRIORITY:-18}"
 
-[ -z "${PUBLISHER_PUBLICKEY_URL}" ] && echo "PUBLISHER_PUBLICKEY_URL is missing" >&2 && exit 1
-[ -z "${PUBLISHER_DEBIAN_URL}" ] && echo "PUBLISHER_DEBIAN_URL is missing" >&2 && exit 1
-[ -z "${PUBLISHER_DOMAIN}" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
 
 CURLFLAGS="-sS"
 WGETFLAGS="-q -O -"

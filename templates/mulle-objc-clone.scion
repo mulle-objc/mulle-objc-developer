@@ -284,6 +284,11 @@ clone()
 
       local last_repos
 
+      if [ ! -f ".mulle-sde-environment.sh" ]
+      then
+         echo "# empty" > ".mulle-sde-environment.sh"
+      fi
+
       #
       # BASE_REPOPREFIX and BASE_BRANCH
       #

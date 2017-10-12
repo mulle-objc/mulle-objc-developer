@@ -7,3 +7,4 @@ build/
 /addictions/
 /.repos/
 /.bootstrap.repos
+bin/publisher-info.sh

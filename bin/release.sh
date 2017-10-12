@@ -37,13 +37,14 @@
 #   ./bin/release.sh -v -n --publisher mulle-nat --publisher-tap mulle-kybernetik/software/
 #
 
+
 #######
 # Ideally changes to the following values are done with the command line
 # which makes it easier for forks.
 #######
 
 MULLE_BOOTSTRAP_FAIL_PREFIX="`basename -- $0`"
-MULLE_HOMEBREW_VERSION="5.2.0"
+MULLE_HOMEBREW_VERSION="5.3.0"
 
 if [ -z "`command -v mulle-homebrew-env`" ]
 then
@@ -59,6 +60,7 @@ INSTALLED_MULLE_HOMEBREW_VERSION="`mulle-homebrew-env version`" || exit 1
 LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
 
 . "${LIBEXEC_DIR}/mulle-files.sh"       || exit 1
+. "${LIBEXEC_DIR}/mulle-publisher.sh"   || exit 1
 . "${LIBEXEC_DIR}/mulle-homebrew.sh"    || exit 1
 . "${LIBEXEC_DIR}/mulle-git.sh"         || exit 1
 . "${LIBEXEC_DIR}/mulle-version.sh"     || exit 1
@@ -67,6 +69,8 @@ LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
 
 main()
 {
+   log_verbose "mulle-homebrew-version ${MULLE_HOMEBREW_VERSION}"
+
    if [ "${DO_GIT_RELEASE}" != "YES" -a "${DO_GENERATE_FORMULA}" != "YES" ]
    then
       fail "Nothing to do! bin/version-info.sh and bin/formula-info.sh are missing"
