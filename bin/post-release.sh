@@ -10,7 +10,6 @@ post_release()
 
    #
    #
-
    if [ -z "${PUBLISHER_DEBIAN_GPG_PATH}" ]
    then
       log_verbose "PUBLISHER_DEBIAN_GPG_PATH is not defined, so no debian release"
@@ -30,6 +29,7 @@ post_release()
    # sanity check
    #
 
+   log_info "Publish to debian"
    exekutor mulle-homebrew-debian
 }
 

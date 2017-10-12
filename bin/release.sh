@@ -44,7 +44,7 @@
 #######
 
 MULLE_BOOTSTRAP_FAIL_PREFIX="`basename -- $0`"
-MULLE_HOMEBREW_VERSION="5.3.0"
+MULLE_HOMEBREW_VERSION="5.3.1"
 
 if [ -z "`command -v mulle-homebrew-env`" ]
 then
@@ -58,6 +58,7 @@ fi
 
 INSTALLED_MULLE_HOMEBREW_VERSION="`mulle-homebrew-env version`" || exit 1
 LIBEXEC_DIR="`mulle-homebrew-env libexec-path`" || exit 1
+RELEASE_DIR="`dirname -- "$0"`"
 
 . "${LIBEXEC_DIR}/mulle-files.sh"       || exit 1
 . "${LIBEXEC_DIR}/mulle-publisher.sh"   || exit 1

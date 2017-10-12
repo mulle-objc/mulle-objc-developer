@@ -7,14 +7,6 @@ then
    set -x
 fi
 
-# sanity check for template fails
-[ -z "www.mulle-kybernetik.com/mulle-objc-community/dists/admin-pub.asc" ] && echo "PUBLISHER_DEBIAN_GPG_PATH is missing" >&2 && exit 1
-[ -z "/www.mulle-kybernetik.com/mulle-objc-community" ] && echo "PUBLISHER_DEBIAN_DISTS_PATH is missing" >&2 && exit 1
-[ -z "mulle-kybernetik.com" ] && echo "PUBLISHER_DOMAIN is missing" >&2 && exit 1
-
-PUBLISHER_PUBLICKEY_URL="https://www.mulle-kybernetik.com/mulle-objc-community/dists/admin-pub.asc"
-PUBLISHER_DEBIAN_URL="http:///www.mulle-kybernetik.com/mulle-objc-community"
-PUBLISHER_DOMAIN="mulle-kybernetik.com"
 DEVELOPER_PACKAGE="${DEVELOPER_PACKAGE:-mulle-objc-developer}"
 CC_PRIORITY="${CC_PRIORITY:-18}"
 
@@ -47,7 +39,7 @@ add_codeon_apt_source()
 
    log_verbose "Add Codeon GmbH apt source"
 
-   ${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/nat-codeon.asc" |
+   ${HTTPGET} ${HTTPGETFLAGS} "https://www.codeon.de/dists/codeon-pub.asc" |
       apt-key add - &&
       echo "deb [arch=amd64] http://download.codeon.de ${osrelease} main" \
          > "/etc/apt/sources.list.d/codeon.de-main.list"
@@ -60,10 +52,23 @@ add_mulle_apt_source()
 
    log_verbose "Add Mulle kybernetiK apt source"
 
-   ${HTTPGET} ${HTTPGETFLAGS} "${PUBLISHER_PUBLICKEY_URL}" |
+   ${HTTPGET} ${HTTPGETFLAGS} "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" |
       apt-key add - &&
-      echo "deb [arch=all] ${PUBLISHER_DEBIAN_URL} ${osrelease} main" \
-         > "/etc/apt/sources.list.d/${PUBLISHER_DOMAIN}-main.list"
+      echo "deb [arch=all] http://www.mulle-kybernetik.com ${osrelease} main" \
+         > "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list"
+}
+
+
+add_community_apt_source()
+{
+   local osrelease="$1"
+
+   log_verbose "Add mulle-objc community apt source"
+
+   ${HTTPGET} ${HTTPGETFLAGS} "https://www.mulle-kybernetik.com/mulle-objc-community/dists/admin-pub.asc" |
+      apt-key add - &&
+      echo "deb [arch=all] http://www.mulle-kybernetik.com/mulle-objc-community ${osrelease} main" \
+         > "/etc/apt/sources.list.d/mulle-objc-community.mulle-kybernetik.com-main.list"
 }
 
 
@@ -95,10 +100,11 @@ Usage: install-ubuntu
 
 This script uses apt-get to install. There are no options.
 
-It will add a public key to your apt gpg keys.
-Add a source to your apt sources.
-Install cmake requirements for mulle-clang if necessary.
-Install mulle-clang.
+It will add a few public keys to your apt gpg keys.
+It will also add a few sources to your apt sources.
+
+Then it will install cmake requirements for mulle-clang if necessary.
+Finally it will install mulle-clang and other required development tools.
 EOF
          return 0
       ;;
@@ -131,7 +137,7 @@ EOF
    then
       echo "This script is only useful for an initial installation." >&2
       echo "But mulle-clang is already installed. Please just use" >&2
-      echo "   sudo apt-get upgrade mulle-objc-developer" >&2
+      echo "   sudo apt-get upgrade ${DEVELOPER_PACKAGE}" >&2
       exit 1
    fi
 
@@ -149,6 +155,12 @@ EOF
    # add Mulle kybernetiK debian/ubuntu key and repository
    #
    add_mulle_apt_source "${osrelease}" || exit 1
+
+
+   #
+   # add Mulle kybernetiK debian/ubuntu key and repository
+   #
+   add_community_apt_source "${osrelease}" || exit 1
 
    #
    # We need cmake >= 3.0.0 eventually, so add it for older linux versions
