@@ -14,11 +14,9 @@ you start developing **mulle-objc** projects.
 
 Script                     | Description                | Dox
 ---------------------------|----------------------------|-----------------
-`mulle-objc-init`          | Create a complete library or executable project with the proper environment                | [INIT.md](INIT.md)
+`mulle-objc-init`          | Create a complete library or executable project with the proper environment                | [INIT.md](INIT.md)
 `mulle-objc-clone`         | For hacking on **mulle-objc**  itself, clones all necessary repositories               | [CLONE.md](CLONE.md)
 `mulle-clang-add-to-xcode` | Make the **mulle-clang** compiler available in Xcode                      | [XCODE.md](XCODE.md)
-
-
 
 
 ## Installation
@@ -47,19 +45,26 @@ docker run -i -t "mulle-objc-developer" /bin/bash
 
 #### Install with `apt-get`
 
-This methods works for **trusty** and **xenial**:
+This methods works for **trusty** , **xenial**, **zesty**:
 
 ```
 apt-get update && apt-get -y install wget
 wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/{{VERSION}}/install-ubuntu.sh | sudo APTFLAGS="-y" sh
 ```
 
-For **zesty** use:
+### Other OS
+
+Install into `/usr/local` like so:
 
 ```
-apt-get update && apt-get -y install wget
-wget -q -O- https://raw.githubusercontent.com/{{PUBLISHER}}/mulle-objc-developer/{{VERSION}}/install-ubuntu.sh | sudo APTFLAGS="-y --allow-unauthenticated" sh
+git clone github.com/{{PUBLISHER}}/mulle-objc-developer
+cd mulle-objc-developer
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local -G "Unix Makefiles" ..
+make install
 ```
+
 
 ## Links
 
