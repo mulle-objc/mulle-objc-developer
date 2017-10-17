@@ -30,6 +30,6 @@ post_release()
    #
 
    log_info "Publish to debian"
-   exekutor mulle-homebrew-debian
+   exekutor mulle-project-debian
 }
 
