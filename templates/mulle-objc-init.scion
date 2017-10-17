@@ -982,7 +982,6 @@ mulle_bootstrap_version_too_old()
 }
 
 
-
 setup_bootstrap_environment()
 {
    local libexec
@@ -991,6 +990,7 @@ setup_bootstrap_environment()
    if [ -z "${libexec}" ]
    then
       echo "mulle-bootstrap not installed or not in PATH: $PATH" >&2
+      echo "   https://github.com/mulle-nat/mulle-bootstrap" >&2
       exit 1
    fi
 
@@ -1188,6 +1188,13 @@ main()
          exit 1
       ;;
    esac
+
+   if [ -z "`command -v mulle-sde`" ]
+   then
+      echo "mulle-sde not installed or not in PATH: $PATH" >&2
+      echo "   https://github.com/mulle-nat/mulle-sde" >&2
+      exit 1
+   fi
 
    if [ "${OPTION_SHOW_LOGO}" = "YES" ]
    then

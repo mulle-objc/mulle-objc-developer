@@ -55,10 +55,20 @@ wget -q -O- https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/0.
 
 ### Other OS
 
-Install into `/usr/local` like so:
+#### Install the prerequisites manually
+
+Prerequiste     | Homepage
+----------------|-----------------
+mulle-clang     | [https://github.com/codeon-gmbh/mulle-clang]()
+mulle-sde       | [https://github.com/mulle-nat/mulle-sde]()
+cmake           | [https://cmake.org]()
+
+
+#### How to install into `/usr/local`
+
 
 ```
-git clone github.com/mulle-objc/mulle-objc-developer
+git clone https://github.com/mulle-objc/mulle-objc-developer
 cd mulle-objc-developer
 mkdir build
 cd build
