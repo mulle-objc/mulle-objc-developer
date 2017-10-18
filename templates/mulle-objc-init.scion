@@ -837,6 +837,44 @@ demo_executable_files()
 }
 
 
+show_logo()
+{
+   local filename
+
+   filename="${MULLE_EXECUTABLE_DIR}/../share/${MULLE_EXECUTABLE}/${PUBLISHER_LOGO}"
+   if [ -f "${filename}" ]
+   then
+      cat "${filename}"
+      return
+   fi
+
+   filename="${MULLE_EXECUTABLE_DIR}/${PUBLISHER_LOGO}"
+   if [ -f "${filename}" ]
+   then
+      cat "${filename}"
+      return
+   fi
+}
+
+
+install_motd()
+{
+   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
+      then
+         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
+      else
+         remove_file_if_present ".bootstrap/motd"
+      fi
+
+      printf "%b" "${C_INFO}Ready to build ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} with:
+${C_RESET}${C_BOLD}   mulle-build${C_RESET}
+" >> ".bootstrap/motd"
+   fi
+}
+
+
 library_setup()
 {
    if [ ! -f "CMakeLists.txt" -o "${FLAG_FORCE}" = "YES" ]
@@ -873,39 +911,7 @@ library_setup()
 
    common_setup
 
-   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
-      then
-         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
-      else
-         remove_file_if_present ".bootstrap/motd"
-      fi
-
-      printf "%b" "${C_INFO}Ready to build ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} with:
-${C_RESET}${C_BOLD}   mulle-build${C_RESET}
-" >> ".bootstrap/motd"
-   fi
-}
-
-
-show_logo()
-{
-   local filename
-
-   filename="${MULLE_EXECUTABLE_DIR}/../share/${MULLE_EXECUTABLE}/${PUBLISHER_LOGO}"
-   if [ -f "${filename}" ]
-   then
-      cat "${filename}"
-      return
-   fi
-
-   filename="${MULLE_EXECUTABLE_DIR}/${PUBLISHER_LOGO}"
-   if [ -f "${filename}" ]
-   then
-      cat "${filename}"
-      return
-   fi
+   install_motd
 }
 
 
@@ -937,20 +943,7 @@ executable_setup()
 
    common_setup
 
-   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
-      then
-         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
-      else
-         remove_file_if_present ".bootstrap/motd"
-      fi
-
-      cat <<EOF >> ".bootstrap/motd"
-Ready to build ${PROJECT_NAME}:
-   mulle-build
-EOF
-   fi
+   install_motd
 }
 
 
