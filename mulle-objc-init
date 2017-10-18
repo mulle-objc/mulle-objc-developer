@@ -308,11 +308,10 @@ This is a [mulle-objc](https://mulle-objc.github.io/) project.
 Install the [developer tools](${MULLE_OBJC_REPOSITORIES}/${MULLE_OBJC_DEVELOPER_TOOLS}).
 
 
-## Use **mulle-sde** and **mulle-build** to build project
+## Use **[mulle-sde](//github.com/mulle-nat/mulle-sde)** to setup your project
 
 \`\`\`
 mulle-sde
-mulle-build
 \`\`\`
 EOF
 
@@ -1204,11 +1203,11 @@ main()
 
    log_info "Your project for $1 \
 ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} in \
-${C_RESET}${C_BOLD}${directory}${C_INFO} is ready."
-   log_info "Build it with:"
-   log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y
-   mulle-build"
+${C_RESET}${C_BOLD}${directory}${C_INFO} has been created."
+   log_info "Enter the project environment with:"
+   log_info "   ${C_RESET}${C_BOLD}mulle-sde \"${directory}\" -y"
 }
+
 
 # sometimes passed in
 if [ -z "${MULLE_EXECUTABLE}" ]
