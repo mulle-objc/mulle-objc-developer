@@ -48,7 +48,7 @@ mulle-build
 
 ### Install on OS X
 
-Install with `[brew](//brew.sh)`:
+Install with [brew](//brew.sh):
 
 ```
 brew install mulle-kybernetik/software/mulle-objc-developer
