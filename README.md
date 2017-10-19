@@ -49,7 +49,7 @@ mulle-build
 
 ### Install on OS X
 
-You install **mulle-objc-developer** with [brew](//brew.sh):
+Install with `[brew](//brew.sh)`:
 
 ```
 brew install mulle-kybernetik/software/mulle-objc-developer
@@ -58,7 +58,7 @@ brew install mulle-kybernetik/software/mulle-objc-developer
 
 ### Install on Ubuntu Linux and WSL/bash
 
-#### Install with `apt-get`
+Install with `apt-get`:
 
 ```
 apt-get update && apt-get -y install wget
@@ -68,7 +68,7 @@ wget -q -O- https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/0.
 
 ### Install in a docker container
 
-This builds a docker container based on `ubuntu:trusty`:
+This builds a docker container named `mulle-objc-developer`, which is based on `ubuntu:trusty`:
 
 ```
 docker build -t "mulle-objc-developer" https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile
