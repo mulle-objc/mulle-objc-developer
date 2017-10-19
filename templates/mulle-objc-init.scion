@@ -284,6 +284,60 @@ configuration_setup()
 }
 
 
+emit_sde_environment()
+{
+   local version
+
+   version="10.6"
+   if [ -x "/usr/bin/sw_vers" ]
+   then
+      version="`/usr/bin/sw_vers -productVersion | cut -d. -f1-2`"
+   fi
+
+   cat <<EOF
+MACOSX_DEPLOYMENT_TARGET="${version}"; export MACOSX_DEPLOYMENT_TARGET
+# PUBLISHER=${LOGNAME}
+EOF
+}
+
+
+sde_setup()
+{
+   # doesn't work when configured as master/minion already
+   if is_minion_master
+   then
+      return
+   fi
+
+   if [ ! -f ".mulle-sde-environment.sh" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      redirect_exekutor .mulle-sde-environment.sh emit_sde_environment
+   fi
+}
+
+
+motd_setup()
+{
+   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
+   then
+      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
+      then
+         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
+      else
+         remove_file_if_present ".bootstrap/motd"
+      fi
+
+      # no exekutor here!
+      if [ "${MULLE_FLAG_EXEKUTOR_DRY_RUN}" != "YES" ]
+      then
+         printf "%b" "${C_INFO}Ready to build ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} with:
+${C_RESET}${C_BOLD}   mulle-build${C_RESET}
+" >> ".bootstrap/motd"
+      fi
+   fi
+}
+
+
 common_setup()
 {
    bootstrap_setup
@@ -292,6 +346,8 @@ common_setup()
    search_path_setup
    developer_setup
    configuration_setup
+   sde_setup
+   motd_setup
 }
 
 
@@ -857,24 +913,6 @@ show_logo()
 }
 
 
-install_motd()
-{
-   if [ ! -f ".bootstrap/motd" -o "${FLAG_FORCE}" = "YES" ]
-   then
-      if [ -f "${HOME}/.mulle-objc-motd.txt" ]
-      then
-         exekutor cp "${HOME}/.mulle-objc-motd.txt" ".bootstrap/motd"
-      else
-         remove_file_if_present ".bootstrap/motd"
-      fi
-
-      printf "%b" "${C_INFO}Ready to build ${C_MAGENTA}${C_BOLD}${PROJECT_NAME}${C_INFO} with:
-${C_RESET}${C_BOLD}   mulle-build${C_RESET}
-" >> ".bootstrap/motd"
-   fi
-}
-
-
 library_setup()
 {
    if [ ! -f "CMakeLists.txt" -o "${FLAG_FORCE}" = "YES" ]
@@ -910,8 +948,6 @@ library_setup()
    fi
 
    common_setup
-
-   install_motd
 }
 
 
@@ -942,8 +978,6 @@ executable_setup()
    fi
 
    common_setup
-
-   install_motd
 }
 
 
