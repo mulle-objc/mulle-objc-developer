@@ -15,9 +15,34 @@ you start developing **mulle-objc** projects.
 
 Script                     | Description                | Dox
 ---------------------------|----------------------------|-----------------
-`mulle-objc-init`          | Create a complete library or executable project with the proper environment                | [INIT.md](INIT.md)
-`mulle-objc-clone`         | For hacking on **mulle-objc**  itself, clones all necessary repositories               | [CLONE.md](CLONE.md)
+`mulle-objc-init`          | Create a library or executable project                | [INIT.md](INIT.md)
+`mulle-objc-clone`         | For hacking **mulle-objc** itself, clones all necessary repositories               | [CLONE.md](CLONE.md)
 `mulle-clang-add-to-xcode` | Make the **mulle-clang** compiler available in Xcode                      | [XCODE.md](XCODE.md)
+
+
+#### Example that creates and runs an executable
+
+```
+mulle-objc-init -d /tmp/demo executable
+mulle-sde /tmp/demo -y
+```
+
+```
+mulle-build
+./build/demo
+```
+
+
+#### Example that creates a library
+
+```
+mulle-objc-init -d /tmp/foo library
+mulle-sde /tmp/foo -y
+```
+
+```
+mulle-build
+```
 
 
 ## Installation
@@ -27,54 +52,63 @@ Script                     | Description                | Dox
 You install **mulle-objc-developer** with [brew](//brew.sh):
 
 ```
-brew install mulle-objc/software/mulle-objc-developer
+brew install mulle-kybernetik/software/mulle-objc-developer
 ```
 
 
-### Install on Unbuntu Linux and WSL/bash
-
-> All commands need to be run with sudo. Use `sudo -s`
-
-#### Install in a docker container
-
-This builds a docker container based on `ubuntu:trusty`:
-
-```
-docker build -t "mulle-objc-developer" github.com/mulle-objc/mulle-objc-developer
-docker run -i -t "mulle-objc-developer" /bin/bash
-```
+### Install on Ubuntu Linux and WSL/bash
 
 #### Install with `apt-get`
-
-This methods works for **trusty** , **xenial**, **zesty**:
 
 ```
 apt-get update && apt-get -y install wget
 wget -q -O- https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/0.12.2/install-ubuntu.sh | sudo APTFLAGS="-y" sh
 ```
 
+
+### Install in a docker container
+
+This builds a docker container based on `ubuntu:trusty`:
+
+```
+docker build -t "mulle-objc-developer" https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile
+docker run -i -t "mulle-objc-developer" /bin/bash
+```
+
 ### Other OS
 
 #### Install the prerequisites manually
 
-Prerequiste     | Homepage
-----------------|-----------------
-mulle-clang     | [https://github.com/codeon-gmbh/mulle-clang]()
-mulle-sde       | [https://github.com/mulle-nat/mulle-sde]()
-cmake           | [https://cmake.org]()
+Prerequiste      | Homepage
+-----------------|-----------------
+mulle-clang      | [https://github.com/codeon-gmbh/mulle-clang]()
+mulle-sde        | [https://github.com/mulle-nat/mulle-sde]()
+cmake 3 or later | [https://cmake.org]()
 
 
 #### How to install into `/usr/local`
 
 
 ```
-git clone https://github.com/mulle-objc/mulle-objc-developer
+git clone "https://github.com/mulle-objc/mulle-objc-developer"
 cd mulle-objc-developer
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=/usr/local -G "Unix Makefiles" ..
+cmake -DCMAKE_INSTALL_PREFIX="/usr/local" -G "Unix Makefiles" ..
 make install
 ```
+
+## Links
+
+For more information about mulle-objc visit the [
+mulle-objc community](//mulle-objc.github.io).
+
+
+## Author
+
+[Nat!](//www.mulle-kybernetik.com/weblog) for
+[Mulle kybernetiK](//www.mulle-kybernetik.com) and
+[Codeon GmbH](//www.codeon.de)
 
 
 ## Links
