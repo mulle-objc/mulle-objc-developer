@@ -1,6 +1,2 @@
-# C libraries
---marks 'no-all-load' https://github.com/mulle-objc/mulle-objc-runtime/archive/latest.tar.gz
---marks 'no-all-load' https://github.com/mulle-objc/mulle-objc-list/archive/latest.tar.gz
-
 # ObjC library
 https://github.com/mulle-objc/MulleObjC/archive/latest.tar.gz
