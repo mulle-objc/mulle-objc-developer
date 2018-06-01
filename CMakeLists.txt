@@ -16,7 +16,7 @@ src/  #backslash is important
 )
 
 set( PIX
-pix/mulle-logo-48x48.txt'
+pix/mulle-logo-48x48.txt
 pix/mulle-objc-logo-opaque-48x48.txt
 )
 
