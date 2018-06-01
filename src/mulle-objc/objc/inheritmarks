@@ -1,0 +1,3 @@
+# do not inherit sourcetree settings from mulle-c
+
+no-sourcetree

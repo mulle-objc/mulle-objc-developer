@@ -171,6 +171,13 @@ main()
    bin="${prefix}/bin"
    share="${prefix}/share/mulle-sde"
 
+   case "`uname`" in
+      *arwin*)
+         install -m "${mode}" "mulle-clang-add-to-xcode" "${bin}/mulle-clang-add-to-xcode" || exit 1
+         printf "install: ${C_MAGENTA}${C_BOLD}%s${C_RESET}\n" "${bin}/mulle-clang-add-to-xcode" >&2
+      ;;
+   esac
+
    EXTENSION_DIR="${share}/extensions"
    mkdir -p "${EXTENSION_DIR}" || exit 1
 
@@ -178,6 +185,15 @@ main()
    do
       cp -Rav "${i}" "${EXTENSION_DIR}/" || exit 1
    done
+
+   PIX_DIR="${share}/pix"
+   mkdir -p "${PIX_DIR}" || exit 1
+
+   for i in pix/*logo*.txt
+   do
+      cp -av "${i}" "${PIX_DIR}/" || exit 1
+   done
+
 }
 
 main "$@"
