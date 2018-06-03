@@ -23,9 +23,9 @@ before_install:
 script:
    - MULLE_SDE_EXTENSION_PATH="${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde" mulle-sde init -d exe -m mulle-objc/objc-developer executable
    - cd exe
-   - mulle-sde --no-search -vvv craft 
+   - mulle-sde --no-search -v -lx craft -V 
    - cd ..
    - MULLE_SDE_EXTENSION_PATH="${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde" mulle-sde init -d lib -m mulle-objc/objc-developer library
    - cd exe
-   - mulle-sde --no-search -vvv craft 
+   - mulle-sde --no-search -v -lx craft -V
    - cd ..

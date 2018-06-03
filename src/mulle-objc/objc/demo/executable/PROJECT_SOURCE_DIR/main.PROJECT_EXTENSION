@@ -1,0 +1,30 @@
+#include "dependencies.h"
+#include "version.h"
+
+#include <stdio.h>
+
+
+@interface Hello : NSObject
+
++ (void) print;
+
+@end
+
+
+@implementation Hello
+
++ (void) print
+{
+   printf( "VfL Bochum %d\n", <|PROJECT_UPCASE_IDENTIFIER|>_VERSION);
+}
+
+@end
+
+
+int  main( int argc, char *argv[])
+{
+   [Hello print];
+
+   return( 0);
+}
+
