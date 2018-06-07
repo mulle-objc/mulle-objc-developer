@@ -7,32 +7,35 @@ set( PROJECT_VERSION 0.13.0)
 
 if( APPLE)
    set( SCRIPTS
-mulle-clang-add-to-xcode
-)
+      mulle-clang-add-to-xcode
+   )
 endif()
 
 set( EXTENSIONS
-src/  #backslash is important
+   src/  #backslash is important
 )
 
 set( PIX
-pix/mulle-logo-48x48.txt
-pix/mulle-objc-logo-opaque-48x48.txt
+   pix/mulle-logo-48x48.txt
+   pix/mulle-objc-logo-opaque-48x48.txt
 )
 
 INSTALL( FILES ${SCRIPTS}
-PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+   PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
             GROUP_EXECUTE GROUP_READ
             WORLD_EXECUTE WORLD_READ
-DESTINATION "bin")
+   DESTINATION "bin"
+)
 
 install( DIRECTORY ${EXTENSIONS}
-DESTINATION "share/mulle-sde/extensions"
-USE_SOURCE_PERMISSIONS
+   DESTINATION "share/mulle-sde/extensions"
+   USE_SOURCE_PERMISSIONS
+   PATTERN "*._DS_Store" EXCLUDE
 )
 
 install( FILES ${PIX}
-DESTINATION "share/mulle-sde/pix")
+   DESTINATION "share/mulle-sde/pix"
+)
 
 
 ######
