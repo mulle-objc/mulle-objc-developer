@@ -1,5 +1,5 @@
-if( NOT __POST_LIBRARY_C_AUX_CMAKE__)
-   set( __POST_LIBRARY_C_AUX_CMAKE__ ON)
+if( NOT __LIBRARY_C_AUX_CMAKE__)
+   set( __LIBRARY_C_AUX_CMAKE__ ON)
 
    if( MULLE_TRACE_INCLUDE)
       message( STATUS "# Include \"${CMAKE_CURRENT_LIST_FILE}\"" )
@@ -7,6 +7,6 @@ if( NOT __POST_LIBRARY_C_AUX_CMAKE__)
 
    include( CreateLoaderIncObjC)
 
-   include( PostLibraryObjCAux OPTIONAL)
+   include( LibraryObjCAux OPTIONAL)
 
 endif()

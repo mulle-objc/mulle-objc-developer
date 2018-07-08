@@ -1,31 +1,35 @@
 language: c
 
-dist: trusty
-sudo: required
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      addons:
+         apt:
+            packages:
+               - cmake
+               - cmake-data
+            sources:
+               - sourceline: 'ppa:george-edison55/cmake-3.x'
+      before_install:
+         - "curl -sS \"https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc\" | sudo apt-key add -"
+         - echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
+         - sudo apt-get update
+         - sudo apt-get install -y mulle-sde-developer
 
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:george-edison55/cmake-3.x'
+    - os: osx
+      before_install:
+        - "brew update"
+        - "brew install mulle-kybernetik/software/mulle-sde-developer"
 
-    packages:
-      - cmake
-      - cmake-data
-
-before_install:
-   - curl -sS https://www.codeon.de/dists/codeon-pub.asc | sudo apt-key add -
-   - sudo echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/codeon.de-main.list"  > /dev/null
-   - curl -sS "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
-   - echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
-   - sudo apt-get update
-   - sudo apt-get -y install mulle-c-developer mulle-clang
 
 script:
-   - MULLE_SDE_EXTENSION_PATH="${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde" mulle-sde init -d exe -m mulle-objc/objc-developer executable
-   - cd exe
-   - mulle-sde --no-search -v -lx craft -V 
-   - cd ..
-   - MULLE_SDE_EXTENSION_PATH="${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde" mulle-sde init -d lib -m mulle-objc/objc-developer library
-   - cd exe
-   - mulle-sde --no-search -v -lx craft -V
-   - cd ..
+  - "MULLE_SDE_EXTENSION_PATH=\"${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde\" mulle-sde init -d exe -m mulle-c/c-developer executable"
+  - "cd exe"
+  - "mulle-sde -v craft"
+  - "cd .."
+  - "MULLE_SDE_EXTENSION_PATH=\"${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde\" mulle-sde init -d lib -m mulle-c/c-developer library"
+  - "cd exe"
+  - "mulle-sde -v craft"
+  - "cd .."
