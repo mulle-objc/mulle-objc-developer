@@ -30,6 +30,6 @@ script:
   - "mulle-sde -v craft"
   - "cd .."
   - "MULLE_SDE_EXTENSION_PATH=\"${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde\" mulle-sde init -d lib -m mulle-objc/objc-developer library"
-  - "cd exe"
+  - "cd lib"
   - "mulle-sde -v craft"
   - "cd .."
