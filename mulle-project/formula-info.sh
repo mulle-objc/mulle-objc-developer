@@ -3,7 +3,7 @@
 # formula operations.
 #
 PROJECT="mulle-objc-developer"      # your project/repository name
-DESC=" mulle-sde installer + extensions for mulle-obj development"
+DESC="🎩 mulle-objc developer kit for mulle-sde"
 
 # LANGUAGE="c"             # c,cpp, objc, bash ...
 # NAME="${PROJECT}"        # formula filename without .rb extension

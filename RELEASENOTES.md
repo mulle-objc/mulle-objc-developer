@@ -1,3 +1,8 @@
+## 0.14.0
+
+* adapt to use of delete instead of clobber
+
+
 ### 0.13.2
 
 * fix startup patternfile
