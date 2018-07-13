@@ -173,6 +173,7 @@ main()
 
    case "`uname`" in
       *arwin*)
+         mkdir -p "${bin}" || exit 1
          install -m "${mode}" "mulle-clang-add-to-xcode" "${bin}/mulle-clang-add-to-xcode" || exit 1
          printf "install: ${C_MAGENTA}${C_BOLD}%s${C_RESET}\n" "${bin}/mulle-clang-add-to-xcode" >&2
       ;;

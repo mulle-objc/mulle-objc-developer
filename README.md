@@ -11,7 +11,7 @@ an introduction on what **mulle-sde** is.
 
 Extension                      | Type      | Description
 -------------------------------|-----------|-----------------------------------
-mulle-objc/objc-developer      | meta      | Create plain C projects
+mulle-objc/objc-developer      | meta      | Create Objective-C projects
 
 
 ## Install
@@ -25,12 +25,14 @@ debian  | `sudo apt-get -y install mulle-objc-developer` (but see below)
 ubuntu  | same as debian
 
 
-#### Debian Mulle kybernetiK repository
+#### Debian Mulle kybernetiK and Codeon repositories
 
-For apt installation you need to add the Mulle kybernetiK debian repository
-first:
+For apt installation you need to add the Mulle kybernetiK and
+the Codeon debian repositories first:
 
 ```
+wget -O - https://www.codeon.de/dists/codeon-pub.asc | sudo apt-key add - 
+echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" | sudo tee /etc/apt/sources.list.d/codeon.de-main.list > /dev/null 
 wget -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
 echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
 sudo apt-get update
@@ -54,7 +56,7 @@ You need to install [mulle-clang](//github.com/Codeon-GmbH/mulle-clang) yourself
 
 ### Docker
 
-There is a [Dockerfile](https://raw.githubusercontent.com/mulle-sde/mulle-objc-developer/release/Dockerfile) in the project.
+There is a [Dockerfile](https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile) in the project.
 
 This will build and run an ephemeral mulle-sde container:
 
