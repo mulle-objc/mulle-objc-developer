@@ -18,7 +18,7 @@ matrix:
         - curl -sS "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
         - echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
         - sudo apt-get update
-        - sudo apt-get install -y mulle-c-developer gdb
+        - sudo apt-get install -y mulle-c-developer 
 
     - os: osx
       osx_image: "xcode9.4"
@@ -28,12 +28,12 @@ matrix:
 
 
 script:
-  - "MULLE_SDE_EXTENSION_PATH=\"${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde\" mulle-sde init -d exe -m mulle-objc/objc-developer executable"
+  - "MULLE_SDE_EXTENSION_BASE_PATH=\"${PWD}/src\" mulle-sde init -d exe -m mulle-objc/objc-developer executable"
   - "cd exe"
-  - "mulle-sde -v craft"
+  - "mulle-sde craft"
   - "cd .."
-  - "MULLE_SDE_EXTENSION_PATH=\"${PWD}/src:/usr/share/mulle-sde:/usr/local/share/mulle-sde\" mulle-sde init -d lib -m mulle-objc/objc-developer library"
+  - "MULLE_SDE_EXTENSION_BASE_PATH=\"${PWD}/src\" mulle-sde init -d lib -m mulle-objc/objc-developer library"
   - "cd lib"
-  - "mulle-sde -v craft"
+  - "mulle-sde craft"
   - "cd .."
 
