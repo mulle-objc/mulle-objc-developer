@@ -35,7 +35,7 @@ script:
   - mulle-sde --no-search craft
   - ./build/Release/exe
   - cd ..
-  - mulle-sde init -DMULLE_SDE_EXTENSION_BASE_PATH="$PWD/src" -d lib -m mulle-objc/objc-developer library
+  - mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="$PWD/src" init -d lib -m mulle-objc/objc-developer library
   - cd lib
   - mulle-sde --no-search craft
   - cd ..
