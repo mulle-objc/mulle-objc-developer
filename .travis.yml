@@ -28,6 +28,7 @@ matrix:
 
 
 script:
+  - mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" extension list
   - mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="$PWD/src" init -d exe -m mulle-objc/objc-developer executable
   - cd exe
   - mulle-sde --no-search craft
