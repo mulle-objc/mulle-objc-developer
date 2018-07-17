@@ -18,13 +18,14 @@ matrix:
         - curl -sS "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
         - echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
         - sudo apt-get update
-        - sudo apt-get install -y mulle-c-developer
+        - sudo apt-get install -y mulle-c-developer mulle-clang
 
     - os: osx
       osx_image: "xcode9.4"
       before_install:
         - "brew update"
         - "brew install mulle-kybernetik/software/mulle-c-developer"
+        - "brew install codeon-gmbh/software/mulle-clang"
 
 
 script:
