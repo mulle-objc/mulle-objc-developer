@@ -30,11 +30,11 @@ matrix:
 script:
   - mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="$PWD/src" init -d exe -m mulle-objc/objc-developer executable
   - cd exe
-  - mulle-sde craft
+  - mulle-sde --no-search craft
   - ./build/Release/exe
   - cd ..
   - mulle-sde init -DMULLE_SDE_EXTENSION_BASE_PATH="$PWD/src" -d lib -m mulle-objc/objc-developer library
   - cd lib
-  - mulle-sde craft
+  - mulle-sde --no-search craft
   - cd ..
 
