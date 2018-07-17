@@ -1,12 +1,13 @@
-# 🎩 mulle-objc developer kit for mulle-sde 
+# 🎩 mulle-objc developer kit for mulle-sde
 
 
-This is a base collection of [mulle-sde](//github.com/mulle-sde/mulle-sde)
-*extensions*. It is also a convenient way to install mulle-sde and 
-[mulle-clang](//github.com/Codeon-GmbH/mulle-clang).
+This is a collection of [mulle-sde](//github.com/mulle-sde/mulle-sde)
+*extensions* to support development of [MulleObjC](//github.com/mulle-objc)
+code. As a package **mulle-objc-developer** is also a convenient way to
+install mulle-sde and [mulle-clang](//github.com/Codeon-GmbH/mulle-clang).
 
-See the [mulle-sde Wiki](https://github.com/mulle-sde/mulle-sde/wiki) for
-an introduction on what **mulle-sde** is.
+> See the [mulle-sde Wiki](https://github.com/mulle-sde/mulle-sde/wiki) for
+> an introduction on **mulle-sde**.
 
 
 Extension                      | Type      | Description
@@ -31,8 +32,8 @@ For apt installation you need to add the Mulle kybernetiK and
 the Codeon debian repositories first:
 
 ```
-wget -O - https://www.codeon.de/dists/codeon-pub.asc | sudo apt-key add - 
-echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" | sudo tee /etc/apt/sources.list.d/codeon.de-main.list > /dev/null 
+wget -O - https://www.codeon.de/dists/codeon-pub.asc | sudo apt-key add -
+echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" | sudo tee /etc/apt/sources.list.d/codeon.de-main.list > /dev/null
 wget -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
 echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
 sudo apt-get update
