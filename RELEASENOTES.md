@@ -1,3 +1,7 @@
+### 0.13.1
+
+* fix for mingw, fix Startup
+
 ## 0.14.0
 
 * adapt to use of delete instead of clobber
