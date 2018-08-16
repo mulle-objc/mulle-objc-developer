@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Debug",
+            "type": "shell",
+            "command": "mulle-sde",
+            "args": [
+                "craft", "--debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Release",
+            "type": "shell",
+            "command": "mulle-sde",
+            "args": [
+                "craft",
+            ],
+            "group": {
+                "kind": "build"
+            }
+        }
+    ]
+}

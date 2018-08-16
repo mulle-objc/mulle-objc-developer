@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug <|PROJECT_NAME|>",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "additionalSOLibSearchPath": "${workspaceFolder}/dependency/Debug/lib:${workspaceFolder}/dependency/lib",
+            "MIMode": "lldb",
+            "windows": {
+                "miDebuggerPath": "C:\\mingw64\\bin\\mulle-lldb-mi.exe",
+                "program": "${workspaceFolder}/build/Debug/<|PROJECT_NAME|>.exe"
+            },
+            "osx": {
+                "miDebuggerPath": "/usr/local/bin/mulle-lldb-mi",
+                "program": "${workspaceFolder}/build/Debug/<|PROJECT_NAME|>"
+            },
+            "linux": {
+                "miDebuggerPath": "/usr/bin/mulle-lldb-mi",
+                "program": "${workspaceFolder}/build/Debug/<|PROJECT_NAME|>"
+             },
+            "preLaunchTask": "Debug"
+        }
+    ]
+}
