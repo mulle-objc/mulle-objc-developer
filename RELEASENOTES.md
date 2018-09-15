@@ -1,3 +1,7 @@
+### 0.14.1
+
+* remove duplicate startup cmake code from mulle-objc
+
 ## 0.14.0
 
 * renamed vs-code to vs-code-clang
