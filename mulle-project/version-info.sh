@@ -9,4 +9,5 @@ VERSIONNAME="PROJECT_VERSION"
 VERSIONFILEMIRRORS="\
 src/mulle-objc/objc/version
 src/mulle-objc/objc-cmake/version
-src/mulle-objc/objc-developer/version"
+src/mulle-objc/objc-developer/version
+src/mulle-objc/vs-code-clang/version"

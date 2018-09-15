@@ -14,14 +14,14 @@
          ],
          "folder_exclude_patterns": [
              "package",
-             "stashes",
+             "stash",
              "build",
              "addiction",
              "dependency",
              "stash",
              ".mulle-env",
              ".mulle-sde",
-             ".git*",
+             ".git*"
          ],
 
       }

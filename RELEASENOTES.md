@@ -1,3 +1,9 @@
+## 0.14.0
+
+* renamed vs-code to vs-code-clang
+* removed cmake startup logic
+
+
 ### 0.13.1
 
 * fix for mingw, fix Startup
