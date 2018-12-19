@@ -1,5 +1,8 @@
-#ifndef <|PROJECT_DOWNCASE_IDENTIFIER|>_import_private_h__
-#define <|PROJECT_DOWNCASE_IDENTIFIER|>_import_private_h__
+/* DO:    #import this files in sources
+
+   DONT:  #import this files in headers
+          #include this file anywhere
+ */
 
 /* This is a central include file to not expose includes to consumers of
    this library. It must not be imported by .h files, but by .m and
@@ -9,7 +12,7 @@
 /*
    Include C first
 */
-#include "include-private.h"
+#import "include-private.h"
 
 
 /*
@@ -25,5 +28,4 @@
 
 /* You can add some more include statements here */
 
-#endif
 

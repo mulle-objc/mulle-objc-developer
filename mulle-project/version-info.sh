@@ -10,4 +10,5 @@ VERSIONFILEMIRRORS="\
 src/mulle-objc/objc/version
 src/mulle-objc/objc-cmake/version
 src/mulle-objc/objc-developer/version
-src/mulle-objc/vs-code-clang/version"
+src/mulle-objc/vscode-objc-developer/version
+src/mulle-objc/vscode-clang/version"

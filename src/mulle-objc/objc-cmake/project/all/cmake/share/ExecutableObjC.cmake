@@ -6,7 +6,7 @@ if( NOT __EXECUTABLE_OBJC_CMAKE__)
    endif()
 
    if( NOT EXECUTABLE_NAME)
-      set( EXECUTABLE_NAME "<|PROJECT_NAME|>")
+      set( EXECUTABLE_NAME "${PROJECT_NAME}")
    endif()
 
    #
@@ -16,7 +16,7 @@ if( NOT __EXECUTABLE_OBJC_CMAKE__)
       PROPERTIES LINKER_LANGUAGE C
    )
 
-   include( ExecutableObjCAux OPTIONAL)
+   include( ExecutableAuxObjC OPTIONAL)
 
 endif()
 

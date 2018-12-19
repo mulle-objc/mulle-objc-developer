@@ -1,5 +1,3 @@
-[ "${TRACE}" = "YES" ] && set -x  && : "$0" "$@"
-
 [ -z "${MULLE_VIRTUAL_ROOT}" -o -z "${MULLE_UNAME}"  ] && \
    echo "Your script needs to setup MULLE_VIRTUAL_ROOT \
 and MULLE_UNAME properly" >&2  && exit 1
@@ -18,27 +16,28 @@ MULLE_ENV_SHARE_DIR="${MULLE_VIRTUAL_ROOT}/.mulle-env/share"
 MULLE_ENV_ETC_DIR="${MULLE_VIRTUAL_ROOT}/.mulle-env/etc"
 
 
-# Top/down order of inclusion.
-# Left overrides right if present.
+# Top/down order of inclusion. Left overrides right if present.
+# Keep these files (except environment-custom.sh) clean off manual edits so
+# that mulle-env can read and set environment variables.
 #
 # .mulle-env/etc                        | .mulle-env/share
 # --------------------------------------|--------------------
-#                                       | environment-aux.sh
+#                                       | environment-plugin.sh
 #                                       | environment-project.sh
-#                                       | environment-share.sh
+#                                       | environment-extension.sh
 # environment-global.sh                 |
 # environment-os-${MULLE_UNAME}.sh      | environment-os-${MULLE_UNAME}.sh
 # environment-host-${MULLE_HOSTNAME}.sh |
 # environment-user-${USER}.sh           |
-# custom-environment.sh                 |
+# environment-custom.sh                 |
 #
 
 #
-# The aux file, if present is to be set by a mulle-env plugin
+# The plugin file, if present is to be set by a mulle-env plugin
 #
-if [ -f "${MULLE_ENV_SHARE_DIR}/environment-aux.sh" ]
+if [ -f "${MULLE_ENV_SHARE_DIR}/environment-plugin.sh" ]
 then
-   . "${MULLE_ENV_SHARE_DIR}/environment-aux.sh"
+   . "${MULLE_ENV_SHARE_DIR}/environment-plugin.sh"
 fi
 
 
@@ -52,14 +51,16 @@ then
 fi
 
 #
-# The share file, if present is to be set by mulle-sde extensions.
+# The extension file, if present is to be set by mulle-sde extensions.
 #
-if [ -f "${MULLE_ENV_SHARE_DIR}/environment-share.sh" ]
+if [ -f "${MULLE_ENV_SHARE_DIR}/environment-extension.sh" ]
 then
-   . "${MULLE_ENV_SHARE_DIR}/environment-share.sh"
+   . "${MULLE_ENV_SHARE_DIR}/environment-extension.sh"
 fi
 
-
+#
+# Global user settings
+#
 if [ -f "${MULLE_ENV_ETC_DIR}/environment-global.sh" ]
 then
    . "${MULLE_ENV_ETC_DIR}/environment-global.sh"
@@ -79,13 +80,9 @@ else
 fi
 
 #
-# Load in some modifications depending on hostname, username. These
+# Load in some user modifications depending on hostname, username. These
 # won't be provided by extensions or plugins.
 #
-# These settings could be "cased" in a single file, but it seems convenient.
-# And more managable for mulle-env environment
-#
-
 if [ -f "${MULLE_ENV_ETC_DIR}/environment-host-${MULLE_HOSTNAME}.sh" ]
 then
    . "${MULLE_ENV_ETC_DIR}/environment-host-${MULLE_HOSTNAME}.sh"
@@ -99,9 +96,9 @@ fi
 #
 # For more complex edits, that don't work with the cmdline tool
 #
-if [ -f "${MULLE_ENV_ETC_DIR}/custom-environment.sh" ]
+if [ -f "${MULLE_ENV_ETC_DIR}/environment-custom.sh" ]
 then
-   . "${MULLE_ENV_ETC_DIR}/custom-environment.sh"
+   . "${MULLE_ENV_ETC_DIR}/environment-custom.sh"
 fi
 
 unset MULLE_ENV_ETC_DIR

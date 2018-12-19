@@ -1,0 +1,199 @@
+#! /usr/bin/env bash
+#
+#   Copyright (c) 2018 Nat! - Mulle kybernetiK
+#   All rights reserved.
+#
+#   Redistribution and use in source and binary forms, with or without
+#   modification, are permitted provided that the following conditions are met:
+#
+#   Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+#   Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#   Neither the name of Mulle kybernetiK nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#   POSSIBILITY OF SUCH DAMAGE.
+#
+[ "${TRACE}" = 'YES' ] && set -x && : "$0" "$@"
+
+
+
+# add hidden subproject files to master code-workspace
+# todo: need a way to remove those (reverse-init)
+
+main()
+{
+   local marks
+
+   local OPTION_REMOVE='NO'
+
+   while [ $# -ne 0 ]
+   do
+      if options_technical_flags "$1"
+      then
+         shift
+         continue
+      fi
+
+      case "$1" in
+         -f)
+            MULLE_FLAG_MAGNUM_FORCE='YES'
+         ;;
+
+         --remove)
+            OPTION_REMOVE='YES'
+         ;;
+
+         --marks)
+            [ "$#" -eq 1 ] && usage "Missing argument to \"$1\""
+            shift
+
+            marks="$1"
+         ;;
+
+         --project-name)
+            [ "$#" -eq 1 ] && usage "Missing argument to \"$1\""
+            shift
+
+            PROJECT_NAME="$1"
+         ;;
+
+         --parent-project-name)
+            [ "$#" -eq 1 ] && usage "Missing argument to \"$1\""
+            shift
+
+            PARENT_PROJECT_NAME="$1"
+         ;;
+
+         --parent-dir)
+            [ "$#" -eq 1 ] && usage "Missing argument to \"$1\""
+            shift
+
+            PARENT_DIR="$1"
+         ;;
+
+         -*)
+            fail "Unknown option \"$1\""
+         ;;
+
+         *)
+            break
+         ;;
+      esac
+
+      shift
+   done
+
+   options_setup_trace "${MULLE_TRACE}"
+
+   [ -z "${PARENT_PROJECT_NAME}" ] && fail 'PARENT_PROJECT_NAME is undefined'
+   [ -z "${PROJECT_NAME}" ]        && fail 'PROJECT_NAME is undefined'
+   [ -z "${PARENT_DIR}" ]          && fail 'PARENT_DIR is undefined'
+   [ -z "${PWD}" ]                 && fail 'PWD is undefined'
+
+   local RVAL
+   local parent_dir
+   local subproject_dir
+
+   r_simplified_absolutepath "${PARENT_DIR}"
+   parent_dir="${RVAL}"
+
+   r_simplified_absolutepath "${PWD}"
+   subproject_dir="${RVAL}"
+
+   local workspacefile
+
+   workspacefile="${parent_dir}/${PARENT_PROJECT_NAME}.code-workspace"
+   if [ ! -f "${workspacefile}" ]
+   then
+      log_info "VSCode Workspace ${C_RESET_BOLD}${workspacefile}${C_INFO} not found."
+      return 0
+   fi
+
+   local JQ
+
+   JQ="`which jq`"
+   if [ -z "${JQ}" ]
+   then
+      log_warning "jq is not installed, can not add subproject files to
+parent's ignore list"
+      return
+   fi
+
+   #
+   # Update parent vscode workspace to ignore some of our subproject files
+   #
+   local relative
+
+   r_relative_path_between "${subproject_dir}" "${parent_dir}" || exit 1
+   relative="${RVAL}"
+
+   local tmpfile
+
+   r_make_tmp
+   tmpfile="${RVAL}"
+
+   local key1
+   local key2
+
+   key1="**/${relative}/_${PROJECT_NAME}*.h"
+   key2="**/${relative}/MulleObjCLoader+${PROJECT_NAME}.[hm]"
+
+   set -o pipefail
+
+   if [ "${OPTION_REMOVE}" = "YES" ]
+   then
+      exekutor "${JQ}" \
+         "del( .settings.\"files.exclude\".\"${key1}\")" \
+         "${workspacefile}" |
+      redirect_exekutor "${tmpfile}" "${JQ}" \
+         "del( .settings.\"files.exclude\".\"${key2}\")"  || \
+         exit 1
+   else
+      exekutor "${JQ}" \
+         ".settings.\"files.exclude\".\"${key1}\" |= true" \
+         "${workspacefile}" |
+      redirect_exekutor "${tmpfile}" "${JQ}" \
+         ".settings.\"files.exclude\".\"${key2}\" |= true"  || \
+         exit 1
+   fi
+
+   [ -z "`cat "${tmpfile}"`" ] && fail "Failed to edit \"${workspacefile}\" somehow"
+
+   exekutor cp "${workspacefile}" "${workspacefile}.bak"  || exit 1
+   exekutor cp "${tmpfile}" "${workspacefile}" || exit 1
+   exekutor rm "${tmpfile}"
+}
+
+
+
+_init()
+{
+   if [ -z "${MULLE_BASHFUNCTIONS_LIBEXEC_DIR}" ]
+   then
+      MULLE_BASHFUNCTIONS_LIBEXEC_DIR="`mulle-bashfunctions-env "libexec-dir" 2> /dev/null`"
+      [ -z "${MULLE_BASHFUNCTIONS_LIBEXEC_DIR}" ] && \
+         echo "mulle-bashfunctions-env not installed" >&2 && \
+         exit 1
+   fi
+
+   . "${MULLE_BASHFUNCTIONS_LIBEXEC_DIR}/mulle-bashfunctions.sh"  || exit 1
+}
+
+_init "$@"
+main "$@"

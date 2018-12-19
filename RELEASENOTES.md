@@ -1,3 +1,7 @@
+### 0.14.2
+
+* fix travis
+
 ### 0.14.1
 
 * remove duplicate startup cmake code from mulle-objc

@@ -42,7 +42,7 @@ sudo apt-get update
 
 ### Script
 
-mulle-sde provides an [installer-all](https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/installer-all) script to install the required commands and mulle-sde-developer itself into `/usr` or some other place.
+mulle-sde provides an [installer-all](https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all) script to install the required commands and mulle-sde-developer itself into `/usr` or some other place.
 
 You need to install [mulle-clang](//github.com/Codeon-GmbH/mulle-clang) yourself.
 
@@ -51,7 +51,7 @@ This is suitable for environments without supported package managers:
 #### Install into /usr with sudo
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/installer-all' && \
+curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 sudo OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
 mulle-c/mulle-c-developer;latest" \
@@ -61,7 +61,7 @@ SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all /usr
 #### Install into ${HOME} (without sudo)
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/installer-all' && \
+curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
 mulle-c/mulle-c-developer;latest" \
@@ -86,7 +86,7 @@ docker run -i -t --rm mulle-objc
 #### Check that the (meta) extensions are found:
 
 ```
-mulle-sde extension list
+mulle-sde extension show
 ```
 
 ### Create an Objective-C executable project
@@ -103,4 +103,10 @@ mulle-sde init -m mulle-objc/objc-developer executable
 mulle-sde init -m mulle-objc/objc-developer -d foolib library
 ```
 
+### Don't create a project but get ObjC libraries built
+
+```
+mulle-sde init -m mulle-objc/objc-developer none
+mulle-sde craft
+```
 

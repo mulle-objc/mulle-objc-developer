@@ -2,9 +2,9 @@
 #
 # (c) 2015, coded by Nat!, Mulle KybernetiK
 #
-[ "${TRACE}" = "YES" ] && set -x && : "$0" "$@"
+[ "${TRACE}" = 'YES' ] && set -x && : "$0" "$@"
 
-if [ "${MULLE_NO_COLOR}" != "YES" ]
+if [ "${MULLE_NO_COLOR}" != 'YES' ]
 then
    # Escape sequence and resets
    C_RESET="\033[0m"
@@ -24,7 +24,7 @@ then
 fi
 
 
-fail()
+installer_fail()
 {
    printf "${C_BR_RED}Error: $*${C_RESET}\n" >&2
    exit 1
@@ -39,7 +39,7 @@ fail()
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
 # ----
 #
-_prepend_path_if_relative()
+_installer_prepend_path_if_relative()
 {
    case "$2" in
       /*)
@@ -61,7 +61,7 @@ _prepend_path_if_relative()
 }
 
 
-resolve_symlinks()
+installer_resolve_symlinks()
 {
    local dir_context
    local path
@@ -70,14 +70,14 @@ resolve_symlinks()
    if [ $? -eq 0 ]
    then
       dir_context=`dirname -- "$1"`
-      resolve_symlinks "`_prepend_path_if_relative "$dir_context" "$path"`"
+      installer_resolve_symlinks "`_installer_prepend_path_if_relative "$dir_context" "$path"`"
    else
       echo "$1"
    fi
 }
 
 
-canonicalize_path()
+installer_canonicalize_path()
 {
    if [ -d "$1" ]
    then
@@ -98,13 +98,13 @@ canonicalize_path()
 }
 
 
-realpath()
+installer_realpath()
 {
-   canonicalize_path "`resolve_symlinks "$1"`"
+   installer_canonicalize_path "`installer_resolve_symlinks "$1"`"
 }
 
 
-get_windows_path()
+installer_get_windows_path()
 {
    local directory
 
@@ -114,28 +114,28 @@ get_windows_path()
       return 1
    fi
 
-   ( cd "$directory" ; pwd -PW ) || fail "failed to get pwd"
+   ( cd "$directory" ; pwd -PW ) || installer_fail "installer_failed to get pwd"
    return 0
 }
 
 
-get_sh_windows_path()
+installer_get_sh_windows_path()
 {
    local directory
 
    directory="`which sh`"
    directory="`dirname -- "${directory}"`"
-   directory="`get_windows_path "${directory}"`"
+   directory="`installer_get_windows_path "${directory}"`"
 
    if [ -z "${directory}" ]
    then
-      fail "could not find sh.exe"
+      installer_fail "could not find sh.exe"
    fi
    echo "${directory}/sh.exe"
 }
 
 
-sed_mangle_escape_slashes()
+installer_sed_mangle_escape_slashes()
 {
    sed -e 's|/|\\\\|g'
 }
@@ -153,20 +153,23 @@ main()
 
    if [ -z "${prefix}" -o "${prefix}" = "--help" ] || [ -z "${mode}" ]
    then
-      fail "usage: install.sh [prefix] [mode]"
+      installer_fail "usage: install.sh [prefix] [mode]"
    fi
 
-   prefix="`realpath "${prefix}"`"
+   prefix="`installer_realpath "${prefix}"`"
    if [ ! -d "${prefix}" ]
    then
-      fail "\"${prefix}\" does not exist"
+      installer_fail "\"${prefix}\" does not exist"
    fi
 
-   local bin
-   local libexec
-   local share
+   local directory
 
-   cd "`dirname -- "$0"`"
+   directory="`dirname -- "$0"`"
+   cd "${directory}" || installer_fail "Could not cd to \"$directory\" ($PWD)"
+   cd .. || installer_fail "Could not cd to \"..\" ($PWD)"  # compensate for installer being in bin
+
+   local bin
+   local share
 
    bin="${prefix}/bin"
    share="${prefix}/share/mulle-sde"
@@ -181,11 +184,7 @@ main()
 
    EXTENSION_DIR="${share}/extensions"
    mkdir -p "${EXTENSION_DIR}" || exit 1
-
-   for i in src/mulle-objc
-   do
-      cp -Rav "${i}" "${EXTENSION_DIR}/" || exit 1
-   done
+   cp -Rav "src/mulle-objc" "${EXTENSION_DIR}/" || exit 1
 
    PIX_DIR="${share}/pix"
    mkdir -p "${PIX_DIR}" || exit 1

@@ -1,5 +1,5 @@
 #
 # These are used by mulle-match find to speed up the search.
 #
-MULLE_MATCH_FIND_NAMES+="*.m"
-MULLE_MATCH_FIND_NAMES+="*.aam"
+MULLE_MATCH_FILENAMES+="*.m"
+MULLE_MATCH_FILENAMES+="*.aam"

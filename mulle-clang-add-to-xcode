@@ -36,7 +36,7 @@
 #
 XCPLUGIN="$1"
 
-if [ "${NO_COLOR}" != "YES" ]
+if [ "${NO_COLOR}" != 'YES' ]
 then
    C_RESET="\033[0m"
 
@@ -75,7 +75,7 @@ MAJOR_VERSION=(${XCODE_BUILD_VERSION//./ }[0]) # => split to array and take majo
 #   complaint="Xcode ${XCODE_BUILD_VERSION} uses library validation.
 # It won't load in-process plugins anymore.
 # See https://github.com/alcatraz/Alcatraz/issues/475"
-#	if [ "${OPTION_FORCE}" = "NO" ]
+#	if [ "${OPTION_FORCE}" = 'NO' ]
 #	then
 #      fail "${complaint}"
 #   else

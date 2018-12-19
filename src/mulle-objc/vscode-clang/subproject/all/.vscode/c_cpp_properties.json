@@ -1,0 +1,35 @@
+{
+   "version": 4,
+   "configurations": [
+      {
+         "name": "Linux",
+         "includePath": [
+               "${workspaceFolder}/**"
+         ],
+         "defines": [],
+         "compilerPath": "/usr/bin/mulle-clang",
+         "cStandard": "c11",
+         "intelliSenseMode": "clang-x64"
+      },
+      {
+         "name": "Mac",
+         "includePath": [
+               "${workspaceFolder}/**"
+         ],
+         "defines": [],
+         "compilerPath": "/usr/local/bin/mulle-clang",
+         "cStandard": "c11",
+         "intelliSenseMode": "clang-x64"
+      },
+      {
+         "name": "Win32",
+         "includePath": [
+               "${workspaceFolder}/**"
+         ],
+         "defines": [],
+         "compilerPath": "\\mulle-clang\\bin\\mulle-clang.exe",
+         "cStandard": "c11",
+         "intelliSenseMode": "clang-x64"
+      }
+   ]
+}

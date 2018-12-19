@@ -9,7 +9,7 @@ generate_brew_formula_build()
 
    cat <<EOF
 def install
-  system "./installer", "#{prefix}"
+  system "./bin/installer", "#{prefix}"
 end
 EOF
 }
