@@ -1,3 +1,7 @@
+### 0.14.3
+
+* Various small improvements
+
 ### 0.14.2
 
 * fix travis
