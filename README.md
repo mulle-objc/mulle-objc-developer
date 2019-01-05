@@ -1,5 +1,6 @@
-# 🎩 mulle-objc developer kit for mulle-sde
+# mulle-objc
 
+🎩 mulle-objc developer kit for mulle-sde
 
 This is a collection of [mulle-sde](//github.com/mulle-sde/mulle-sde)
 *extensions* to support development of [MulleObjC](//github.com/mulle-objc)

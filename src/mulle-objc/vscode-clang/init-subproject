@@ -106,7 +106,7 @@ main()
    [ -z "${PARENT_DIR}" ]          && fail 'PARENT_DIR is undefined'
    [ -z "${PWD}" ]                 && fail 'PWD is undefined'
 
-   local RVAL
+
    local parent_dir
    local subproject_dir
 

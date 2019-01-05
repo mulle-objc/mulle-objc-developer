@@ -1,3 +1,4 @@
-mulle-scan-build
-mulle-nm
+# these two could be back, but currently aren't include
+# mulle-scan-build
+# mulle-nm
 mulle-lldb
