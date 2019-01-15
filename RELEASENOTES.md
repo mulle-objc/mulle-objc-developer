@@ -1,3 +1,7 @@
+### 0.14.6
+
+* renamed dependency to dependencies for newest mulle-sde
+
 ### 0.14.5
 
 * remove old .mulle-make folders
