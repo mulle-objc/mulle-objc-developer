@@ -1,3 +1,7 @@
+### 0.14.5
+
+* remove old .mulle-make folders
+
 ### 0.14.4
 
 * modernized mulle-sde with .mulle folder
