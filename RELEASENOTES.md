@@ -1,3 +1,7 @@
+### 0.14.7
+
+* restructured for mulle-sde-developer changes
+
 ### 0.14.6
 
 * renamed dependency to dependencies for newest mulle-sde
