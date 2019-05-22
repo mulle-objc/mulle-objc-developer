@@ -8,14 +8,14 @@
             "MIMode": "lldb",
             "request": "launch",
             "stopAtEntry": true,
-            "program": "${workspaceFolder}/build/Debug/<|PROJECT_NAME|>",
+            "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>",
             "args": [],
             "environment": [],
             "cwd": "${workspaceFolder}",
             "additionalSOLibSearchPath": "${workspaceFolder}/dependency/Debug/lib:${workspaceFolder}/dependency/lib",
             "windows": {
                 "miDebuggerPath": "C:\\mingw64\\bin\\mulle-lldb-mi.exe",
-                "program": "${workspaceFolder}/build/Debug/<|PROJECT_NAME|>.exe"
+                "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>.exe"
             },
             "osx": {
                 "miDebuggerPath": "/usr/local/bin/mulle-lldb-mi"

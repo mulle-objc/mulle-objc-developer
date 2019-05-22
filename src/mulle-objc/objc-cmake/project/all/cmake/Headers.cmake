@@ -14,15 +14,22 @@ include( _Headers OPTIONAL)
 
 
 # add ignored headers back in so that the generators pick them up
-set( PUBLIC_HEADERS
-"<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h"
-"<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h"
-${PUBLIC_HEADERS}
-)
+if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h")
+   set( PUBLIC_HEADERS
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h"
+      ${PUBLIC_HEADERS}
+   )
+endif()
+if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h")
+   set( PUBLIC_HEADERS
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h"
+      ${PUBLIC_HEADERS}
+   )
+endif()
+
 
 # keep headers to install separate to make last minute changes
 set( INSTALL_PUBLIC_HEADERS ${PUBLIC_HEADERS})
-
 
 #
 # Do not install generated private headers and include-private.h
@@ -35,11 +42,18 @@ if( INSTALL_PRIVATE_HEADERS)
 endif()
 
 # add ignored headers back in so that the generators pick them up
-set( PRIVATE_HEADERS
-"<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h"
-"<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h"
-${PRIVATE_HEADERS}
-)
+if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h")
+   set( PRIVATE_HEADERS
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h"
+      ${PRIVATE_HEADERS}
+   )
+endif()
+if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h")
+   set( PRIVATE_HEADERS
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h"
+      ${PRIVATE_HEADERS}
+   )
+endif()
 
 
 #

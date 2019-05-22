@@ -9,6 +9,7 @@
       "**/.*": true,
       "**/addiction": true,
       "**/build": true,
+      "**/kitchen": true,
       "**/dependency": true,
       "**/stash": true,
       "**/cmake/share": true,

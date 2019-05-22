@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "version.h"
+
 
 @interface Hello : NSObject
 

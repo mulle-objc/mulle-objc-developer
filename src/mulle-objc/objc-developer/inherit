@@ -1,3 +1,16 @@
 # always runtime before buildtool to pick up language
 mulle-objc/objc;runtime
 mulle-objc/objc-cmake;buildtool
+
+#
+# Not using the \"inherit\" file" here, but specify
+# the dependencies like this, so we "clobber" what we
+# inherit as demofiles without overwriting existing
+# user files.
+#
+# Because of the quirky way mulle-sde does this, the
+# order is reversed.
+#
+mulle-sde/c-demo;extra
+mulle-c/c-demo;extra
+mulle-objc/objc-demo;extra
