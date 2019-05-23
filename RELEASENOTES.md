@@ -1,3 +1,7 @@
+### 0.14.8
+
+* fix travis
+
 ### 0.14.7
 
 * restructured for mulle-sde-developer changes
