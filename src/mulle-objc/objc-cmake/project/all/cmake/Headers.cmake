@@ -16,7 +16,7 @@ include( _Headers OPTIONAL)
 # add ignored headers back in so that the generators pick them up
 if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h")
    set( PUBLIC_HEADERS
-      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h"
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h"
       ${PUBLIC_HEADERS}
    )
 endif()
@@ -44,7 +44,7 @@ endif()
 # add ignored headers back in so that the generators pick them up
 if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h")
    set( PRIVATE_HEADERS
-      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h"
+      "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h"
       ${PRIVATE_HEADERS}
    )
 endif()

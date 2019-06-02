@@ -1,3 +1,7 @@
+### 0.15.1
+
+* fix missing header files
+
 ## 0.15.0
 
 * Various small improvements

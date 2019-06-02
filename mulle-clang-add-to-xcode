@@ -79,7 +79,7 @@ MAJOR_VERSION=(${XCODE_BUILD_VERSION//./ }[0]) # => split to array and take majo
 #	then
 #      fail "${complaint}"
 #   else
-#   	echo "${complaint}"
+#   	printf "%s\n" "${complaint}"
 #   fi
 #fi
 

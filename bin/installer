@@ -43,17 +43,17 @@ _installer_prepend_path_if_relative()
 {
    case "$2" in
       /*)
-         echo "$2"
+         printf "%s\n" "$2"
       ;;
 
       *)
          case "$1" in
             */)
-               echo "$1$2"
+               printf "%s%s\n" "$1" "$2"
             ;;
 
             *)
-               echo "$1/$2"
+               printf "%s/%s\n" "$1" "$2"
             ;;
          esac
       ;;
@@ -72,7 +72,7 @@ installer_resolve_symlinks()
       dir_context=`dirname -- "$1"`
       installer_resolve_symlinks "`_installer_prepend_path_if_relative "$dir_context" "$path"`"
    else
-      echo "$1"
+      printf "%s\n" "$1"
    fi
 }
 
@@ -131,7 +131,7 @@ installer_get_sh_windows_path()
    then
       installer_fail "could not find sh.exe"
    fi
-   echo "${directory}/sh.exe"
+   printf "%s\n" "${directory}/sh.exe"
 }
 
 
