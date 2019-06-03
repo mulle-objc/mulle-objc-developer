@@ -14,13 +14,13 @@ include( _Headers OPTIONAL)
 
 
 # add ignored headers back in so that the generators pick them up
-if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h")
    set( PUBLIC_HEADERS
       "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import.h"
       ${PUBLIC_HEADERS}
    )
 endif()
-if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h")
    set( PUBLIC_HEADERS
       "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include.h"
       ${PUBLIC_HEADERS}
@@ -42,13 +42,13 @@ if( INSTALL_PRIVATE_HEADERS)
 endif()
 
 # add ignored headers back in so that the generators pick them up
-if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h")
    set( PRIVATE_HEADERS
       "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-import-private.h"
       ${PRIVATE_HEADERS}
    )
 endif()
-if( EXISTS "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h")
+if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h")
    set( PRIVATE_HEADERS
       "<|PROJECT_SOURCE_DIR|>/_<|PROJECT_NAME|>-include-private.h"
       ${PRIVATE_HEADERS}

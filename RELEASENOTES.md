@@ -1,3 +1,7 @@
+### 0.15.2
+
+* fix missing header files for sure now
+
 ### 0.15.1
 
 * fix missing header files
