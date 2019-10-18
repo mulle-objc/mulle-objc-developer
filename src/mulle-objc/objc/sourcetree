@@ -1,0 +1,3 @@
+# ObjC library
+--nodetype 'tar' --marks no-singlephase --branch '${MULLE_OBJC_BRANCH:-latest}' --url '${MULLE_OBJC_URL:-https://github.com/mulle-objc/MulleObjC/archive/${MULLE_BRANCH}.tar.gz}' 'MulleObjC'
+

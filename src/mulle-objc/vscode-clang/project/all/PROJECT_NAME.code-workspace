@@ -5,20 +5,8 @@
     }
   ],
   "settings": {
-    "files.exclude": {
-      "**/.*": true,
-      "**/addiction": true,
-      "**/build": true,
-      "**/kitchen": true,
-      "**/dependency": true,
-      "**/stash": true,
-      "**/cmake/share": true,
-      "**/_*.cmake": true,
-      "**/*.code-workspace": true,
-      "**/_<|PROJECT_NAME|>*.h": true,
-      "**/MulleObjCLoader+*<|PROJECT_NAME|>*.h": true,
-      "**/objc-loader.h": true
-    }
-  }
+     "files.associations": { "*.h": "objective-c" },
+     "clang.executable": "mulle-clang"
+   }
 }
 

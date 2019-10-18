@@ -1,3 +1,8 @@
+## 0.16.0
+
+* 0.16 release
+
+
 ### 0.15.2
 
 * fix missing header files for sure now

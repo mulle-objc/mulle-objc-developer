@@ -4,7 +4,9 @@
       {
          "name": "Linux",
          "includePath": [
-               "${workspaceFolder}/**"
+            "${workspaceFolder}/src/**",
+            "${workspaceFolder}/dependency/include/**",
+            "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
          "compilerPath": "/usr/bin/mulle-clang",
@@ -14,7 +16,9 @@
       {
          "name": "Mac",
          "includePath": [
-               "${workspaceFolder}/**"
+            "${workspaceFolder}/src/**",
+            "${workspaceFolder}/dependency/include/**",
+            "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
          "compilerPath": "/usr/local/bin/mulle-clang",
@@ -24,7 +28,9 @@
       {
          "name": "Win32",
          "includePath": [
-               "${workspaceFolder}/**"
+            "${workspaceFolder}/src/**",
+            "${workspaceFolder}/dependency/include/**",
+            "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
          "compilerPath": "\\mulle-clang\\bin\\mulle-clang.exe",

@@ -1,0 +1,19 @@
+{
+  "files.exclude": {
+    "**/addiction": true,
+    "**/build": true,
+    "**/dependency": true,
+    "**/kitchen": true,
+    "**/stash": true,
+    "**/var": true
+   },
+   "files.watcherExclude": {
+    "**/addiction": true,
+    "**/build": true,
+    "**/dependency": true,
+    "**/kitchen": true,
+    "**/stash": true,
+    "**/var": true
+   },
+   "lldb.executable": "mulle-lldb"
+}
