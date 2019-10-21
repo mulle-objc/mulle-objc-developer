@@ -2,5 +2,5 @@
 --nodetype 'tar' --marks no-singlephase --branch '${MULLE_OBJC_BRANCH:-latest}' --url '${MULLE_OBJC_URL:-https://github.com/mulle-objc/MulleObjC/archive/${MULLE_BRANCH}.tar.gz}' 'MulleObjC'
 
 #
---nodetype 'tar' --marks no-dynamic-link,no-intermediate-link,no-header,no-singlephase --branch '${MULLE_OBJC_STARTUP_BRANCH:-latest}' --url '${MULLE_OBJC_STARTUP_URL:-https://github.com/mulle-objc/MulleObjC-startup/archive/${MULLE_BRANCH}.tar.gz}' 'MulleObjC-startup'
+--nodetype 'tar' --marks no-dynamic-link,no-intermediate-link,no-header --branch '${MULLE_OBJC_STARTUP_BRANCH:-latest}' --url '${MULLE_OBJC_STARTUP_URL:-https://github.com/mulle-objc/MulleObjC-startup/archive/${MULLE_BRANCH}.tar.gz}' 'MulleObjC-startup'
 
