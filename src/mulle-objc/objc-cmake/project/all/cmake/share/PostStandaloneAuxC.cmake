@@ -13,4 +13,3 @@ if( APPLE AND MULLE_OBJC)
 endif()
 
 include( PostLibraryAuxObjC OPTIONAL)
-

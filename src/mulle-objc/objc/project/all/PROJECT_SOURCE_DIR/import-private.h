@@ -17,6 +17,6 @@
  */
 #import "_<|PROJECT_NAME|>-import-private.h"
 
-/* You can add some more include statements here */
+/* You can add some more import statements here */
 
 
