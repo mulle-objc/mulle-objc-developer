@@ -1,6 +1,6 @@
 # ObjC library
---nodetype 'tar' --marks no-singlephase --tag '${MULLE_OBJC_TAG:-latest}' --url '${MULLE_OBJC_URL:-https://github.com/mulle-objc/MulleObjC/archive/${MULLE_TAG}.tar.gz}' 'MulleObjC'
+--nodetype '${MULLE_OBJC_NODETYPE:-tar}' --marks no-singlephase --branch '${MULLE_OBJC_BRANCH}' --tag '${MULLE_OBJC_TAG:-latest}' --url '${MULLE_OBJC_URL:-https://github.com/mulle-objc/MulleObjC/archive/${MULLE_TAG}.tar.gz}' 'MulleObjC'
 
 #
---nodetype 'tar' --marks no-dynamic-link,no-intermediate-link,no-header --tag '${MULLE_OBJC_STARTUP_TAG:-latest}' --url '${MULLE_OBJC_STARTUP_URL:-https://github.com/mulle-objc/MulleObjC-startup/archive/${MULLE_TAG}.tar.gz}' 'MulleObjC-startup'
+--nodetype '${MULLE_OBJC_STARTUP_NODETYPE:-tar}' --marks no-dynamic-link,no-intermediate-link,no-header --branch '${MULLE_OBJC_STARTUP_BRANCH}' --tag '${MULLE_OBJC_STARTUP_TAG:-latest}' --url '${MULLE_OBJC_STARTUP_URL:-https://github.com/mulle-objc/MulleObjC-startup/archive/${MULLE_TAG}.tar.gz}' 'MulleObjC-startup'
 

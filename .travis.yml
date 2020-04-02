@@ -12,24 +12,28 @@ addons:
       - cmake
       - cmake-data
 
+#
+# MEMO: hard to test this on prelease, since we are creating projects
+#       on the fly, and they won't have the environment values
+#       in a travis-ci-prerelease ready.
+#
 matrix:
   include:
     - os: linux
       dist: xenial
       sudo: required
       before_install:
-         - '[ ! -f .travis.d/before_install.linux ]      || source .travis.d/before_install.linux'
-         - '[ ! -f .travis.d/before_install-aux.linux ]  || source .travis.d/before_install-aux.linux'
-         - '[ ! -f .travis.d/before_install-user.linux ] || source .travis.d/before_install-user.linux'
+        - '[ ! -f .travis.d/before_install.linux ]      || source .travis.d/before_install.linux'
+        - '[ ! -f .travis.d/before_install-aux.linux ]  || source .travis.d/before_install-aux.linux'
+        - '[ ! -f .travis.d/before_install-user.linux ] || source .travis.d/before_install-user.linux'
 
-#
 # Uncomment if you want osx too
-#
-#    - os: osx
-#      before_install:
-#         - '[ ! -f .travis.d/before_install.darwin ]      || source .travis.d/before_install.darwin'
-#         - '[ ! -f .travis.d/before_install-aux.darwin ]  || source .travis.d/before_install-aux.darwin'
-#         - '[ ! -f .travis.d/before_install-user.darwin ] || source .travis.d/before_install-user.darwin'
+
+    - os: osx
+      before_install:
+        - '[ ! -f .travis.d/before_install.darwin ]      || source .travis.d/before_install.darwin'
+        - '[ ! -f .travis.d/before_install-aux.darwin ]  || source .travis.d/before_install-aux.darwin'
+        - '[ ! -f .travis.d/before_install-user.darwin ] || source .travis.d/before_install-user.darwin'
 
 
 # install:
