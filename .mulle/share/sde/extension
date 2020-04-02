@@ -1,1 +1,4 @@
 mulle-sde/extension-cmake;meta
+mulle-c/travis;extra
+mulle-objc/travis;extra
+mulle-sde/travis;extra

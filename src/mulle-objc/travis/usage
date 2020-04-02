@@ -1,0 +1,4 @@
+Add a .travis.yml file to your project. Your project will be built with
+mulle-sde and tested with mulle-test (if a test folder is present). This
+variant adds the mulle-clang repository to travis.
+

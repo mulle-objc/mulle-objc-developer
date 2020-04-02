@@ -1,0 +1,7 @@
+# Required: uncomment the applicable extension type
+#
+# buildtool
+# common
+# meta
+# runtime
+extra

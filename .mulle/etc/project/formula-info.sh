@@ -17,6 +17,6 @@ DESC="🎩 mulle-objc developer kit for mulle-sde"
 # So keep them single quoted.
 #
 DEPENDENCIES='${MULLE_SDE_TAP}mulle-c-developer
-codeon-gmbh/software/mulle-clang'
+${CODEON_TAP}/mulle-clang'
 
 DEBIAN_DEPENDENCIES='mulle-c-developer, mulle-clang'

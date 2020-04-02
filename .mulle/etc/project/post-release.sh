@@ -4,6 +4,6 @@
 
 post_release()
 {
-   exekutor mulle-project-debian
+   rexekutor mulle-project-debian "$@"
 }
 

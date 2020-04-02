@@ -18,8 +18,8 @@
       return( nil);
    }
 
-   _others = [NSMutableArray new];
-   _value  = [@"whatever" retain];
+//   _others = [NSMutableArray new];
+//   _value  = [@"whatever" retain];
    return( self);
 }
 
@@ -31,8 +31,8 @@
    // remove and nil yourself from relationships (like delegate, dataSource)
    // remove yourself from NSNotificationCenter and such things
    //
-   [_value autorelease];
-   _value = nil;
+//   [_value autorelease];
+//   _value = nil;
    [super finalize]; // call anywhere you like
 }
 
@@ -42,16 +42,16 @@
    //
    // release instance variables, that aren't properties
    //
-   [_others release];
+//   [_others release];
    [super dealloc];  // call at end
 }
 
 
 // example method
-- (id) method:(id) argument
-{
-   return( self);
-}
+//- (id) method:(id) argument
+//{
+//   return( self);
+//}
 
 @end
 

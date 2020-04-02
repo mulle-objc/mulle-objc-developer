@@ -1,3 +1,8 @@
+## 0.17.0
+
+* templates for protocolclasses
+
+
 ## 0.16.0
 
 * 0.16 release

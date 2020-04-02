@@ -1,7 +1,7 @@
-/* DO:    #import this files in public headers
+/* DOS:   #import this files in public headers
 
-   DONT:  #import this file in private headers
-          #import this files in directly in sources
+   DONTS: #import this file in private headers
+          #import this files directly in sources
           #include this file anywhere
 */
 

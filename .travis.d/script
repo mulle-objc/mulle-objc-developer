@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# with serial its easier to read the logs
+
+echo "MULLE_HOSTNAME=\"${MULLE_HOSTNAME}\"" 2>&1
+
+mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" extension show &&
+mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d exe -m mulle-objc/objc-developer executable &&
+cd exe &&
+mulle-sde craft --release &&
+"./kitchen/Release/exe" &&
+cd .. &&
+mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d lib -m mulle-objc/objc-developer library &&
+cd lib &&
+mulle-sde craft
