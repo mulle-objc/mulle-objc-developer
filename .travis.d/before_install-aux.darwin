@@ -73,11 +73,11 @@ before_install_objc_main()
    brew tap "${tapuser}/${tapname}"
    brew update
 
-   if [ -f ".travis.d/PACKAGES.darwin" ]
+   if [ -f ".travis.d/PACKAGES-aux.darwin" ]
    then
-      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES.darwin" `"
+      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES-aux.darwin" `"
    else
-      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES" `"
+      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES.aux" `"
    fi
 
    (
