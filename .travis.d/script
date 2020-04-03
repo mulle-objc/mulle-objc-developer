@@ -12,6 +12,8 @@ cd exe &&
    cd .mulle/etc/env &&
    curl -L -O "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/test/.mulle/etc/env/environment-host-travis-ci-prerelease.sh" >&2
 ) &&
+mulle-sde hostname &&
+mulle-sde environment &&
 mulle-sde craft --release &&
 "./kitchen/Release/exe" &&
 cd .. &&
