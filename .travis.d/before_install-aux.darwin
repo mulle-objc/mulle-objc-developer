@@ -77,7 +77,7 @@ before_install_objc_main()
    then
       PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES-aux.darwin" `"
    else
-      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES.aux" `"
+      PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES-aux" `"
    fi
 
    (
