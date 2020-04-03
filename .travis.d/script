@@ -9,7 +9,7 @@ mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d exe -m mulle-objc
 cd exe &&
 (
    cd .mulle/etc/env &&
-   curl -L -O "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/.mulle/etc/env/environment-host-travis-ci-prerelease.sh"
+   curl -L -O "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/test/.mulle/etc/env/environment-host-travis-ci-prerelease.sh"
 ) &&
 mulle-sde craft --release &&
 "./kitchen/Release/exe" &&
@@ -18,6 +18,6 @@ mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d lib -m mulle-objc
 cd lib &&
 (
    cd .mulle/etc/env &&
-   curl -L -O "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/.mulle/etc/env/environment-host-travis-ci-prerelease.sh"
+   curl -L -O "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/test/.mulle/etc/env/environment-host-travis-ci-prerelease.sh"
 ) &&
 mulle-sde craft
