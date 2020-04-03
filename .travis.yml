@@ -22,14 +22,12 @@ matrix:
          - '[ ! -f .travis.d/before_install-aux.linux ]  || source .travis.d/before_install-aux.linux'
          - '[ ! -f .travis.d/before_install-user.linux ] || source .travis.d/before_install-user.linux'
 
-#
 # Uncomment if you want osx too
-#
-#    - os: osx
-#      before_install:
-#         - '[ ! -f .travis.d/before_install.darwin ]      || source .travis.d/before_install.darwin'
-#         - '[ ! -f .travis.d/before_install-aux.darwin ]  || source .travis.d/before_install-aux.darwin'
-#         - '[ ! -f .travis.d/before_install-user.darwin ] || source .travis.d/before_install-user.darwin'
+    - os: osx
+      before_install:
+         - '[ ! -f .travis.d/before_install.darwin ]      || source .travis.d/before_install.darwin'
+         - '[ ! -f .travis.d/before_install-aux.darwin ]  || source .travis.d/before_install-aux.darwin'
+         - '[ ! -f .travis.d/before_install-user.darwin ] || source .travis.d/before_install-user.darwin'
 
 
 # install:
