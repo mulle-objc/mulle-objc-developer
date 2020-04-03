@@ -16,7 +16,7 @@ DESC="🎩 mulle-objc developer kit for mulle-sde"
 # DEPENDENCIES and BUILD_DEPENDENCIES will be evaled later!
 # So keep them single quoted.
 #
-DEPENDENCIES='${MULLE_SDE_TAP}mulle-c-developer
+DEPENDENCIES='${MULLE_C_TAP}mulle-c-developer
 ${CODEON_TAP}/mulle-clang'
 
 DEBIAN_DEPENDENCIES='mulle-c-developer, mulle-clang'
