@@ -1,11 +1,4 @@
 <|HEADER|>
-// prefer a local <|ONESHOT_CLASS|> over one in import.h
-#ifdef __has_include
-# if __has_include( "<|ONESHOT_CLASS|>.h")
-#  import "<|ONESHOT_CLASS|>.h"
-# endif
-#endif
-
 // we wan't "import.h" always anyway
 #import "import.h"
 

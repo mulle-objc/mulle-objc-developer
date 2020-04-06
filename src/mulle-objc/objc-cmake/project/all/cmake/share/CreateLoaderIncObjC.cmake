@@ -1,3 +1,7 @@
+### If you want to edit this, copy it from cmake/share to cmake. It will be
+### picked up in preference over the one in cmake/share. And it will not get
+### clobbered with the next upgrade.
+
 # can be included multiple times
 # define OBJC_LOADER_INC
 #        CREATE_OBJC_LOADER_INC
@@ -102,7 +106,7 @@ if( CREATE_OBJC_LOADER_INC)
 
    #
    # tricky: this file can only be installed during link phase.
-   #         It's installation is somewhat gratuitous now.
+   #         Used by optimization.
    #
    if( LINK_PHASE)
       install( FILES "${OBJC_LOADER_INC}" DESTINATION "include/${LIBRARY_NAME}/private")
