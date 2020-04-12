@@ -1,3 +1,8 @@
+## 0.18.0
+
+* use newer style extension files from mulle-sde 0.42
+
+
 ## 0.17.0
 
 * templates for protocolclasses

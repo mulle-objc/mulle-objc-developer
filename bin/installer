@@ -177,21 +177,21 @@ main()
    case "`uname`" in
       *arwin*)
          mkdir -p "${bin}" || exit 1
-         install -m "${mode}" "mulle-clang-add-to-xcode" "${bin}/mulle-clang-add-to-xcode" || exit 1
+         install ${VERBOSE} -m "${mode}" "mulle-clang-add-to-xcode" "${bin}/mulle-clang-add-to-xcode" || exit 1
          printf "install: ${C_MAGENTA}${C_BOLD}%s${C_RESET}\n" "${bin}/mulle-clang-add-to-xcode" >&2
       ;;
    esac
 
    EXTENSION_DIR="${share}/extensions"
    mkdir -p "${EXTENSION_DIR}" || exit 1
-   cp -Rav "src/mulle-objc" "${EXTENSION_DIR}/" || exit 1
+   cp -Ra ${VERBOSE} "src/mulle-objc" "${EXTENSION_DIR}/" || exit 1
 
    PIX_DIR="${share}/pix"
    mkdir -p "${PIX_DIR}" || exit 1
 
    for i in pix/*logo*.txt
    do
-      cp -av "${i}" "${PIX_DIR}/" || exit 1
+      cp -a ${VERBOSE} "${i}" "${PIX_DIR}/" || exit 1
    done
 
 }
