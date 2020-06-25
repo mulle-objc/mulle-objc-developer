@@ -77,10 +77,20 @@ There is a [Dockerfile](https://raw.githubusercontent.com/mulle-objc/mulle-objc-
 This will build and run an ephemeral mulle-sde container:
 
 ```
-docker build -t mulle-objc 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
-docker run -i -t --rm mulle-objc
+docker build -t mulle-objc-developer 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
+docker run -i -t --rm mulle-objc-developer
 ```
 
+>
+> To create a 32 bit docker on the base of xenial use
+>
+> ```
+>  docker build -t mulle-objc-developer-32 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
+> docker run -i -t --rm mulle-objc-developer-32
+> ```
+>
+> Xenial support will run out evetually though.
+>
 
 # Usage
 

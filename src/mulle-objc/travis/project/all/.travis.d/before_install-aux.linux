@@ -49,7 +49,7 @@ before_install_objc_main()
       PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES-aux.linux" `"
    else
       PACKAGES="`egrep -v '^#' ".travis.d/PACKAGES-aux" `"
-   fi &&
+   fi
 
    (
       IFS=$'\n'

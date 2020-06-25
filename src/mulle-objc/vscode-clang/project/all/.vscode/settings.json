@@ -5,7 +5,8 @@
     "**/dependency": true,
     "**/kitchen": true,
     "**/stash": true,
-    "**/var": true
+    "**/var": true,
+    "**/*.code-workspace": true
    },
    "files.watcherExclude": {
     "**/addiction": true,
@@ -15,5 +16,11 @@
     "**/stash": true,
     "**/var": true
    },
-   "lldb.executable": "mulle-lldb"
+  "files.associations": {
+    "*.h": "objective-c",
+    "*.inc": "objective-c",
+    "*.aam": "objective-c"
+  },
+  "gdb.executable": "mulle-gdb",
+  "clang.executable": "mulle-clang"
 }

@@ -5,7 +5,6 @@
             "_comment": "All? It's often convenient in library projects too",
             "name": "Debug <|PROJECT_NAME|>",
             "type": "cppdbg",
-            "MIMode": "lldb",
             "request": "launch",
             "stopAtEntry": true,
             "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>",
@@ -14,14 +13,17 @@
             "cwd": "${workspaceFolder}",
             "additionalSOLibSearchPath": "${workspaceFolder}/dependency/Debug/lib:${workspaceFolder}/dependency/lib",
             "windows": {
-                "miDebuggerPath": "C:\\mingw64\\bin\\mulle-lldb-mi.exe",
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:\\mingw64\\bin\\mulle-gdb.exe",
                 "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>.exe"
             },
             "osx": {
-                "miDebuggerPath": "/usr/local/bin/mulle-lldb-mi"
+                "MIMode": "lldb",
+                "miDebuggerPath": "/usr/local/bin/lldb-mi"
             },
             "linux": {
-                "miDebuggerPath": "/usr/bin/mulle-lldb-mi"
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/mulle-gdb"
              },
             "preLaunchTask": "Debug"
         }

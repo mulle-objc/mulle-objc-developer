@@ -32,9 +32,6 @@ if( CREATE_OBJC_LOADER_INC)
       set( OBJC_LOADER_INC "${CMAKE_SOURCE_DIR}/<|PROJECT_SOURCE_DIR|>/reflect/objc-loader.inc")
    endif()
 
-   set_source_files_properties( "${OBJC_LOADER_INC}"
-      PROPERTIES GENERATED TRUE
-   )
    # add to headers being installed, not part of project headers though
    # because it is too late here
    set( PUBLIC_HEADERS
@@ -93,6 +90,14 @@ if( CREATE_OBJC_LOADER_INC)
       COMMENT "Create: ${OBJC_LOADER_INC}"
       VERBATIM
    )
+
+   #
+   # if set to true, than a make clean/ninja clean removes it's
+   # which we don't want... Doesn't help though...
+   #
+   # set_source_files_properties( "${OBJC_LOADER_INC}"
+   #    PROPERTIES GENERATED FALSE
+   # )
 
    add_custom_target( "__objc_loader_inc__"
       DEPENDS ${OBJC_LOADER_INC}

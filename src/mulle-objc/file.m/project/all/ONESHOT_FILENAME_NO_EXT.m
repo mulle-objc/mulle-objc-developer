@@ -1,5 +1,4 @@
 <|HEADER|>
-
 #import "<|ONESHOT_NAME|>.h"
 
 #import "import-private.h"
@@ -11,15 +10,24 @@
 
 - (instancetype) init
 {
-   // release self, if object can not be inited
-   if( 0)
-   {
-      [self release];
-      return( nil);
-   }
+   // Call [super init], if subclassing something else than NSObject.
+   // self = [super init];
 
-//   _others = [NSMutableArray new];
-//   _value  = [@"whatever" retain];
+   // Release self and return nil, if object can not be inited
+   //
+   // if( ...)
+   // {
+   //    [self release];
+   //    return( nil);
+   // }
+
+   //
+   // Initialize ivars and properties without using the setter (preferably)
+   //
+   //
+   //   _others = [NSMutableArray new];
+   //   _value  = [@"whatever" retain];
+
    return( self);
 }
 
@@ -27,12 +35,12 @@
 - (void) finalize
 {
    //
-   // autorelease and nil read-only properties
-   // remove and nil yourself from relationships (like delegate, dataSource)
-   // remove yourself from NSNotificationCenter and such things
+   // Autorelease and nil read-only properties.
+   // Remove and nil yourself from relationships (like delegate, dataSource).
+   // Remove yourself from NSNotificationCenter and such things.
    //
-//   [_value autorelease];
-//   _value = nil;
+   //   [_value autorelease];
+   //   _value = nil;
    [super finalize]; // call anywhere you like
 }
 
@@ -40,9 +48,9 @@
 - (void) dealloc
 {
    //
-   // release instance variables, that aren't properties
+   // Release instance variables, that aren't properties.
    //
-//   [_others release];
+   //   [_others release];
    [super dealloc];  // call at end
 }
 
@@ -54,4 +62,4 @@
 //}
 
 @end
-
+<|FOOTER|>
