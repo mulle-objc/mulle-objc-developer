@@ -1,0 +1,23 @@
+{
+  "files.exclude": {
+    "**/[Aa]ddiction": true,
+    "**/[Bb]uild": true,
+    "**/[Dd]ependency": true,
+    "**/[Kk]itchen": true,
+    "**/[Ss]tash": true,
+    "**/[Vv]ar": true,
+    "**/*.code-workspace": true
+   },
+   "files.watcherExclude": {
+    "**/[Aa]ddiction": true,
+    "**/[Bb]uild": true,
+    "**/[Dd]ependency": true,
+    "**/[Kk]itchen": true,
+    "**/[Ss]tash": true,
+    "**/[Vv]ar": true
+   },
+  "files.associations": {
+    "*.h": "objective-c",
+    "*.inc": "objective-c"
+  }
+}

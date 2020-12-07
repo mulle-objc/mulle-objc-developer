@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "version.h"
+#include "<|PROJECT_IDENTIFIER|>-version.h"
 
 
 @interface Hello : NSObject

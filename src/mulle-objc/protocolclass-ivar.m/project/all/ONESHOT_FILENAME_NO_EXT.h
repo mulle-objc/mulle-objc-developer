@@ -1,14 +1,14 @@
 <|HEADER|>
-// we wan't "import.h" always anyway
+// we want "import.h" always anyway
 #import "import.h"
 
 
-// **EDIT** define your properties her, if any
+// **EDIT** define your properties here (if any)
 #define <|ONESHOT_CLASS|>Properties \
 // @property id   whatever1;        \
 // @property id   whatever2
 
-// **EDIT** define your required instance variable here, if any
+// **EDIT** define your required instance variable here (if any)
 struct _<|ONESHOT_CLASS|>Ivars
 {
 //   int   whatevs1;

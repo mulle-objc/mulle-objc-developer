@@ -1,0 +1,4 @@
+Adds a .github/workflows/mulle-sde-ci.yml file to your project. Your project
+will be built with mulle-sde and tested with mulle-test with github actions.
+(if a test folder is present).
+
