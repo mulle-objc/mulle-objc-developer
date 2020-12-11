@@ -1,4 +1,2 @@
 mulle-sde/extension-cmake;meta
-mulle-c/travis;extra
-mulle-sde/travis;extra
-mulle-objc/travis;extra
+mulle-c/github-actions;extra
