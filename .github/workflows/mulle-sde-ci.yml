@@ -30,12 +30,12 @@ jobs:
     - name: Dump Environment
       run:  env | sort
 
-    - name: Mulle-SDE Fetch
-      run: mulle-sde fetch
-
-    - name: Mulle-SDE Craft
-      run: mulle-sde craft --${BUILD_TYPE:-release}
-
-    - name: Mulle-SDE Test
+    - name: Mulle-SDE Excecutable
       run: |
-        [ ! -d test ] || mulle-sde test
+        mulle-sde init -m objc-developer -d /tmp/executable executable &&
+        mulle-sde -d /tmp/executable craft
+
+    - name: Mulle-SDE Library
+      run: |
+        mulle-sde init -m objc-developer -d /tmp/library library &&
+        mulle-sde -d /tmp/library craft
