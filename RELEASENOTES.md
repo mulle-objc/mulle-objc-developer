@@ -1,3 +1,8 @@
+## 0.20.0
+
+* Various small improvements
+
+
 ## 0.18.0
 
 * use newer style extension files from mulle-sde 0.42
