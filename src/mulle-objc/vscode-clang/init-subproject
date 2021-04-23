@@ -145,7 +145,7 @@ parent's ignore list"
 
    local tmpfile
 
-   r_make_tmp
+   r_make_tmp || exit 1
    tmpfile="${RVAL}"
 
    local key1

@@ -1,7 +1,15 @@
 #
-# These are used by mulle-match find to speed up the search.
+# Used by mulle-match find to locate source files
 #
 MULLE_MATCH_FILENAMES+="*.m"
+
+#
+# Used by mulle-match find to locate source files
+#
 MULLE_MATCH_FILENAMES+="*.aam"
 
+#
+# If you are really basing on MulleObjC you need this startup lib
+#
 PREFERRED_STARTUP_LIBRARY="MulleObjC-startup"
+

@@ -11,6 +11,4 @@ mulle-objc/objc-cmake;buildtool
 # Because of the quirky way mulle-sde does this, the
 # order is reversed.
 #
-mulle-sde/c-demo;extra
-mulle-c/c-demo;extra
 mulle-objc/objc-demo;extra

@@ -1,3 +1,7 @@
+/*
+ * template: demo/executable/PROJECT_SOURCE_DIR/main.PROJECT_EXTENSION
+ * vendor/extension: mulle-objc/objc-demo
+ */
 #import "import-private.h"
 
 #include <stdio.h>

@@ -1,0 +1,4 @@
+*.plist
+*.strings
+*.eomodeld
+*.nib

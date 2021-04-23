@@ -1,0 +1,14 @@
+#
+# Turn off C header generation by default
+#
+MULLE_SOURCETREE_TO_C_INCLUDE_FILE="DISABLE"
+
+#
+# Turn off C header generation by default
+#
+MULLE_SOURCETREE_TO_C_PRIVATEINCLUDE_FILE="DISABLE"
+
+#
+# Turn off C header generation by default
+#
+MULLE_MATCH_TO_C_C_HEADERS_FILE="DISABLE"
