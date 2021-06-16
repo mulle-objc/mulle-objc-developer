@@ -25,18 +25,18 @@ export PROJECT_LANGUAGE="none"
 #
 #
 #
-export PROJECT_IDENTIFIER="mulle_objc_developer"
 
-
-#
-#
-#
-export PROJECT_DOWNCASE_IDENTIFIER="mulle_objc_developer"
 
 
 #
 #
 #
-export PROJECT_UPCASE_IDENTIFIER="MULLE_OBJC_DEVELOPER"
+
+
+
+#
+#
+#
+
 
 

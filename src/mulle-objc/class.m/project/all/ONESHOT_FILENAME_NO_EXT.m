@@ -1,0 +1,65 @@
+<|HEADER|>
+#import "<|ONESHOT_NAME|>.h"
+
+#import "import-private.h"
+
+
+
+@implementation <|ONESHOT_CLASS|>
+
+
+- (instancetype) init
+{
+   // Call [super init], if subclassing something else than NSObject.
+   // self = [super init];
+
+   // Release self and return nil, if object can not be inited
+   //
+   // if( ...)
+   // {
+   //    [self release];
+   //    return( nil);
+   // }
+
+   //
+   // Initialize ivars and properties without using the setter (preferably)
+   //
+   //
+   //   _others = [NSMutableArray new];
+   //   _value  = [@"whatever" retain];
+
+   return( self);
+}
+
+
+- (void) finalize
+{
+   //
+   // Autorelease and nil read-only properties.
+   // Remove and nil yourself from relationships (like delegate, dataSource).
+   // Remove yourself from NSNotificationCenter and such things.
+   //
+   //   [_value autorelease];
+   //   _value = nil;
+   [super finalize]; // call anywhere you like
+}
+
+
+- (void) dealloc
+{
+   //
+   // Release instance variables, that aren't properties.
+   //
+   //   [_others release];
+   [super dealloc];  // call at end
+}
+
+
+// example method
+//- (id) method:(id) argument
+//{
+//   return( self);
+//}
+
+@end
+<|FOOTER|>
