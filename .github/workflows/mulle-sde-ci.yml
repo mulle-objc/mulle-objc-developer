@@ -15,14 +15,6 @@ jobs:
         os: [ ubuntu-latest]
 
     steps:
-    - name: Update stuff (for act)
-      if: ${{ env.ACT }}
-      run: apt-get update
-
-    - name: Install stuff (for act)
-      if: ${{ env.ACT }}
-      run: apt-get -y install cmake curl lsb-release uuid-runtime
-
     - name: Set MULLE_HOSTNAME
       run: |
         name="${GITHUB_REF##*/}"
@@ -39,9 +31,11 @@ jobs:
       if: ${{ ! env.ACT }}
 
     - uses: mulle-sde/github-ci@v1
+      if: ${{ ! env.ACT }}
 
-    - uses: mulle-objc/github-ci@v1
-
+    - uses: mulle-objc/github-ci@v2
+      if: ${{ ! env.ACT }}
+      
     - name: List extensions
       run: |
         mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" extension show
