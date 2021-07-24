@@ -1,6 +1,18 @@
+## 0.21.0
+
+* split file.m into file.m and class.m
+* added loader.m
+* remove **travis**
+
 ## 0.20.0
 
-* Various small improvements
+* updated Dockerfile
+
+## 0.19.0
+
+* added protocol template (use mulle-sde add -t protocol FooProtocol.m to use)
+* github actions extension
+* improved file.m/h template can now set superclass if desired
 
 
 ## 0.18.0
