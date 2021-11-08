@@ -64,13 +64,13 @@ _installer_prepend_path_if_relative()
 installer_resolve_symlinks()
 {
    local dir_context
-   local path
+   local filepath
 
-   path="`readlink "$1"`"
+   filepath="`readlink "$1"`"
    if [ $? -eq 0 ]
    then
       dir_context=`dirname -- "$1"`
-      installer_resolve_symlinks "`_installer_prepend_path_if_relative "$dir_context" "$path"`"
+      installer_resolve_symlinks "`_installer_prepend_path_if_relative "$dir_context" "$filepath"`"
    else
       printf "%s\n" "$1"
    fi

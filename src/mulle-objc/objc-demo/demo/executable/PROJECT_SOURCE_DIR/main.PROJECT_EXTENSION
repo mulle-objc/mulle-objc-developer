@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-#include "<|PROJECT_IDENTIFIER|>-version.h"
+#include "<|PROJECT_NAME|>-version.h"
 
 
 @interface Hello : NSObject
