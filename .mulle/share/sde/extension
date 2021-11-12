@@ -1,1 +1,3 @@
-mulle-sde/extension-cmake;meta
+mulle-sde/extension-developer;meta
+mulle-sde/extension;runtime
+mulle-sde/extension-cmake;buildtool
