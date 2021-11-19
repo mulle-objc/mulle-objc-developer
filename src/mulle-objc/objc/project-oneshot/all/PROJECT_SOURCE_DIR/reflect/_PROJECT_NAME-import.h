@@ -4,8 +4,4 @@
  *
  * DO NOT EDIT. YOUR CHANGES WILL BE LOST!
  *
- *
- * template: project-oneshot/all/PROJECT_SOURCE_DIR/reflect/_PROJECT_NAME-import.h
- * vendor/extension: mulle-objc/objc
- *
  */

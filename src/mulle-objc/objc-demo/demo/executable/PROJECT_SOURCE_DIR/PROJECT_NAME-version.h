@@ -2,6 +2,7 @@
 #define <|PROJECT_DOWNCASE_IDENTIFIER|>_version_h__
 
 /*
+ *  You can maintain this file with `mulle-project-version`
  *  version:  major, minor, patch
  */
 #define <|PROJECT_UPCASE_IDENTIFIER|>_VERSION  ((0 << 20) | (7 << 8) | 56)

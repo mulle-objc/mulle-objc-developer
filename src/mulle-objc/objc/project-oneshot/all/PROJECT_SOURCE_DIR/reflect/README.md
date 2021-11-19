@@ -1,4 +1,8 @@
-# Header files in `reflect`
+# reflect
+
+The contents of this folder are not editable. Changes will be lost.
+
+## Header files in `reflect`
 
 
 ### `<|PROJECT_NAME|>-import.h`

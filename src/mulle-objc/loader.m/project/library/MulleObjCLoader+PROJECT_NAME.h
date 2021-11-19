@@ -1,7 +1,3 @@
-/*
- * template: project/library/PROJECT_SOURCE_DIR/MulleObjCLoader+PROJECT_NAME.h
- * vendor/extension: mulle-objc/objc-loader
- */
 #ifdef __MULLE_OBJC__
 
 #import <MulleObjC/MulleObjC.h>
