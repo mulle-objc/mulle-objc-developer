@@ -1,3 +1,8 @@
+## 0.22.0
+
+* improved compiler flags generation
+
+
 ## 0.21.0
 
 * split file.m into file.m and class.m

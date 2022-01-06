@@ -29,13 +29,11 @@ ubuntu  | same as debian
 
 #### Debian Mulle kybernetiK and Codeon repositories
 
-For apt installation you need to add the Mulle kybernetiK and
-the Codeon debian repositories first:
+For apt installation you need to add the Mulle kybernetiK and debian
+repository first:
 
 ```
-wget -O - https://www.codeon.de/dists/codeon-pub.asc | sudo apt-key add -
-echo "deb [arch=amd64] http://download.codeon.de `lsb_release -c -s` main" | sudo tee /etc/apt/sources.list.d/codeon.de-main.list > /dev/null
-wget -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
+get -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
 echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
 sudo apt-get update
 ```
