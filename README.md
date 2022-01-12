@@ -27,9 +27,9 @@ debian  | `sudo apt-get -y install mulle-objc-developer` (but see below)
 ubuntu  | same as debian
 
 
-#### Debian Mulle kybernetiK and Codeon repositories
+#### Debian Mulle kybernetiK repositories
 
-For apt installation you need to add the Mulle kybernetiK and debian
+For apt installation you need to add the Mulle kybernetiK debian
 repository first:
 
 ```
