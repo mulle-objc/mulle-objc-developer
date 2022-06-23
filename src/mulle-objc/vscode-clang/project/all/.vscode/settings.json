@@ -22,5 +22,6 @@
     "*.aam": "objective-c"
   },
   "gdb.executable": "mulle-gdb",
-  "clang.executable": "mulle-clang"
+  "clang.executable": "mulle-clang",
+  "debug.allowBreakpointsEverywhere": true
 }

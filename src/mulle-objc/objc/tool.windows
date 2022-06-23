@@ -2,5 +2,5 @@ mulle-clang;remove
 mulle-scan-build;remove
 mulle-lldb;remove
 mulle-clang-cl.exe
-mulle-scan-build.exe
-mulle-lldb.exe;optional
+scan-build.exe;optional
+mulle-gdb.exe;optional

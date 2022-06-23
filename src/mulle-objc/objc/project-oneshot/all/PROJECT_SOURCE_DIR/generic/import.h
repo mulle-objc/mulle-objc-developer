@@ -9,6 +9,11 @@
  *  .m and .aam use import-private.h.
  */
 
+// this is a global symbol that is exposed, which can be used to detect
+// if this library is available
+
+#define HAVE_IMPORT_<|PROJECT_UPCASE_IDENTIFIER|>
+
 /*
  * Get C includes first, if
  *

@@ -1,23 +1,27 @@
 {
-  "files.exclude": {
-    "**/[Aa]ddiction": true,
-    "**/[Bb]uild": true,
-    "**/[Dd]ependency": true,
-    "**/[Kk]itchen": true,
-    "**/[Ss]tash": true,
-    "**/[Vv]ar": true,
-    "**/*.code-workspace": true
-   },
-   "files.watcherExclude": {
-    "**/[Aa]ddiction": true,
-    "**/[Bb]uild": true,
-    "**/[Dd]ependency": true,
-    "**/[Kk]itchen": true,
-    "**/[Ss]tash": true,
-    "**/[Vv]ar": true
-   },
-  "files.associations": {
-    "*.h": "objective-c",
-    "*.inc": "objective-c"
-  }
+        "files.exclude": {
+                "**/addiction": true,
+                "**/build": true,
+                "**/dependency": true,
+                "**/kitchen": true,
+                "**/stash": true,
+                "**/var": true,
+                "**/*.code-workspace": true
+        },
+        "files.watcherExclude": {
+                "**/addiction": true,
+                "**/build": true,
+                "**/dependency": true,
+                "**/kitchen": true,
+                "**/stash": true,
+                "**/var": true
+        },
+        "files.associations": {
+                "*.h": "objective-c",
+                "*.inc": "objective-c",
+                "*.aam": "objective-c"
+        },
+        "gdb.executable": "mulle-gdb",
+        "clang.executable": "mulle-clang",
+        "debug.allowBreakpointsEverywhere": true
 }

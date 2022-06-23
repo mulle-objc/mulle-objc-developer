@@ -32,7 +32,7 @@ ubuntu  | same as debian
 For apt installation you need to add the Mulle kybernetiK debian
 repository first:
 
-```
+``` sh
 get -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
 echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
 sudo apt-get update
@@ -49,7 +49,7 @@ This is suitable for environments without supported package managers:
 
 #### Install into /usr with sudo
 
-```
+``` sh
 curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 sudo OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
@@ -74,7 +74,7 @@ There is a [Dockerfile](https://raw.githubusercontent.com/mulle-objc/mulle-objc-
 
 This will build and run an ephemeral mulle-sde container:
 
-```
+``` sh
 docker build -t mulle-objc-developer 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
 docker run -i -t --rm mulle-objc-developer
 ```
@@ -82,7 +82,7 @@ docker run -i -t --rm mulle-objc-developer
 >
 > To create a 32 bit docker on the base of xenial use
 >
-> ```
+> ``` sh
 >  docker build -t mulle-objc-developer-32 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
 > docker run -i -t --rm mulle-objc-developer-32
 > ```
@@ -100,7 +100,7 @@ mulle-sde extension show
 
 ### Create an Objective-C executable project
 
-```
+``` sh
 mkdir foo
 cd foo
 mulle-sde init -m mulle-objc/objc-developer executable
@@ -108,13 +108,13 @@ mulle-sde init -m mulle-objc/objc-developer executable
 
 ### Create an Objective-C library project
 
-```
+``` sh
 mulle-sde init -m mulle-objc/objc-developer -d foolib library
 ```
 
 ### Don't create a project but get ObjC libraries built
 
-```
+``` sh
 mulle-sde init -m mulle-objc/objc-developer none
 mulle-sde craft
 ```
