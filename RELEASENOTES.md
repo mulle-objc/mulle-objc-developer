@@ -1,3 +1,9 @@
+## 0.23.0
+
+* changes for Windows
+* improved Library identifier code
+
+
 ## 0.22.0
 
 * improved compiler flags generation
