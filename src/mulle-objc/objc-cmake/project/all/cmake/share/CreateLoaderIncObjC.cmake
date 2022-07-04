@@ -111,6 +111,8 @@ if( CREATE_OBJC_LOADER_INC)
       set( TMP_MULLE_BIN_DIR "")
    endif()
 
+   # TODO: $ENV{MULLE_OBJC_LOADER_TOOL_FLAGS} are implicitly double quote 
+   # protected by cmake it seems, which trips up settings like "-vvv -ld" 
    add_custom_command(
       OUTPUT ${OBJC_LOADER_INC}
       COMMAND ${MULLE_OBJC_LOADER_TOOL}
