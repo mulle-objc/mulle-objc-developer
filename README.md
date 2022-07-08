@@ -7,7 +7,7 @@ This is a collection of [mulle-sde](//github.com/mulle-sde/mulle-sde)
 code. As a package **mulle-objc-developer** is also a convenient way to
 install mulle-sde and [mulle-clang](//github.com/Codeon-GmbH/mulle-clang).
 
-> See the [mulle-sde Wiki](https://github.com/mulle-sde/mulle-sde/wiki) for
+> See the [mulle-sde Wiki](//github.com/mulle-sde/mulle-sde/wiki) for
 > an introduction on **mulle-sde**.
 
 
@@ -33,7 +33,7 @@ For apt installation you need to add the Mulle kybernetiK debian
 repository first:
 
 ``` sh
-get -O - "https://www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
+get -O - "//www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
 echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
 sudo apt-get update
 ```
@@ -41,7 +41,7 @@ sudo apt-get update
 
 ### Script
 
-mulle-sde provides an [installer-all](https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all) script to install the required commands and mulle-sde-developer itself into `/usr` or some other place.
+mulle-sde provides an [installer-all](//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all) script to install the required commands and mulle-sde-developer itself into `/usr` or some other place.
 
 You need to install [mulle-clang](//github.com/Codeon-GmbH/mulle-clang) yourself.
 
@@ -50,7 +50,7 @@ This is suitable for environments without supported package managers:
 #### Install into /usr with sudo
 
 ``` sh
-curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
+curl -L -O '//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 sudo OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
 mulle-c/mulle-c-developer;latest" \
@@ -60,7 +60,7 @@ SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all /usr
 #### Install into ${HOME} (without sudo)
 
 ```
-curl -L -O 'https://raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
+curl -L -O '//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
 mulle-c/mulle-c-developer;latest" \
@@ -70,12 +70,12 @@ SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all ~
 
 ### Docker
 
-There is a [Dockerfile](https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile) in the project.
+There is a [Dockerfile](//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile) in the project.
 
 This will build and run an ephemeral mulle-sde container:
 
 ``` sh
-docker build -t mulle-objc-developer 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
+docker build -t mulle-objc-developer '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
 docker run -i -t --rm mulle-objc-developer
 ```
 
@@ -83,7 +83,7 @@ docker run -i -t --rm mulle-objc-developer
 > To create a 32 bit docker on the base of xenial use
 >
 > ``` sh
->  docker build -t mulle-objc-developer-32 'https://raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
+>  docker build -t mulle-objc-developer-32 '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
 > docker run -i -t --rm mulle-objc-developer-32
 > ```
 >
