@@ -59,7 +59,7 @@ SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all /usr
 
 #### Install into ${HOME} (without sudo)
 
-```
+``` sh
 curl -L -O '//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
 chmod 755 installer-all && \
 OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
