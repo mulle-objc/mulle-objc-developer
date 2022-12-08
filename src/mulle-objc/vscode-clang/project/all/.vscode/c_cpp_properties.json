@@ -9,7 +9,7 @@
             "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
-         "compilerPath": "/usr/bin/mulle-clang",
+         "compilerPath": "mulle-clang",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
          "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"
@@ -22,7 +22,7 @@
             "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
-         "compilerPath": "/usr/local/bin/mulle-clang",
+         "compilerPath": "mulle-clang",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
          "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"
@@ -35,7 +35,7 @@
             "${workspaceFolder}/addiction/include/**"
          ],
          "defines": [],
-         "compilerPath": "\\mulle-clang\\bin\\mulle-clang.exe",
+         "compilerPath": "mulle-clang-cl.exe",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
          "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"

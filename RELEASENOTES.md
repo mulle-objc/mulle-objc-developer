@@ -1,3 +1,8 @@
+## 0.24.0
+
+* Various small improvements
+
+
 ## 0.23.0
 
 * changes for Windows

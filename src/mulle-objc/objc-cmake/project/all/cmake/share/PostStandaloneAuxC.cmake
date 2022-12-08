@@ -10,10 +10,12 @@ endif()
 # only for mulle-clang
 #
 if( APPLE AND MULLE_OBJC)
-   target_link_options( "${STANDALONE_LIBRARY_NAME}"
-      PUBLIC
-         "SHELL:LINKER:-undefined,dynamic_lookup"
-   )
+   if( LINK_PHASE)
+      target_link_options( "${STANDALONE_LIBRARY_NAME}"
+         PUBLIC
+            "SHELL:LINKER:-undefined,dynamic_lookup"
+      )
+   endif()
 endif()
 
 include( PostStandaloneAuxObjC OPTIONAL)

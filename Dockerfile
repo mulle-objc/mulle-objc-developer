@@ -27,6 +27,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
    && chmod 755 installer-all \
    && ./installer-all /usr no \
 \
-   && wget "https://github.com/Codeon-GmbH/mulle-clang-project/releases/download/11.0.0.0/mulle-clang-11.0.0.0-bullseye-amd64.deb"  \
-   && dpkg --install "mulle-clang-11.0.0.0-bullseye-amd64.deb"
+   && wget "https://github.com/Codeon-GmbH/mulle-clang-project/releases/download/14.0.6.2/mulle-clang-14.0.6.2-bullseye-amd64.deb"  \
+   && dpkg --install "mulle-clang-14.0.6.2-bullseye-amd64.deb"
 

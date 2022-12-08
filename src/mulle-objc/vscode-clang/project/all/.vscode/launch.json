@@ -14,16 +14,16 @@
             "additionalSOLibSearchPath": "${workspaceFolder}/dependency/Debug/lib:${workspaceFolder}/dependency/lib",
             "windows": {
                 "MIMode": "gdb",
-                "miDebuggerPath": "C:\\mingw64\\bin\\mulle-gdb.exe",
+                "miDebuggerPath": "mulle-gdb.exe",
                 "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>.exe"
             },
             "osx": {
                 "MIMode": "lldb",
-                "miDebuggerPath": "/usr/local/bin/lldb-mi"
+                "miDebuggerPath": "lldb-mi"
             },
             "linux": {
                 "MIMode": "gdb",
-                "miDebuggerPath": "/usr/bin/mulle-gdb"
+                "miDebuggerPath": "mulle-gdb"
              },
             "preLaunchTask": "Debug"
         }

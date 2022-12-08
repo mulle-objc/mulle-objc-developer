@@ -43,8 +43,10 @@ if( NOT __DEFINE_LOADER_INC_OBJC_CMAKE__)
 
    # currently MSVC/WSL is considered busted by default
    # but MINGW could (?) work
+   # MUSL_STATIC_ONLY and COSMOPOLITAN don't do share library stuff
+   #
    if( NOT DEFINED CREATE_OBJC_LOADER_INC)
-      if( MULLE_OBJC_LOADER_TOOL AND ((NOT MSVC) OR MINGW))
+      if( MULLE_OBJC_LOADER_TOOL AND (NOT (MSVC OR MUSL_STATIC_ONLY OR COSMOPOLITAN)))
          option( CREATE_OBJC_LOADER_INC "Create objc-loader.inc for Objective-C libraries" ON)
       else()
          option( CREATE_OBJC_LOADER_INC "Create objc-loader.inc for Objective-C libraries" OFF)

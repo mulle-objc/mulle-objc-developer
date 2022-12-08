@@ -76,17 +76,18 @@ if( CREATE_OBJC_LOADER_INC)
    # included by the Loader.
    #
    if( TARGET "_2_${LIBRARY_NAME}")
-      add_library( "_3_${LIBRARY_NAME}" STATIC
+      set( LIBRARY_STAGE3_TARGET "_3_${LIBRARY_NAME}")
+      add_library( ${LIBRARY_STAGE3_TARGET} STATIC
          $<TARGET_OBJECTS:_1_${LIBRARY_NAME}>
       )
-      set( OBJC_LOADER_LIBRARY "$<TARGET_FILE:_3_${LIBRARY_NAME}>")
+      set( OBJC_LOADER_LIBRARY "$<TARGET_FILE:${LIBRARY_STAGE3_TARGET}>")
 
-      set_target_properties( "_3_${LIBRARY_NAME}"
+      set_target_properties( ${LIBRARY_STAGE3_TARGET}
          PROPERTIES
             CXX_STANDARD 11
 #            DEFINE_SYMBOL "${LIBRARY_UPCASE_IDENTIFIER}_SHARED_BUILD"
       )
-      target_compile_definitions( "_3_${LIBRARY_NAME}" PRIVATE "${LIBRARY_UPCASE_IDENTIFIER}_BUILD")
+      target_compile_definitions( ${LIBRARY_STAGE3_TARGET} PRIVATE "${LIBRARY_UPCASE_IDENTIFIER}_BUILD")
 
       set( STAGE2_HEADERS
          ${STAGE2_HEADERS}
@@ -138,6 +139,7 @@ if( CREATE_OBJC_LOADER_INC)
 
    add_custom_target( "__objc_loader_inc__"
       DEPENDS ${OBJC_LOADER_INC}
+      COMMENT "Target to build \"${OBJC_LOADER_INC}\""
    )
 
    if( TARGET "_2_${LIBRARY_NAME}")

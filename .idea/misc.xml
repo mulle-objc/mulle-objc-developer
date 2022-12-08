@@ -19,6 +19,7 @@
       <file path="$PROJECT_DIR$/test/.mulle" />
       <file path="$PROJECT_DIR$/test/dependency" />
       <file path="$PROJECT_DIR$/test/kitchen" />
+      <file path="$PROJECT_DIR$/test/stash" />
     </excludeRoots>
   </component>
 </project>
