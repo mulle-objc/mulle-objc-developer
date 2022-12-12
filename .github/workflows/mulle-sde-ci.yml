@@ -55,5 +55,7 @@ jobs:
         echo "Adding environment-host-ci-prerelease file from MulleObjC/test" >&2 &&
         curl -L --output .mulle/etc/env/environment-host-ci-prerelease.sh "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/test/.mulle/etc/env/environment-host-ci-prerelease.sh" >&2 &&
         mulle-sde craft --release &&
-        "./kitchen/Release/exe"
+        [ -x "./kitchen/Release/exe" -o "./kitchen/exe" ] &&
+        ( [ ! -x "./kitchen/Release/exe" ] || "./kitchen/Release/exe" ) &&
+        ( [ ! -x "./kitchen/exe" ] || "./kitchen/exe" )
 
