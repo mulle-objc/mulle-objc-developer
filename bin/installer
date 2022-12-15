@@ -2,8 +2,6 @@
 #
 # (c) 2015, coded by Nat!, Mulle KybernetiK
 #
-[ "${TRACE}" = 'YES' ] && set -x && : "$0" "$@"
-
 if [ "${MULLE_NO_COLOR}" != 'YES' ]
 then
    # Escape sequence and resets
@@ -47,15 +45,7 @@ _installer_prepend_path_if_relative()
       ;;
 
       *)
-         case "$1" in
-            */)
-               printf "%s%s\n" "$1" "$2"
-            ;;
-
-            *)
-               printf "%s/%s\n" "$1" "$2"
-            ;;
-         esac
+         printf "%s/%s\n" "$1" "$2"
       ;;
    esac
 }
@@ -63,9 +53,6 @@ _installer_prepend_path_if_relative()
 
 installer_resolve_symlinks()
 {
-   local dir_context
-   local filepath
-
    filepath="`readlink "$1"`"
    if [ $? -eq 0 ]
    then
@@ -85,10 +72,7 @@ installer_canonicalize_path()
       cd "$1" 2>/dev/null && pwd -P
    )
    else
-      local dir
-      local file
-
-      dir="`dirname -- "$1"`"
+      dir="`dirname "$1"`"
       file="`basename -- "$1"`"
       (
          cd "${dir}" 2>/dev/null &&
@@ -106,8 +90,6 @@ installer_realpath()
 
 installer_get_windows_path()
 {
-   local directory
-
    directory="$1"
    if [ -z "${directory}" ]
    then
@@ -121,8 +103,6 @@ installer_get_windows_path()
 
 installer_get_sh_windows_path()
 {
-   local directory
-
    directory="`which sh`"
    directory="`dirname -- "${directory}"`"
    directory="`installer_get_windows_path "${directory}"`"
@@ -141,11 +121,29 @@ installer_sed_mangle_escape_slashes()
 }
 
 
+r_installer_install_prefix()
+{
+   prefix="`installer_realpath "$1" 2> /dev/null`"
+   if [ ! -d "${prefix}" ]
+   then
+      installer_fail "\"${prefix}\" does not exist"
+   fi
+
+   directory="`dirname -- "$0"`"
+   cd "${directory}" || installer_fail "Could not cd to \"$directory\" ($PWD)"
+   cd .. || installer_fail "Could not cd to \"..\" ($PWD)"  # compensate for installer being in bin
+
+   bindir="${prefix}/bin"
+   if [ -d "${bindir}" ]
+   then
+      bindir="`installer_realpath "${bindir}"`"
+   fi
+   RVAL="`dirname -- "${bindir}"`"
+}
+
+
 main()
 {
-   local prefix
-   local mode
-
    prefix=${1:-"/usr/local"}
    [ $# -eq 0 ] || shift
    mode=${1:-755}
@@ -156,27 +154,18 @@ main()
       installer_fail "usage: install.sh [prefix] [mode]"
    fi
 
-   prefix="`installer_realpath "${prefix}"`"
-   if [ ! -d "${prefix}" ]
-   then
-      installer_fail "\"${prefix}\" does not exist"
-   fi
-
-   local directory
-
-   directory="`dirname -- "$0"`"
-   cd "${directory}" || installer_fail "Could not cd to \"$directory\" ($PWD)"
-   cd .. || installer_fail "Could not cd to \"..\" ($PWD)"  # compensate for installer being in bin
-
-   local bin
-   local share
+   r_installer_install_prefix "${prefix}"
+   prefix="${RVAL}"
 
    bin="${prefix}/bin"
    share="${prefix}/share/mulle-sde"
 
+   mkdir -p "${share}" || installer_fail "could not create ${share}"
+#   mkdir -p "${libexec}" || installer_fail "could not create ${libexec}"
+
    case "`uname`" in
       *arwin*)
-         mkdir -p "${bin}" || exit 1
+         mkdir -p "${bin}" || installer_fail "could not create ${bin}"
          install ${VERBOSE} -m "${mode}" "mulle-clang-add-to-xcode" "${bin}/mulle-clang-add-to-xcode" || exit 1
          printf "install: ${C_MAGENTA}${C_BOLD}%s${C_RESET}\n" "${bin}/mulle-clang-add-to-xcode" >&2
       ;;
@@ -194,6 +183,9 @@ main()
       cp -a ${VERBOSE} "${i}" "${PIX_DIR}/" || exit 1
    done
 
+   EXTENSION_DIR="${share}/extensions"
+   mkdir -p "${EXTENSION_DIR}" 2> /dev/null
+   cp -Rav "src/mulle-objc" "${EXTENSION_DIR}/" || installer_fail "copy to ${EXTENSION_DIR} failed"
 }
 
 main "$@"
