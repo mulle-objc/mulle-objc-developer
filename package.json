@@ -1,17 +1,14 @@
 {
    "name" : "mulle-objc-developer",
-   "version" : "0.19.0",
+   "version" : "0.24.0",
    "description" : "🎩 mulle-objc developer kit for mulle-sde",
-   "homepage" : "https://github.com/mulle-kybernetik-tv/mulle-objc-developer
-https://github.com/mulle-objc/mulle-objc-developer",
-   "bugs" : "https://github.com/mulle-kybernetik-tv/mulle-objc-developer
-https://github.com/mulle-objc/mulle-objc-developer/issues",
+   "homepage" : "https://github.com/mulle-objc/mulle-objc-developer",
+   "bugs" : "https://github.com/mulle-objc/mulle-objc-developer/issues",
    "keywords" : [],
    "license" : "UNLICENSED",
    "repository" : {
       "type" : "git",
-      "url" : "mulle-kybernetik-tv/mulle-objc-developer
-mulle-objc/mulle-objc-developer"
+      "url" : "mulle-objc/mulle-objc-developer"
    },
    "dependencies" : {
    }
