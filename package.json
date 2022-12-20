@@ -8,7 +8,7 @@
    "license" : "UNLICENSED",
    "repository" : {
       "type" : "git",
-      "url" : "mulle-objc/mulle-objc-developer"
+      "url" : "github:mulle-objc/mulle-objc-developer"
    },
    "dependencies" : {
    }
