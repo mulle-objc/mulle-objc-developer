@@ -2,6 +2,8 @@
 #
 # (c) 2015, coded by Nat!, Mulle KybernetiK
 #
+[ "${TRACE}" = 'YES' ] && set -x && : "$0" "$@"
+
 if [ "${MULLE_NO_COLOR}" != 'YES' ]
 then
    # Escape sequence and resets
@@ -148,10 +150,12 @@ main()
    [ $# -eq 0 ] || shift
    mode=${1:-755}
    [ $# -eq 0 ] || shift
+   libexecdirname="${1:-libexec}"
+   [ $# -eq 0 ] || shift
 
    if [ -z "${prefix}" -o "${prefix}" = "--help" ] || [ -z "${mode}" ]
    then
-      installer_fail "usage: install.sh [prefix] [mode]"
+      installer_fail "usage: installer [prefix] [mode] [libexecdirname]"
    fi
 
    r_installer_install_prefix "${prefix}"
@@ -173,19 +177,19 @@ main()
 
    EXTENSION_DIR="${share}/extensions"
    mkdir -p "${EXTENSION_DIR}" || exit 1
-   cp -Ra ${VERBOSE} "src/mulle-objc" "${EXTENSION_DIR}/" || exit 1
+   cp -Rp ${VERBOSE} "src/mulle-objc" "${EXTENSION_DIR}/" || exit 1
 
    PIX_DIR="${share}/pix"
    mkdir -p "${PIX_DIR}" || exit 1
 
    for i in pix/*logo*.txt
    do
-      cp -a ${VERBOSE} "${i}" "${PIX_DIR}/" || exit 1
+      cp -p ${VERBOSE} "${i}" "${PIX_DIR}/" || exit 1
    done
 
    EXTENSION_DIR="${share}/extensions"
    mkdir -p "${EXTENSION_DIR}" 2> /dev/null
-   cp -Rav "src/mulle-objc" "${EXTENSION_DIR}/" || installer_fail "copy to ${EXTENSION_DIR} failed"
+   cp -Rp "src/mulle-objc" "${EXTENSION_DIR}/" || installer_fail "copy to ${EXTENSION_DIR} failed"
 }
 
 main "$@"

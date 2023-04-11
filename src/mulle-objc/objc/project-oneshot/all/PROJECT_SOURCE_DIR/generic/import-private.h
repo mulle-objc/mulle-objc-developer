@@ -9,14 +9,17 @@
 */
 
 /*
- * Get C includes first, if any
+ * Get C includes first, if any. As include-private.h is a generic name,
+ * testing could pick up the wrong one, so we test for inferior header
+ * that we assume to be there if "include-private.h" were to exist.
  *
  * #ifdef __has_include
- * # if __has_include( "include-private.h")
+ * # if __has_include( "_<|PROJECT_NAME|>-include-private.h")
  * #   include "include-private.h"
  * # endif
  * #endif
  */
+
 
 #import "import.h"
 

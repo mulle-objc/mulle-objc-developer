@@ -1,0 +1,12 @@
+{
+   project =
+   {
+      description="🎩 mulle-objc developer kit for mulle-sde";
+      domain="github";
+      name="mulle-objc-developer";
+      user="mulle-objc";
+      repo="mulle-objc-developer";
+      homepage="https://github.com/mulle-objc/mulle-objc-developer";
+      license="BSD-3-Clause"
+   };
+}

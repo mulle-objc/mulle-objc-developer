@@ -1,1 +1,2 @@
-cmake;optional
+cmake
+cmake.exe

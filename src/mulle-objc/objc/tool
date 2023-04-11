@@ -1,4 +1,4 @@
 mulle-clang
-mulle-scan-build;optional
-mulle-gdb;optional
+mulle-scan-build
+mulle-gdb
 

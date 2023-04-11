@@ -83,11 +83,11 @@ docker run -i -t --rm mulle-objc-developer
 > To create a 32 bit docker on the base of xenial use
 >
 > ``` sh
->  docker build -t mulle-objc-developer-32 '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
+> docker build -t mulle-objc-developer-32 '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
 > docker run -i -t --rm mulle-objc-developer-32
 > ```
 >
-> Xenial support will run out evetually though.
+> Xenial support will run out eventually though.
 >
 
 # Usage
@@ -101,9 +101,7 @@ mulle-sde extension show
 ### Create an Objective-C executable project
 
 ``` sh
-mkdir foo
-cd foo
-mulle-sde init -m mulle-objc/objc-developer executable
+mulle-sde init -d foo -m mulle-objc/objc-developer executable
 ```
 
 ### Create an Objective-C library project
