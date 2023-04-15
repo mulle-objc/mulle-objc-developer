@@ -1,3 +1,9 @@
+## 0.25.0
+
+* remove package.json as it conflicts with clib.json
+* changes to objc-loader and linking
+
+
 ## 0.24.0
 
 * Various small improvements

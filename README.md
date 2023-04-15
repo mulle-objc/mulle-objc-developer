@@ -1,4 +1,4 @@
-# mulle-objc
+# mulle-objc-developer
 
 #### 🎩 mulle-objc developer kit for mulle-sde
 
@@ -7,113 +7,63 @@ This is a collection of [mulle-sde](//github.com/mulle-sde/mulle-sde)
 code. As a package **mulle-objc-developer** is also a convenient way to
 install mulle-sde and [mulle-clang](//github.com/Codeon-GmbH/mulle-clang).
 
-> See the [mulle-sde Wiki](//github.com/mulle-sde/mulle-sde/wiki) for
-> an introduction on **mulle-sde**.
+
+| Release Version                                       | Release Notes
+|-------------------------------------------------------|--------------
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag//mulle-objc-developer.svg?branch=release) [![Build Status](https://github.com//mulle-objc-developer/workflows/CI/badge.svg?branch=release)](//github.com//mulle-objc-developer/actions)| [RELEASENOTES](RELEASENOTES.md) |
 
 
-Extension                      | Type      | Description
--------------------------------|-----------|-----------------------------------
-mulle-objc/objc-developer      | meta      | Create Objective-C projects
+
+
+
+
+
+## Add
+
+Use [mulle-sde](//github.com/mulle-sde) to add mulle-objc-developer to your project:
+
+``` sh
+mulle-sde add github:/
+```
+
+To only add the sources of mulle-objc-developer with dependency
+sources use [clib](https://github.com/clibs/clib):
+
+
+``` sh
+clib install --out src/ /
+```
+
+Add `-isystem src/` to your `CFLAGS` and compile all the sources that were downloaded with your project.
 
 
 ## Install
 
-### Packages
+### Install with mulle-sde
 
-OS      | Command
---------|------------------------------------
-macos   | `brew install mulle-kybernetik/software/mulle-objc-developer`
-debian  | `sudo apt-get -y install mulle-objc-developer` (but see below)
-ubuntu  | same as debian
-
-
-#### Debian Mulle kybernetiK repositories
-
-For apt installation you need to add the Mulle kybernetiK debian
-repository first:
+Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-objc-developer:
 
 ``` sh
-get -O - "//www.mulle-kybernetik.com/dists/debian-admin-pub.asc" | sudo apt-key add -
-echo "deb [arch=all] http://www.mulle-kybernetik.com `lsb_release -c -s` main" | sudo tee "/etc/apt/sources.list.d/mulle-kybernetik.com-main.list" > /dev/null
-sudo apt-get update
+mulle-sde install --prefix /usr/local \
+   https://github.com///archive/latest.tar.gz
 ```
 
+### Manual Installation
 
-### Script
-
-mulle-sde provides an [installer-all](//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all) script to install the required commands and mulle-sde-developer itself into `/usr` or some other place.
-
-You need to install [mulle-clang](//github.com/Codeon-GmbH/mulle-clang) yourself.
-
-This is suitable for environments without supported package managers:
-
-#### Install into /usr with sudo
+Install the [Requirements](#Requirements) and then
+install **mulle-objc-developer** with [cmake](https://cmake.org):
 
 ``` sh
-curl -L -O '//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
-chmod 755 installer-all && \
-sudo OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
-mulle-c/mulle-c-developer;latest" \
-SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all /usr
+cmake -B build \
+      -DCMAKE_INSTALL_PREFIX=/usr/local \
+      -DCMAKE_PREFIX_PATH=/usr/local \
+      -DCMAKE_BUILD_TYPE=Release &&
+cmake --build build --config Release &&
+cmake --install build --config Release
 ```
 
-#### Install into ${HOME} (without sudo)
+## Author
 
-``` sh
-curl -L -O '//raw.githubusercontent.com/mulle-sde/mulle-sde/release/bin/installer-all' && \
-chmod 755 installer-all && \
-OTHER_PROJECTS="mulle-objc/mulle-objc-developer;latest \
-mulle-c/mulle-c-developer;latest" \
-SDE_PROJECTS="mulle-sde-developer;latest" ./installer-all ~
-```
+[Nat!](https://mulle-kybernetik.com/weblog) for Mulle kybernetiK
 
-
-### Docker
-
-There is a [Dockerfile](//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile) in the project.
-
-This will build and run an ephemeral mulle-sde container:
-
-``` sh
-docker build -t mulle-objc-developer '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/Dockerfile'
-docker run -i -t --rm mulle-objc-developer
-```
-
->
-> To create a 32 bit docker on the base of xenial use
->
-> ``` sh
-> docker build -t mulle-objc-developer-32 '//raw.githubusercontent.com/mulle-objc/mulle-objc-developer/release/i386/Dockerfile'
-> docker run -i -t --rm mulle-objc-developer-32
-> ```
->
-> Xenial support will run out eventually though.
->
-
-# Usage
-
-#### Check that the (meta) extensions are found:
-
-```
-mulle-sde extension show
-```
-
-### Create an Objective-C executable project
-
-``` sh
-mulle-sde init -d foo -m mulle-objc/objc-developer executable
-```
-
-### Create an Objective-C library project
-
-``` sh
-mulle-sde init -m mulle-objc/objc-developer -d foolib library
-```
-
-### Don't create a project but get ObjC libraries built
-
-``` sh
-mulle-sde init -m mulle-objc/objc-developer none
-mulle-sde craft
-```
 
