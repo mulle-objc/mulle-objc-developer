@@ -1,6 +1,6 @@
 name: DockerfileCI
 
-on: [push]
+on: [push,workflow_dispatch]
 
 
 jobs:
