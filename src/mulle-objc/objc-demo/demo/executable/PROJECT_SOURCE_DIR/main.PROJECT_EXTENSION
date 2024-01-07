@@ -16,7 +16,7 @@
 
 + (void) print
 {
-   printf( "VfL Bochum %d\n", <|PROJECT_UPCASE_IDENTIFIER|>_VERSION);
+   printf( "VfL Bochum %lu\n", <|PROJECT_UPCASE_IDENTIFIER|>_VERSION);
 }
 
 @end

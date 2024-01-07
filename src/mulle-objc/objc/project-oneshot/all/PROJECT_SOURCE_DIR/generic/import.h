@@ -21,7 +21,7 @@
  *
  * #ifdef __has_include
  * # if __has_include( "_<|PROJECT_NAME|>-include.h")
- * #   include "include-private.h"
+ * #   include "include.h"
  * # endif
  * #endif
  */
