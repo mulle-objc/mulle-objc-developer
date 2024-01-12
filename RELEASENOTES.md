@@ -1,3 +1,11 @@
+## 0.26.0
+
+* update version numbers to use unsigned long
+* .inc files are no long considered for public headers, but are not project header by default
+* project headers is now a thing...
+* fix import.h accidentally including include-private.h
+
+
 ## 0.25.0
 
 * remove package.json as it conflicts with clib.json
