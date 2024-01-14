@@ -56,7 +56,7 @@ Use [mulle-sde](//github.com/mulle-sde) to build and install mulle-objc-develope
 
 ``` sh
 mulle-sde install --prefix /usr/local \
-   https://github.com///archive/latest.tar.gz
+   https://github.com/mulle-objc/mulle-objc-developer/archive/latest.tar.gz
 ```
 
 ### Manual Installation
