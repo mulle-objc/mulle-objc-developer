@@ -2,7 +2,7 @@ cmake_minimum_required( VERSION 3.14)
 
 project( mulle-objc-developer NONE)
 
-set( PROJECT_VERSION 0.26.0)
+set( PROJECT_VERSION 0.26.1)
 
 
 if( APPLE)

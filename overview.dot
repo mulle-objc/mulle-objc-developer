@@ -1,0 +1,11 @@
+digraph sourcetree
+{
+   rankdir = TD;
+   node [ shape="box"; style="filled" ]
+   "mulle-objc-developer"  [ fillcolor="yellow"]
+   //  not inheriting from mulle-objc-developer
+   "mulle-c-developer"     [ fillcolor="white"]
+   "mulle-sde-developer"   [ fillcolor="white"]
+
+   "mulle-objc-developer" -> "mulle-c-developer"  -> "mulle-sde-developer"
+}

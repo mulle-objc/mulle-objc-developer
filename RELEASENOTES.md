@@ -1,3 +1,7 @@
+### 0.26.1
+
+* Various small improvements
+
 ## 0.26.0
 
 * update version numbers to use unsigned long

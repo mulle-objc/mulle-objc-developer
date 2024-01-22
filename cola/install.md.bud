@@ -1,0 +1,7 @@
+## Install
+
+Install [foundation-developer](//github.com/MulleFoundation/foundation-developer) and
+{{ project.name }} will part of the deal. 
+
+> If you really want just {{ project.name }},
+> examine the "Script" approach and reduce the `OTHER_PROJECTS`.
