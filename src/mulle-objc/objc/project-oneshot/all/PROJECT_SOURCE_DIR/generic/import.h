@@ -18,13 +18,12 @@
  * Get C includes first. As "include.h" is a generic name,
  * testing could pick up the wrong one, so we test for an inferior header
  * that we assume to be there if "include.h" were to exist.
- *
- * #ifdef __has_include
- * # if __has_include( "_<|PROJECT_NAME|>-include.h")
- * #   include "include.h"
- * # endif
- * #endif
  */
+#ifdef __has_include
+# if __has_include( "_<|PROJECT_NAME|>-include.h")
+#   include "include.h"
+# endif
+#endif
 
 
 #ifndef <|PROJECT_UPCASE_IDENTIFIER|>_GLOBAL

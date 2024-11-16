@@ -7,15 +7,15 @@
             "type": "cppdbg",
             "request": "launch",
             "stopAtEntry": true,
-            "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>",
+            "program": "${env:KITCHEN_DIR}/Debug/<|PROJECT_NAME|>",
             "args": [],
             "environment": [],
             "cwd": "${workspaceFolder}",
-            "additionalSOLibSearchPath": "${workspaceFolder}/dependency/Debug/lib:${workspaceFolder}/dependency/lib",
+            "additionalSOLibSearchPath": "${env:DEPENDENCY_DIR}/Debug/lib:${env:DEPENDENCY_DIR}/lib",
             "windows": {
                 "MIMode": "gdb",
                 "miDebuggerPath": "mulle-gdb.exe",
-                "program": "${workspaceFolder}/kitchen/Debug/<|PROJECT_NAME|>.exe"
+                "program": "${env:KITCHEN_DIR}/Debug/<|PROJECT_NAME|>.exe"
             },
             "osx": {
                 "MIMode": "lldb",

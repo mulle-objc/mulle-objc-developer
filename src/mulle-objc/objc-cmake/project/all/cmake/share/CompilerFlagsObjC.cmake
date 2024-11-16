@@ -9,11 +9,22 @@ if( NOT __COMPILER_FLAGS_OBJC_CMAKE__)
       message( STATUS "# Include \"${CMAKE_CURRENT_LIST_FILE}\"" )
    endif()
 
+   #
+   # only useful in mulle-objc
+   #
+   option( OBJC_TAO_DEBUG_ENABLED "Enable Objective-C TAO for debug builds" MULLE_OBJC)
+
    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OTHER_OBJC_FLAGS} ${UNWANTED_OBJC_WARNINGS}")
    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OTHER_OBJC_FLAGS} ${UNWANTED_OBJC_WARNINGS}")
 
    if( CMAKE_BUILD_TYPE)
-      if( NOT TMP_CONFIGURATION_NAME STREQUAL "DEBUG")
+      string( TOUPPER "${CMAKE_BUILD_TYPE}" TMP_CONFIGURATION_NAME)
+      if( TMP_CONFIGURATION_NAME STREQUAL "DEBUG")
+         if( OBJC_TAO_DEBUG_ENABLED)
+            message( STATUS "Objective-C TAO enabled")
+            add_definitions( "-fobjc-tao")
+         endif()
+      else()
          add_definitions( "-DNS_BLOCK_ASSERTIONS" )
       endif()
    endif()

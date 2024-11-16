@@ -5,40 +5,40 @@
          "name": "Linux",
          "includePath": [
             "${workspaceFolder}/src/**",
-            "${workspaceFolder}/dependency/include/**",
-            "${workspaceFolder}/addiction/include/**"
+            "${env:DEPENDENCY_DIR}/include/**",
+            "${env:ADDICTION_DIR}/include/**"
          ],
          "defines": [],
          "compilerPath": "mulle-clang",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
-         "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"
+         "compileCommands": "${env:KITCHEN_DIR}/Debug/compile_commands.json"
       },
       {
          "name": "Mac",
          "includePath": [
             "${workspaceFolder}/src/**",
-            "${workspaceFolder}/dependency/include/**",
-            "${workspaceFolder}/addiction/include/**"
+            "${env:DEPENDENCY_DIR}/include/**",
+            "${env:ADDICTION_DIR}/include/**"
          ],
          "defines": [],
          "compilerPath": "mulle-clang",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
-         "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"
+         "compileCommands": "${env:KITCHEN_DIR}/Debug/compile_commands.json"
       },
       {
          "name": "Win32",
          "includePath": [
             "${workspaceFolder}/src/**",
-            "${workspaceFolder}/dependency/include/**",
-            "${workspaceFolder}/addiction/include/**"
+            "${env:DEPENDENCY_DIR}/include/**",
+            "${env:ADDICTION_DIR}/include/**"
          ],
          "defines": [],
          "compilerPath": "mulle-clang-cl.exe",
          "cStandard": "c11",
          "intelliSenseMode": "clang-x64",
-         "compileCommands": "${workspaceFolder}/kitchen/Debug/compile_commands.json"
+         "compileCommands": "${env:KITCHEN_DIR}/Debug/compile_commands.json"
       }
    ]
 }

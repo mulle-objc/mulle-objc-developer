@@ -52,7 +52,7 @@ int  main( int argc, char *argv[])
  *
  * To easier pin down, where a leak is created. try any of:
  *
- *    MULLE_TESTALLOCATOR_TRACE=3
+ *    MULLE_TESTALLOCATOR=3
  *    MULLE_OBJC_TRACE_INSTANCE=YES
  *    MULLE_OBJC_TRACE_METHOD_CALL=YES
  *    MULLE_OBJC_TRACE_UNIVERSE=YES
