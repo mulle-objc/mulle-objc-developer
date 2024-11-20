@@ -1,3 +1,31 @@
+## 0.27.0
+
+feat: improve build system and environment handling
+
+* Enhance CMake configuration and build
+  - Add `OBJC_TAO_DEBUG_ENABLED` option for debug builds
+  - Update library linking with `WHOLE_ARCHIVE` support
+  - Fix paths to use `CMAKE_CURRENT_SOURCE_DIR` consistently
+  - Add config template for package installation
+
+* Update VSCode integration
+  - Use environment variables for include paths
+  - Update debug configuration paths
+  - Improve IntelliSense settings
+
+* Environment and workflow improvements
+  - Update GitHub Actions to use checkout@v4
+  - Add `workflow_dispatch` support
+  - Fix environment plugin handling
+  - Update environment version to 5.3.0
+
+* Other improvements
+  - Enable include.h and include-private.h conditionals
+  - Update trace environment variable name
+  - Fix project version handling
+  - Add mulle-clang-project dependency
+
+
 ### 0.26.1
 
 * Various small improvements
