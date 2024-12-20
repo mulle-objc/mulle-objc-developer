@@ -1,3 +1,7 @@
+### 0.27.1
+
+* fix wrong include in demo library
+
 ## 0.27.0
 
 feat: improve build system and environment handling

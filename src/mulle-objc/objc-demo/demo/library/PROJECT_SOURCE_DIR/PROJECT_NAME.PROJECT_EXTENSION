@@ -1,4 +1,4 @@
-#import "<|PROJECT_IDENTIFIER|>.h"
+#import "<|PROJECT_NAME|>.h"
 
 #import "import-private.h"
 
