@@ -1,3 +1,7 @@
+### 0.27.2
+
+Various small improvements
+
 ### 0.27.1
 
 * fix wrong include in demo library
