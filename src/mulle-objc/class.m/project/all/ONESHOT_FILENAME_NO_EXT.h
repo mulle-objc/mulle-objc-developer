@@ -10,12 +10,14 @@
 
 @interface <|ONESHOT_CLASS|> : <|SUPERCLASS:-NSObject|>
 //{
-//   NSMutableArray   *_others;
+// @private                     // Tip: avoid @private as much as possible
+//   NSMutableArray   *_others; // Tip: use properties if possible
 //}
 
 
-// @property( readonly, copy) NSString  *value;
-// @property( retain) id                someObject;
+// @property( readonly, copy) NSString  *value;         // prefer copy for all value objects 
+// @property( retain) id                iOwnObject;     // retain for objects you own and cant copy
+// @property( assign) id                myOwnerObject;  // assign for relationships to objects that own you
 
 // - (id) method:(id) argument;
 

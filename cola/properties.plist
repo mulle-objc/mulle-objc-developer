@@ -3,6 +3,8 @@
    {
       description="🎩 mulle-objc developer kit for mulle-sde";
       domain="github";
+      language="none";
+      dialect="none";
       name="mulle-objc-developer";
       user="mulle-objc";
       repo="mulle-objc-developer";
