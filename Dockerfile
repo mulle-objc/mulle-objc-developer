@@ -28,6 +28,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
    && chmod 755 installer-all \
    && ./installer-all /usr no \
 \
-   && wget "https://github.com/mulle-cc/mulle-clang-project/releases/download/17.0.6.2/mulle-clang-17.0.6.2-bookworm-amd64.deb"  \
-   && dpkg --install "mulle-clang-17.0.6.2-bookworm-amd64.deb"
+   && wget "https://github.com/mulle-cc/mulle-clang-project/releases/download/21.1.8.1/mulle-clang-21.1.8.1-bookworm-amd64.deb"  \
+   && dpkg --install "mulle-clang-21.1.8.1-bookworm-amd64.deb"
 
