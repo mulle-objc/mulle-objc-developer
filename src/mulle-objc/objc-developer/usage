@@ -1,1 +1,1 @@
-mulle-objc cmake project based on <MulleObjC/MulleObjC.h>
+mulle-objc cmake project based on <MulleObjC/MulleObjC.h> - does not have NSString or NSArray

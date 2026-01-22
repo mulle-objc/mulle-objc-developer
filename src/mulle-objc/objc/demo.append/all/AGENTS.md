@@ -17,6 +17,7 @@ This is a mulle-objc Objective C project.
     -   **Write:** `[self setProperty:value]` instead of `self.property = value`
 -   Do not use class properties
 -   Do not use `atomic`, `weak`, `strong`
+-   `char *` properties that hold UTF8 strings must be names <prefix>UTF8String
 
 ### No Blocks
 

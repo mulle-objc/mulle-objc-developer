@@ -1,3 +1,7 @@
+### 0.28.1
+
+* improved vibecoding support
+
 ## 0.28.0
 
 Various small improvements
