@@ -1,6 +1,6 @@
 ## Coding Style Guide
 
-<!-- Keywords: edit, c, styleguide -->
+<!-- Keywords: syntax, edit, objc, styleguide -->
 
 This document outlines the coding conventions. All contributions must adhere to
 these rules to maintain code consistency and readability.

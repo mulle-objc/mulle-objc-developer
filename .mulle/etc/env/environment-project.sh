@@ -40,3 +40,9 @@ export PROJECT_LANGUAGE="none"
 
 
 
+#
+#
+#
+export PROJECT_ASSET_DIR="asset"
+
+

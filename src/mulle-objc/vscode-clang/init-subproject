@@ -198,7 +198,7 @@ parent's ignore list"
    local key2
 
    key1="**/${relative}/_${PROJECT_NAME}*.h"
-   key2="**/${relative}/MulleObjCLoader+${PROJECT_NAME}.[hm]"
+   key2="**/${relative}/MulleObjCDeps+${PROJECT_NAME}.[hm]"
 
    set -o pipefail
 

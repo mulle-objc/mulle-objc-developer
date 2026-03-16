@@ -32,7 +32,7 @@ C dependency and library headers that this project uses privately are imported
 via this file.
 
 
-### `objc-loader.inc`
+### `objc-deps.inc`
 
 This file contains Objective-C dependency information of this library.
 It's updated during a build.

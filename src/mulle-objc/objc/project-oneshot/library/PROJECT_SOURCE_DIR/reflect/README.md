@@ -18,7 +18,7 @@ This file is generated for the Objective-C or C envelope header (typically
 advertised to consumers of this library.
 
 
-### `objc-loader.inc`
+### `objc-deps.inc`
 
 This file contains Objective-C dependency information of this library.
 It's updated during a build.

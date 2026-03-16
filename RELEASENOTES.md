@@ -58,7 +58,7 @@ feat: improve build system and environment handling
 ## 0.25.0
 
 * remove package.json as it conflicts with clib.json
-* changes to objc-loader and linking
+* changes to objc-deps and linking
 
 
 ## 0.24.0
