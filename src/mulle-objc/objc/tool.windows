@@ -1,6 +1,11 @@
 mulle-clang;remove
+mulle-clangd;remove
 mulle-scan-build;remove
-mulle-lldb;remove
+mulle-cov;remove
+mulle-nm;remove
+#
 mulle-clang-cl.exe
 scan-build.exe
 mulle-gdb.exe
+mulle-cov.exe
+mulle-nm.exe

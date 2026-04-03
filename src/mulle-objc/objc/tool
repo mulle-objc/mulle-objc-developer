@@ -1,4 +1,6 @@
 mulle-clang
+mulle-clangd
 mulle-scan-build
 mulle-gdb
-
+mulle-cov
+mulle-nm
