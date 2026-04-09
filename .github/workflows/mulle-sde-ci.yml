@@ -31,7 +31,7 @@ jobs:
 
     - uses: mulle-sde/github-ci@v2
 
-    - uses: mulle-cc/github-ci@v7
+    - uses: mulle-cc/github-ci@v8
       
     - name: List extensions
       run: |
