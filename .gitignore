@@ -51,3 +51,4 @@ build-7452/
 build-9112/
 .roam
 .graveyard
+*.tmp.*
