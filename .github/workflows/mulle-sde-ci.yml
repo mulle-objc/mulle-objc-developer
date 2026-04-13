@@ -41,6 +41,7 @@ jobs:
       run: |
         mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d lib -m mulle-objc/objc-developer library &&
         cd lib &&
+        mulle-sde vibecoding off &&
         mulle-sde hostname &&
         mulle-sde environment &&
         echo "Adding environment-host-ci-prerelease file from MulleObjC/test" >&2 &&
@@ -52,6 +53,7 @@ jobs:
         mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" extension show &&
         mulle-sde -DMULLE_SDE_EXTENSION_BASE_PATH="${PWD}/src" init -d exe -m mulle-objc/objc-developer executable &&
         cd exe &&
+        mulle-sde vibecoding off &&
         echo "Adding environment-host-ci-prerelease file from MulleObjC/test" >&2 &&
         curl -L --output .mulle/etc/env/environment-host-ci-prerelease.sh "https://raw.githubusercontent.com/mulle-objc/MulleObjC/prerelease/test/.mulle/etc/env/environment-host-ci-prerelease.sh" >&2 &&
         mulle-sde craft --release &&
