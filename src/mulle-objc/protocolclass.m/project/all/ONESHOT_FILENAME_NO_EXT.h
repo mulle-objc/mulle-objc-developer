@@ -10,14 +10,14 @@
 
 
 // **EDIT** define your protocol here
-PROTOCOLCLASS_INTERFACE( <|ONESHOT_CLASS|>, NSObject)
+@protocol_interface <|ONESHOT_CLASS|> < NSObject>
 
 <|ONESHOT_CLASS|>Properties;
 
 @optional
 // - (id) method;   // methods with default implementations
 
-PROTOCOLCLASS_END();
+@end;
 
 // A typical adopting class will look like this:
 // @interface Adopter : NSObject < <|ONESHOT_CLASS|>>

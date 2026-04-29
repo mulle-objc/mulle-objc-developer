@@ -31,7 +31,7 @@ struct _<|ONESHOT_CLASS|>Ivars   <|ONESHOT_CLASS|>
 
 
 // **EDIT** define your protocol here
-PROTOCOLCLASS_INTERFACE( <|ONESHOT_CLASS|>, NSObject)
+@protocol_interface <|ONESHOT_CLASS|> < NSObject>
 
 <|ONESHOT_CLASS|>Properties;
 <|ONESHOT_CLASS|>IvarsGetterInterface;
@@ -39,7 +39,7 @@ PROTOCOLCLASS_INTERFACE( <|ONESHOT_CLASS|>, NSObject)
 @optional
 // - (id) method;   // methods with default implementations
 
-PROTOCOLCLASS_END();
+@end;
 
 // A typical adopting class will look like this:
 // @interface Adopter : NSObject < <|ONESHOT_CLASS|>>
