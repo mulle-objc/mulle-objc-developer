@@ -10,7 +10,7 @@
 
 
 // **EDIT** define your protocol here
-@protocol_interface <|ONESHOT_CLASS|> < NSObject>
+@mixin <|ONESHOT_CLASS|> < NSObject>
 
 <|ONESHOT_CLASS|>Properties;
 

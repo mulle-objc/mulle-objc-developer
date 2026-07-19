@@ -31,7 +31,7 @@ struct _<|ONESHOT_CLASS|>Ivars   <|ONESHOT_CLASS|>
 
 
 // **EDIT** define your protocol here
-@protocol_interface <|ONESHOT_CLASS|> < NSObject>
+@mixin <|ONESHOT_CLASS|> < NSObject>
 
 <|ONESHOT_CLASS|>Properties;
 <|ONESHOT_CLASS|>IvarsGetterInterface;
