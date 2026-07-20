@@ -9,7 +9,7 @@
       user="mulle-objc";
       repo="mulle-objc-developer";
       homepage="https://github.com/mulle-objc/mulle-objc-developer";
-       version="0.28.2";
+        version="0.28.3";
       license="BSD-3-Clause";
    };
 }
