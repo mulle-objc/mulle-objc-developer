@@ -52,3 +52,5 @@ build-9112/
 .roam
 .graveyard
 *.tmp.*
+*.test.*
+.idea
